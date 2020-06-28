@@ -18,7 +18,7 @@ const val PAGE_COUNT = 10
 class MainActivity : AppCompatActivity() {
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_main)
+//        setContentView(R.layout._root_layout)
 //    }
 
 
@@ -27,8 +27,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        pager = findViewById(R.id.pager) as ViewPager
+        setContentView(R.layout._root_layout)
+
+
+
+        pager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
         pagerAdapter = MyFragmentPagerAdapter(supportFragmentManager)
         pager!!.adapter = pagerAdapter
         pager!!.setOnPageChangeListener(object : OnPageChangeListener {
@@ -46,8 +49,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private class MyFragmentPagerAdapter(fm: FragmentManager?) :
-        FragmentPagerAdapter(fm!!) {
+    private class MyFragmentPagerAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm!!) {
         override fun getItem(position: Int): Fragment {
 
             return PageFragment.newInstance(position)

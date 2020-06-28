@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cont_layz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="8dp"
+    android:background="#00f81000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/texttext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="aslas" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+
+        <Button
+            android:layout_width="111dp"
+            android:layout_height="111dp"
+            android:text="asdasd" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

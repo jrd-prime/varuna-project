@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/header_height"
     android:background="@drawable/shape"
-    android:elevation="@dimen/headerElevation"
+    android:elevation="4dp"
     android:gravity="top"
     android:orientation="vertical"
     app:layout_constraintEnd_toEndOf="parent"

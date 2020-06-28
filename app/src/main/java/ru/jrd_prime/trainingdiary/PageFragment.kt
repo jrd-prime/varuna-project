@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import java.util.*
 
@@ -14,8 +15,8 @@ const val ARGUMENT_PAGE_NUMBER = "arg_page_number"
 class PageFragment : Fragment() {
 
 
-    var pageNumber = 0
-    var backColor = 0
+    private var pageNumber = 0
+    private var backColor = 0
 
     /*
     Метод newInstance создает новый экземпляр фрагмента и записывает ему в атрибуты число,
@@ -27,7 +28,7 @@ class PageFragment : Fragment() {
             val pageFragment = PageFragment()
             val arguments = Bundle()
             arguments.putInt(ARGUMENT_PAGE_NUMBER, page)
-            pageFragment.setArguments(arguments)
+            pageFragment.arguments = arguments
             return pageFragment
         }
     }
@@ -52,8 +53,11 @@ class PageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view: View = inflater.inflate(R.layout.fragment, null)
-        val tvPage = view.findViewById(R.id.tvPage) as TextView
+        val view: View = inflater.inflate(R.layout.a_workout_list_pager, null)
+        val scrollView = view.findViewById<NestedScrollView>(R.id.cont_layz);
+//        val scrollView = findViewById<ScrollView>(R.id.cont_lay);
+        scrollView.isFillViewport = true
+        val tvPage = view.findViewById(R.id.texttext) as TextView
         tvPage.text = "Page $pageNumber"
         tvPage.setBackgroundColor(backColor)
         return view

@@ -1,8 +1,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/constLayDate"
+    android:id="@+id/constraintShowDay"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="@dimen/showDayHeight"
     android:background="@color/colorLightGrey"
     app:layout_constraintTop_toBottomOf="@+id/fr">
 
