@@ -55,7 +55,7 @@ class PageFragment : Fragment() {
     ): View? {
         val view: View = inflater.inflate(R.layout.a_workout_list_pager, null)
         val scrollView = view.findViewById<NestedScrollView>(R.id.cont_layz);
-//        val scrollView = findViewById<ScrollView>(R.id.cont_lay);
+
         scrollView.isFillViewport = true
         val tvPage = view.findViewById(R.id.texttext) as TextView
         tvPage.text = "Page $pageNumber"

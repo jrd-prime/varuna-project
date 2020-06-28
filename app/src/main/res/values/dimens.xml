@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="header_height">150dp</dimen>
-    <dimen name="headerElevation">16dp</dimen>
+    <dimen name="headerElevation">4dp</dimen>
     <dimen name="fabMargin">4dp</dimen>
     <dimen name="fabCornerRadius">16dp</dimen>
     <dimen name="mainProgressBarSideSize">100dp</dimen>
     <dimen name="day_show_height">48dp</dimen>
     <dimen name="showDayHeight">48dp</dimen>
     <dimen name="headerHeight">150dp</dimen>
-    <dimen name="showDayElevation">8dp</dimen>
+    <dimen name="showDayElevation">4dp</dimen>
     <dimen name="fabBorderWidth">0dp</dimen>
 </resources>
