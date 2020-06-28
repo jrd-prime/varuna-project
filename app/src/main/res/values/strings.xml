@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="logout">Выйти</string>
+    <string name="avatar">Avatar</string>
+    <string name="procent">100%</string>
+    <string name="minusDay">На день назад</string>
+    <string name="plusDay">На день вперед</string>
+    <string name="textMock">Заглушка</string>
+    <string name="primary_screen_text">primary screen</string>
+    <string name="app_name">Training Diary</string>
+    <string name="bottom_sheet_name">btm sheet name</string>
+    <string name="bottom_sheet_email">btm sheet mail</string>
+    <string name="toggle_fab_string">toogle fab</string>
+    <string name="nav_item1">1</string>
+    <string name="nav_item2">2</string>
+    <string name="nav_item3">3</string>
+    <string name="nav_item4">4</string>
+    <string name="nav_item5">6</string>
+    <string name="action_search">SEARCH</string>
+    <string name="action_mail">MAIL</string>
+    <string name="action_delete">DELETE</string>
+    <string name="action_archieve">ARCH</string>
+</resources>
