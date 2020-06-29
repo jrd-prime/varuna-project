@@ -12,7 +12,7 @@ import java.util.*
 
 const val ARGUMENT_PAGE_NUMBER = "arg_page_number"
 
-class PageFragment : Fragment() {
+class WorkoutPageFragment : Fragment() {
 
 
     private var pageNumber = 0
@@ -24,8 +24,8 @@ class PageFragment : Fragment() {
     По нему фрагмент будет определять, какое содержимое создавать в фрагменте.
     */
     companion object {
-        fun newInstance(page: Int): PageFragment {
-            val pageFragment = PageFragment()
+        fun newInstance(page: Int): WorkoutPageFragment {
+            val pageFragment = WorkoutPageFragment()
             val arguments = Bundle()
             arguments.putInt(ARGUMENT_PAGE_NUMBER, page)
             pageFragment.arguments = arguments
