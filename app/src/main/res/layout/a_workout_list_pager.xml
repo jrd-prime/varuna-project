@@ -1,100 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cont_layz"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="8dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <data>
+
+        <variable
+            name="workoutModel"
+            type="ru.jrd_prime.trainingdiary.model.WorkoutModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/cont_layz"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="8dp">
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:paddingTop="8dp">
 
-        <TextView
-            android:id="@+id/texttext"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="aslas" />
 
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
+            android:orientation="vertical">
 
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@layout/a_workout_card" />
 
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
+            <!--            <include-->
+            <!--                layout="@layout/a_workout_card"-->
+            <!--                app:workoutModel="@{workoutModel}" />-->
 
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
 
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
-
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
-
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
-
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
-
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
-
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
-
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
-
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
-
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
-
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
-
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
-
-        <Button
-            android:layout_width="111dp"
-            android:layout_height="111dp"
-            android:text="asdasd" />
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

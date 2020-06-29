@@ -1,5 +1,6 @@
 package ru.jrd_prime.trainingdiary.ui
 
+import android.icu.util.LocaleData
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
@@ -17,8 +18,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.WorkoutPageFragment
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
+import ru.jrd_prime.trainingdiary.model.Category
+import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.makeStatusBarTransparent
 import ru.jrd_prime.trainingdiary.utils.setMarginTop
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.*
 
 
 const val TAG = "myLogs"
@@ -41,7 +48,10 @@ class DashboardActivity : AppCompatActivity() {
             DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         val viewmodel = dashboardViewModel
 
+
         binding.viewmodel = viewmodel
+
+
 
         setWindow()
 
@@ -93,7 +103,7 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         window.navigationBarColor = resources.getColor(
-            R.color.colorPrimaryLight,
+            R.color.colorPrimaryDark,
             applicationContext.theme
         )
     }

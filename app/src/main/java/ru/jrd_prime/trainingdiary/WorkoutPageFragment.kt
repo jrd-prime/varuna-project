@@ -5,16 +5,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.widget.NestedScrollView
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.a_workout_list_pager.view.*
+import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
+import ru.jrd_prime.trainingdiary.data.prepData
+import ru.jrd_prime.trainingdiary.databinding.AWorkoutListPagerBinding
+import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import java.util.*
+
 
 const val ARGUMENT_PAGE_NUMBER = "arg_page_number"
 
 class WorkoutPageFragment : Fragment() {
-
-
     private var pageNumber = 0
     private var backColor = 0
 
@@ -53,15 +58,34 @@ class WorkoutPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view: View = inflater.inflate(R.layout.a_workout_list_pager, null)
-        val scrollView = view.findViewById<NestedScrollView>(R.id.cont_layz);
 
+        val pagerBinding: AWorkoutListPagerBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(activity),
+            R.layout.a_workout_list_pager,
+            container,
+            false
+        )
+        // создаем адаптер
+
+
+        val rootView = pagerBinding.root
+
+        val data: Collection<WorkoutModel> = prepData()
+        val adapter = WorkoutListAdapter(data)
+        rootView.recView.layoutManager = LinearLayoutManager(context)
+
+        rootView.recView.adapter = adapter
+
+//        val view: View = inflater.inflate(R.layout.a_workout_list_pager, null)
+        val scrollView = rootView.cont_layz as NestedScrollView
         scrollView.isFillViewport = true
-        val tvPage = view.findViewById(R.id.texttext) as TextView
-        tvPage.text = "Page $pageNumber"
-        tvPage.setBackgroundColor(backColor)
-        return view
+
+
+//        val tvPage = root.texttext as TextView
+//        tvPage.text = "Page $pageNumber"
+//        tvPage.setBackgroundColor(backColor)
+
+//        pagerBinding.workoutCase = newWork
+        return rootView
     }
-
-
 }

@@ -20,4 +20,7 @@
     <string name="action_mail">MAIL</string>
     <string name="action_delete">DELETE</string>
     <string name="action_archieve">ARCH</string>
+    <string name="categoryDesc">category</string>
+    <string name="long_text">Legs asdas dasd asd asd asd asda\nad asd asda sdasd asd asd ad asd asd\nasd asd asd asd asd asd asda sd asdasd</string>
+    <string name="long_text1">Legs asdas dasd asd asd asd asda ad asd asda sdasd asd asd ad asd asd asd asd asd asd asd asd asda sd asdasd</string>
 </resources>

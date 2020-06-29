@@ -8,6 +8,9 @@
         <variable
             name="viewmodel"
             type="ru.jrd_prime.trainingdiary.ui.DashboardViewModel" />
+        <variable
+            name="workoutModel"
+            type="ru.jrd_prime.trainingdiary.model.WorkoutModel" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -45,6 +48,11 @@
                     android:elevation="@dimen/showDayElevation"
                     app:layout_constraintTop_toBottomOf="@+id/frameHeader">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{viewmodel.ele}" />
+
                     <include layout="@layout/a_root_show_date" />
                 </FrameLayout>
 
@@ -53,8 +61,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/headerHeight"
                     android:background="@color/colorPrimary"
-                    android:elevation="@dimen/headerElevation"
+                    android:elevation="@dimen/showDayElevation"
                     app:layout_constraintTop_toTopOf="parent">
+
 
                     <include layout="@layout/a_root_header" />
                 </FrameLayout>
