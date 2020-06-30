@@ -43,15 +43,10 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val binding: ActivityDashboardBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         val viewmodel = dashboardViewModel
-
-
         binding.viewmodel = viewmodel
-
-
 
         setWindow()
 
@@ -77,7 +72,8 @@ class DashboardActivity : AppCompatActivity() {
 
     private class WorkoutPageAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm!!) {
         override fun getItem(position: Int): Fragment {
-            return WorkoutPageFragment.newInstance(position)
+//            return WorkoutPageFragment.newInstance(position)
+            return WorkoutPageFragment.newInstance(4)
         }
 
         override fun getCount(): Int {

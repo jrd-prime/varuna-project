@@ -1,41 +1,125 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constLayDate"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/showDayHeight"
+    android:layout_height="54dp"
     android:background="@color/colorLightGrey"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
     app:layout_constraintTop_toBottomOf="@+id/fr">
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_chevron_left"
-            app:layout_constraintBottom_toBottomOf="@+id/tvDateScroll"
-            app:layout_constraintEnd_toStartOf="@+id/tvDateScroll"
-            app:layout_constraintTop_toTopOf="@+id/tvDateScroll"
-            android:contentDescription="@string/minusDay" />
+            android:layout_gravity="center"
+            android:id="@+id/ivDay1"
+            android:layout_width="@dimen/dayTodayImgSize"
+            android:layout_height="@dimen/dayTodayImgSize"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/minusDay"
+            android:padding="4dp"
+            android:src="@drawable/jp_day_mon" />
+    </FrameLayout>
 
-        <TextView
-            android:id="@+id/tvDateScroll"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="@string/textMock"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_chevron_right"
-            app:layout_constraintBottom_toBottomOf="@+id/tvDateScroll"
-            app:layout_constraintStart_toEndOf="@+id/tvDateScroll"
-            app:layout_constraintTop_toTopOf="@+id/tvDateScroll"
-            android:contentDescription="@string/plusDay" />
+            android:layout_gravity="center"
+            android:id="@+id/ivDay2"
+            android:layout_width="@dimen/dayTodayImgSize"
+            android:layout_height="@dimen/dayTodayImgSize"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/minusDay"
+            android:padding="4dp"
+            android:background="#66EF7F3E"
+            android:src="@drawable/jp_day_mon" />
+    </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/ivDay3"
+            android:layout_width="@dimen/dayTodayImgSize"
+            android:layout_height="@dimen/dayTodayImgSize"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/minusDay"
+            android:padding="4dp"
+            android:src="@drawable/jp_day_mon" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/ivDay4"
+            android:layout_width="@dimen/dayTodayImgSize"
+            android:layout_height="@dimen/dayTodayImgSize"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/minusDay"
+            android:padding="4dp"
+            android:src="@drawable/jp_day_mon" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/ivDay5"
+            android:layout_width="@dimen/dayTodayImgSize"
+            android:layout_height="@dimen/dayTodayImgSize"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/minusDay"
+            android:padding="4dp"
+            android:src="@drawable/jp_day_mon" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/ivDay6"
+            android:layout_width="@dimen/dayTodayImgSize"
+            android:layout_height="@dimen/dayTodayImgSize"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/minusDay"
+            android:padding="4dp"
+            android:src="@drawable/jp_day_mon" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:id="@+id/ivDay7"
+            android:layout_width="@dimen/dayTodayImgSize"
+            android:layout_height="@dimen/dayTodayImgSize"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/minusDay"
+            android:padding="4dp"
+            android:src="@drawable/jp_day_mon" />
+    </FrameLayout>
+</LinearLayout>

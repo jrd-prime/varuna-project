@@ -27,11 +27,6 @@
                 android:layout_height="wrap_content"
                 tools:listitem="@layout/a_workout_card" />
 
-            <!--            <include-->
-            <!--                layout="@layout/a_workout_card"-->
-            <!--                app:workoutModel="@{workoutModel}" />-->
-
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </layout>

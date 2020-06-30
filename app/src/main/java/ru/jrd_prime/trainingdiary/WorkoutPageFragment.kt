@@ -2,6 +2,7 @@ package ru.jrd_prime.trainingdiary
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +47,8 @@ class WorkoutPageFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pageNumber = requireArguments().getInt(ARGUMENT_PAGE_NUMBER)
+
+        Log.d("\nHERE\n", "pageNum $pageNumber")
         val rnd = Random()
         backColor = Color.argb(40, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
     }

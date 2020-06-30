@@ -41,27 +41,7 @@ fun prepData(): Collection<WorkoutModel> {
 
     Log.d("TAG", "prepData: $myString")
     val list = mutableListOf<WorkoutModel>()
-//    list.add(
-//        WorkoutModel(
-//            32,
-//            Category.Cardio,
-//            mlistl,
-//            "2 гантели 8п, Бицепс 15п, Попа 10п",
-//            32 + 2 * 3,
-//            dat
-//        )
-//    )
-//    list.add(
-//        WorkoutModel(
-//            31,
-//            Category.Rest,
-//            mlistl,
-//            "2 гантели 8п, Бицепс 15п, Попа 10п",
-//            32 + 2 * 3,
-//            dat
-//        )
-//    )
-//    Log.d("TAG", "prepData:")
+
 
     val startDay = SimpleDateFormat("dd-MM-yyyy")
     val dateInString = "01-06-2020"
@@ -71,8 +51,6 @@ fun prepData(): Collection<WorkoutModel> {
     val endDayDate: Date = sdf.parse(dateInString2)
     val dates =
         getDatesBetweenUsingJava7(startDayDate, endDayDate)
-
-
 
 
     for (i in dates) {
