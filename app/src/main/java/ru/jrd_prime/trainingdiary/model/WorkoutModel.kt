@@ -5,7 +5,8 @@ import java.util.*
 data class WorkoutModel(
     val workoutID: Int,
     val workoutCategory: Category,
-    val muscleGroup: List<String>,
+//    val muscleGroup: List<String>,
+    val muscleGroup: String,
     val desc: String,
     val workoutTime: Int,
     val workoutDate: Date

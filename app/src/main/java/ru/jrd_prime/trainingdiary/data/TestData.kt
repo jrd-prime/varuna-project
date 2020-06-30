@@ -35,7 +35,13 @@ fun prepData(): Collection<WorkoutModel> {
     val datf = DateFormat.getDateInstance()
 
     val myString = DateFormat.getDateInstance(LONG).format(dat)
-
+    var zzz =
+        "LongList, "+
+    "Mock, "+
+    "Грудь, "+
+    "Бицепс, "+
+    "Нижний пресс, "+
+    "Плечи"
 
 
 
@@ -47,7 +53,7 @@ fun prepData(): Collection<WorkoutModel> {
     val dateInString = "01-06-2020"
     val startDayDate: Date = sdf.parse(dateInString)
     val endDay = SimpleDateFormat("dd-MM-yyyy")
-    val dateInString2 = "11-07-2020"
+    val dateInString2 = "25-07-2020"
     val endDayDate: Date = sdf.parse(dateInString2)
     val dates =
         getDatesBetweenUsingJava7(startDayDate, endDayDate)
@@ -58,8 +64,8 @@ fun prepData(): Collection<WorkoutModel> {
         list.add(
             WorkoutModel(
                 1,
-                Category.Power,
-                mlist,
+                Category.values()[Random().nextInt(Category.values().size)],
+                zzz,
                 "2 гантели 8п, Бицепс 15п, Попа 10п", 2 * 3,
                 i
             )

@@ -1,9 +1,7 @@
 package ru.jrd_prime.trainingdiary.ui
 
-import android.icu.util.LocaleData
 import android.os.Bundle
 import android.util.Log
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -14,22 +12,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.WorkoutPageFragment
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
-import ru.jrd_prime.trainingdiary.model.Category
-import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.makeStatusBarTransparent
-import ru.jrd_prime.trainingdiary.utils.setMarginTop
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
 
 
 const val TAG = "myLogs"
-const val PAGE_COUNT = 10
+const val PAGE_COUNT = 5000
+const val START_PAGE = 1500
 
 class DashboardActivity : AppCompatActivity() {
 
@@ -40,6 +32,7 @@ class DashboardActivity : AppCompatActivity() {
 
     var workoutPager: ViewPager? = null
     var workoutPagerAdapter: PagerAdapter? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +46,11 @@ class DashboardActivity : AppCompatActivity() {
 
         workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
         workoutPagerAdapter = WorkoutPageAdapter(supportFragmentManager)
+
         workoutPager!!.adapter = workoutPagerAdapter
+
+        workoutPager!!.setCurrentItem(START_PAGE, false)
+
         workoutPager!!.setOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageSelected(position: Int) {
                 Log.d(TAG, "onPageSelected, position = $position")
@@ -71,9 +68,10 @@ class DashboardActivity : AppCompatActivity() {
 
 
     private class WorkoutPageAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm!!) {
+
+
         override fun getItem(position: Int): Fragment {
-//            return WorkoutPageFragment.newInstance(position)
-            return WorkoutPageFragment.newInstance(4)
+            return WorkoutPageFragment.newInstance(position)
         }
 
         override fun getCount(): Int {

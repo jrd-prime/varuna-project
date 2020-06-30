@@ -14,20 +14,41 @@ class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
 
     fun bind(workoutCase: WorkoutModel?, position: Int) {
         val cat = workoutCase?.workoutCategory
-
+        Log.d("TAG", "bind: $position")
+        val ivCategory = binding.ivCategory
+        val cardLayout = binding.ivCategory
+        val ivWeekDay = binding.ivWeekDay
+        when (position) {
+            0 -> ivWeekDay.setText("Mon")
+            1 -> ivWeekDay.setText("Tue")
+            2 -> ivWeekDay.setText("Wed")
+            3 -> ivWeekDay.setText("Thu")
+            4 -> ivWeekDay.setText("Fri")
+            5 -> ivWeekDay.setText("Sat")
+            6 -> ivWeekDay.setText("Sun")
+        }
 //
 //        Log.d("dfpmsdfqlwpr1123", ((cat == Cardio).toString()))
 //        Log.d("dfpmsdfqlwpr1123", ((cat == Rest).toString()))
 
         if (cat == Cardio) {
-            binding.ivCategory.setImageResource(R.drawable.jp_heartbeat)
-            Log.d("TAG", "bind: SET CARDIO")
+            ivCategory.setImageResource(R.drawable.jp_heartbeat)
+            cardLayout.setBackgroundResource(R.drawable.card_bg_red)
+//            binding.cardLayout.radius = 10.toFloat()
         }
-        if (cat == Stretch) binding.ivCategory.setImageResource(R.drawable.ic_logout)
-        if (cat == Power) binding.ivCategory.setImageResource(R.drawable.jp_dumbbell)
-        if (cat == Rest) binding.ivCategory.setImageResource(R.drawable.jp_sleep)
+        if (cat == Stretch) {
+            ivCategory.setImageResource(R.drawable.jp_child)
+            cardLayout.setBackgroundResource(R.drawable.card_bg_pink)
+        }
+        if (cat == Power) {
+            ivCategory.setImageResource(R.drawable.jp_power)
+            cardLayout.setBackgroundResource(R.drawable.card_bg_blue)
+        }
+        if (cat == Rest) {
+            ivCategory.setImageResource(R.drawable.jp_sleep)
+            cardLayout.setBackgroundResource(R.drawable.card_bg_yellow)
+        }
 
-        binding.ivWeekDay.text = (position + 1).toString()
 
         val myHandler = MyHandler()
         binding.handler = myHandler

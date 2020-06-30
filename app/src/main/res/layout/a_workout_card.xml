@@ -86,15 +86,19 @@
                         android:id="@+id/weekDayContainer"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
+
                         android:layout_alignParentEnd="true">
 
                         <TextView
                             android:id="@+id/ivWeekDay"
-                            android:layout_width="@dimen/iconCardSize"
+                            android:gravity="center"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:layout_width="40dp"
                             android:layout_height="@dimen/iconCardSize"
-                            android:layout_gravity="center"
-                            android:contentDescription="TODO"
-                            android:src="@drawable/jp_day_mon" />
+                            android:textAllCaps="true"
+
+                            android:text="jrd"
+                            android:textSize="10sp" />
                     </FrameLayout>
                 </RelativeLayout>
 
@@ -102,7 +106,7 @@
                     android:id="@+id/frameForHide"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
 
                     <TextView
@@ -123,6 +127,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tvDescription">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

@@ -13,7 +13,7 @@ import ru.jrd_prime.trainingdiary.utils.dateCut
 class WorkoutListAdapter(val data: Collection<WorkoutModel>) :
     RecyclerView.Adapter<WorkoutListViewHolder>() {
     private val items: MutableList<WorkoutModel> = data as MutableList<WorkoutModel>
-    private val newItems: MutableList<WorkoutModel> = dateCut(data) as MutableList<WorkoutModel>
+//    private val newItems: MutableList<WorkoutModel> = dateCut(data) as MutableList<WorkoutModel>
 
 //    fun setData() {
 //        items.clear()
@@ -33,10 +33,10 @@ class WorkoutListAdapter(val data: Collection<WorkoutModel>) :
     }
 
     override fun onBindViewHolder(holder: WorkoutListViewHolder, position: Int) {
-        holder.bind(newItems.get(position), position)
+        holder.bind(items.get(position), position)
     }
 
     override fun getItemCount(): Int {
-        return newItems.size
+        return items.size
     }
 }

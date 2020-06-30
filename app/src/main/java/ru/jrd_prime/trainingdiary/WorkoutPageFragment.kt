@@ -12,9 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.a_workout_list_pager.view.*
 import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
-import ru.jrd_prime.trainingdiary.data.prepData
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutListPagerBinding
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
+import ru.jrd_prime.trainingdiary.utils.calcDateFromPosition
+import ru.jrd_prime.trainingdiary.utils.dateCut
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -23,6 +25,7 @@ const val ARGUMENT_PAGE_NUMBER = "arg_page_number"
 class WorkoutPageFragment : Fragment() {
     private var pageNumber = 0
     private var backColor = 0
+
 
     /*
     Метод newInstance создает новый экземпляр фрагмента и записывает ему в атрибуты число,
@@ -33,6 +36,7 @@ class WorkoutPageFragment : Fragment() {
         fun newInstance(page: Int): WorkoutPageFragment {
             val pageFragment = WorkoutPageFragment()
             val arguments = Bundle()
+
             arguments.putInt(ARGUMENT_PAGE_NUMBER, page)
             pageFragment.arguments = arguments
             return pageFragment
@@ -68,14 +72,14 @@ class WorkoutPageFragment : Fragment() {
             container,
             false
         )
-        // создаем адаптер
-
 
         val rootView = pagerBinding.root
 
-        val data: Collection<WorkoutModel> = prepData()
+        val data: Collection<WorkoutModel> = dateCut(calcDateFromPosition(pageNumber))
         val adapter = WorkoutListAdapter(data)
+
         rootView.recView.layoutManager = LinearLayoutManager(context)
+
 
         rootView.recView.adapter = adapter
 
