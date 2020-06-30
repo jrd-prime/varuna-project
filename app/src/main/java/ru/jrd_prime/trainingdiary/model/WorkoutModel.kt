@@ -1,15 +1,15 @@
 package ru.jrd_prime.trainingdiary.model
 
+import java.util.*
+
 data class WorkoutModel(
     val workoutID: Int,
     val workoutCategory: Category,
     val muscleGroup: List<String>,
     val desc: String,
     val workoutTime: Int,
-    val workoutDate: String
-) {
-    fun gogo() {}
-}
+    val workoutDate: Date
+)
 
 enum class Category {
     Cardio,

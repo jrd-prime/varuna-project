@@ -38,6 +38,7 @@
                     android:id="@+id/viewPagerMainDashboard"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="198dp"
                     android:layout_marginBottom="?actionBarSize"
 
                     app:layout_constraintTop_toBottomOf="@+id/frameShowDay" />

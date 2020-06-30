@@ -7,24 +7,28 @@ import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutCardBinding
 import ru.jrd_prime.trainingdiary.model.Category.*
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
-import java.util.*
 
 
 class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(workoutCase: WorkoutModel?) {
-        val cardio = Cardio
-        val power = Power
-        val rest = Rest
+    fun bind(workoutCase: WorkoutModel?, position: Int) {
         val cat = workoutCase?.workoutCategory
-        when (cat) {
-            Cardio -> binding.ivCategory.setImageResource(R.drawable.jp_heartbeat)
-            Stretch -> binding.ivCategory.setImageResource(R.drawable.jp_sleep)
-            Power -> binding.ivCategory.setImageResource(R.drawable.jp_dumbbell)
-            Rest -> binding.ivCategory.setImageResource(R.drawable.jp_sleep)
-            null -> binding.ivCategory.setImageResource(R.drawable.ic_logout)
+
+//
+//        Log.d("dfpmsdfqlwpr1123", ((cat == Cardio).toString()))
+//        Log.d("dfpmsdfqlwpr1123", ((cat == Rest).toString()))
+
+        if (cat == Cardio) {
+            binding.ivCategory.setImageResource(R.drawable.jp_heartbeat)
+            Log.d("TAG", "bind: SET CARDIO")
         }
+        if (cat == Stretch) binding.ivCategory.setImageResource(R.drawable.ic_logout)
+        if (cat == Power) binding.ivCategory.setImageResource(R.drawable.jp_dumbbell)
+        if (cat == Rest) binding.ivCategory.setImageResource(R.drawable.jp_sleep)
+
+        binding.ivWeekDay.text = (position + 1).toString()
+
         val myHandler = MyHandler()
         binding.handler = myHandler
 
@@ -34,8 +38,7 @@ class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
 //        val dayOfWeek: Int = c.get(Calendar.DAY_OF_WEEK)
 
 
-
-        Log.d("TAG", "bind: ${cat.toString()}")
+//        Log.d("TAG", "bind: ${cat.toString()}")
 
         binding.workoutModel = workoutCase
         binding.executePendingBindings()

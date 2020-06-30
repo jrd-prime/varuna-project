@@ -1,5 +1,6 @@
 package ru.jrd_prime.trainingdiary
 
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -7,6 +8,14 @@ import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 
 class MyHandler {
+
+
+    fun setImg(view: View?, category: String?) {
+
+//        Log.d("afaddasd", "setImg: $category")
+
+
+    }
     fun onGo(view: View?) {
         if (view == null) return
         val contView = view.findViewById<ConstraintLayout>(R.id.frameForHide)

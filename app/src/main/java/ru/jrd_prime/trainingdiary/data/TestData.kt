@@ -3,6 +3,9 @@ package ru.jrd_prime.trainingdiary.data
 import android.util.Log
 import ru.jrd_prime.trainingdiary.model.Category
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
+import ru.jrd_prime.trainingdiary.utils.getDatesBetweenUsingJava7
+import java.text.DateFormat
+import java.text.DateFormat.LONG
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,37 +28,62 @@ fun prepData(): Collection<WorkoutModel> {
     val sdf = SimpleDateFormat("dd-MM-yyyy")
     val currentDate: String = sdf.format(Date())
 
+    var cal = Calendar.getInstance()
+    var dat: Date = cal.time
+
+
+    val datf = DateFormat.getDateInstance()
+
+    val myString = DateFormat.getDateInstance(LONG).format(dat)
+
+
+
+
+    Log.d("TAG", "prepData: $myString")
     val list = mutableListOf<WorkoutModel>()
-    list.add(
-        WorkoutModel(
-            32,
-            Category.Cardio,
-            mlistl,
-            "2 гантели 8п, Бицепс 15п, Попа 10п",
-            32 + 2 * 3,
-            currentDate
-        )
-    )
-    list.add(
-        WorkoutModel(
-            31,
-            Category.Rest,
-            mlistl,
-            "2 гантели 8п, Бицепс 15п, Попа 10п",
-            32 + 2 * 3,
-            currentDate
-        )
-    )
-    Log.d("TAG", "prepData:")
-    for (i in 1..7) {
+//    list.add(
+//        WorkoutModel(
+//            32,
+//            Category.Cardio,
+//            mlistl,
+//            "2 гантели 8п, Бицепс 15п, Попа 10п",
+//            32 + 2 * 3,
+//            dat
+//        )
+//    )
+//    list.add(
+//        WorkoutModel(
+//            31,
+//            Category.Rest,
+//            mlistl,
+//            "2 гантели 8п, Бицепс 15п, Попа 10п",
+//            32 + 2 * 3,
+//            dat
+//        )
+//    )
+//    Log.d("TAG", "prepData:")
+
+    val startDay = SimpleDateFormat("dd-MM-yyyy")
+    val dateInString = "01-06-2020"
+    val startDayDate: Date = sdf.parse(dateInString)
+    val endDay = SimpleDateFormat("dd-MM-yyyy")
+    val dateInString2 = "11-07-2020"
+    val endDayDate: Date = sdf.parse(dateInString2)
+    val dates =
+        getDatesBetweenUsingJava7(startDayDate, endDayDate)
+
+
+
+
+    for (i in dates) {
+
         list.add(
             WorkoutModel(
-                i,
+                1,
                 Category.Power,
                 mlist,
-                "2 гантели 8п, Бицепс 15п, Попа 10п",
-                i + 2 * 3,
-                currentDate
+                "2 гантели 8п, Бицепс 15п, Попа 10п", 2 * 3,
+                i
             )
         )
     }

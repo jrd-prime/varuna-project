@@ -15,15 +15,16 @@
             name="handler"
             type="ru.jrd_prime.trainingdiary.MyHandler" />
     </data>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardLayout"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="8dp"
-        android:elevation="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:animateLayoutChanges="true"
-        android:onClick="@{(view) -> handler.onGo(view)}">
+        android:elevation="4dp"
+        android:onClick="@{(view) -> handler.onGo(view)}"
+        app:cardCornerRadius="8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -34,9 +35,9 @@
                 android:id="@+id/llMainContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
                 android:orientation="vertical"
                 android:padding="4dp"
-                android:animateLayoutChanges="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -60,6 +61,7 @@
                             android:layout_height="@dimen/iconCardSize"
                             android:layout_gravity="center"
                             android:contentDescription="TODO"
+
                             android:src="@drawable/jp_heartbeat" />
                     </FrameLayout>
 
@@ -86,7 +88,7 @@
                         android:layout_height="40dp"
                         android:layout_alignParentEnd="true">
 
-                        <ImageView
+                        <TextView
                             android:id="@+id/ivWeekDay"
                             android:layout_width="@dimen/iconCardSize"
                             android:layout_height="@dimen/iconCardSize"
@@ -98,9 +100,9 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/frameForHide"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:visibility="visible">
 
 
                     <TextView
@@ -121,6 +123,12 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tvDescription">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:paddingEnd="8dp"
+                            android:text='@{workoutModel.workoutDate.toString()}' />
 
                         <TextView
                             android:layout_width="wrap_content"
