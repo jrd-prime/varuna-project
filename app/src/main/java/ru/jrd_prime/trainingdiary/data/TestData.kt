@@ -14,22 +14,51 @@ fun prepData(): Collection<WorkoutModel> {
         "Плечи"
     )
 
+    val mlistl = listOf<String>(
+        "LongList",
+        "Mock",
+        "Грудь",
+        "Бицепс",
+        "Нижний пресс",
+        "Плечи"
+    )
     val sdf = SimpleDateFormat("dd-MM-yyyy")
     val currentDate: String = sdf.format(Date())
 
     val list = mutableListOf<WorkoutModel>()
-
+    list.add(
+        WorkoutModel(
+            32,
+            Category.Cardio,
+            mlistl,
+            "2 гантели 8п, Бицепс 15п, Попа 10п",
+            32 + 2 * 3,
+            currentDate
+        )
+    )
+    list.add(
+        WorkoutModel(
+            31,
+            Category.Rest,
+            mlistl,
+            "2 гантели 8п, Бицепс 15п, Попа 10п",
+            32 + 2 * 3,
+            currentDate
+        )
+    )
     Log.d("TAG", "prepData:")
     for (i in 1..7) {
-        list.add(WorkoutModel(
+        list.add(
+            WorkoutModel(
                 i,
                 Category.Power,
                 mlist,
-                "2 гантели, 8п\nБицепс, 15п\nПопа, 10п",
+                "2 гантели 8п, Бицепс 15п, Попа 10п",
                 i + 2 * 3,
                 currentDate
             )
         )
     }
+
     return list
 }

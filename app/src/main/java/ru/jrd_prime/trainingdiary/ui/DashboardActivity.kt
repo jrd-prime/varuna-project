@@ -88,17 +88,17 @@ class DashboardActivity : AppCompatActivity() {
     private fun setWindow() {
         makeStatusBarTransparent()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.coordinatorAppContainer)) { _, insets ->
-            findViewById<FloatingActionButton>(R.id.vFloatActionBar).setMarginTop(insets.systemWindowInsetTop)
+//            findViewById<FloatingActionButton>(R.id.vFloatActionBar).setMarginTop(insets.systemWindowInsetTop)
             insets.consumeSystemWindowInsets()
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(
             findViewById(R.id.coordinatorAppContainer)
         ) { _, insets ->
-            val menu = findViewById<FloatingActionButton>(R.id.vFloatActionBar)
-            val menuLayoutParams = menu.layoutParams as ViewGroup.MarginLayoutParams
-            menuLayoutParams.setMargins(0, insets.systemWindowInsetTop, 0, 0)
-            menu.layoutParams = menuLayoutParams
+//            val menu = findViewById<FloatingActionButton>(R.id.vFloatActionBar)
+//            val menuLayoutParams = menu.layoutParams as ViewGroup.MarginLayoutParams
+//            menuLayoutParams.setMargins(0, insets.systemWindowInsetTop, 0, 0)
+//            menu.layoutParams = menuLayoutParams
             insets.consumeSystemWindowInsets()
         }
 

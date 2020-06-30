@@ -24,7 +24,7 @@
             android:id="@+id/linearMainContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/appMainBackground"
+            android:background="@color/colorLightGrey"
             android:orientation="vertical">
 
 
@@ -37,7 +37,9 @@
                 <androidx.viewpager.widget.ViewPager
                     android:id="@+id/viewPagerMainDashboard"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="?actionBarSize"
+
                     app:layout_constraintTop_toBottomOf="@+id/frameShowDay" />
 
                 <FrameLayout
@@ -79,23 +81,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:backgroundTint="@color/colorPrimaryLight"
+            android:backgroundTint="@color/colorWhite"
             app:fabAlignmentMode="center"
             app:fabCradleMargin="@dimen/fabMargin"
             app:fabCradleRoundedCornerRadius="@dimen/fabCornerRadius"
-            app:hideOnScroll="true"
+            app:hideOnScroll="false"
             app:layout_scrollFlags="scroll|enterAlways"
             app:navigationIcon="@drawable/ic_nav_menu" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/vFloatActionBar"
-            style="@style/Widget.MaterialComponents.FloatingActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:backgroundTint="@color/colorPrimary"
-            android:src="@android:drawable/ic_menu_add"
-            app:borderWidth="@dimen/fabBorderWidth"
-            app:layout_anchor="@id/vBottomAppBar" />
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/vFloatActionBar"-->
+<!--            style="@style/Widget.MaterialComponents.FloatingActionButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@android:color/white"-->
+<!--            android:backgroundTint="@color/colorPrimaryDark"-->
+<!--            android:src="@android:drawable/ic_menu_add"-->
+<!--            app:borderWidth="@dimen/fabBorderWidth"-->
+<!--            app:layout_anchor="@id/vBottomAppBar" />-->
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

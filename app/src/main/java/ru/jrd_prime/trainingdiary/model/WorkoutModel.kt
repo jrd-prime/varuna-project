@@ -7,7 +7,9 @@ data class WorkoutModel(
     val desc: String,
     val workoutTime: Int,
     val workoutDate: String
-)
+) {
+    fun gogo() {}
+}
 
 enum class Category {
     Cardio,

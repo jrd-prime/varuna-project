@@ -10,4 +10,5 @@
     <dimen name="headerHeight">150dp</dimen>
     <dimen name="showDayElevation">4dp</dimen>
     <dimen name="fabBorderWidth">0dp</dimen>
+    <dimen name="iconCardSize">24dp</dimen>
 </resources>
