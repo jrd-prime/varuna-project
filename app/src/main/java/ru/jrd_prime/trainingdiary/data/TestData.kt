@@ -36,12 +36,12 @@ fun prepData(): Collection<WorkoutModel> {
 
     val myString = DateFormat.getDateInstance(LONG).format(dat)
     var zzz =
-        "LongList, "+
-    "Mock, "+
-    "Грудь, "+
-    "Бицепс, "+
-    "Нижний пресс, "+
-    "Плечи"
+        "LongList, " +
+                "Mock, " +
+                "Грудь, " +
+                "Бицепс, " +
+                "Нижний пресс, " +
+                "Плечи"
 
 
 
@@ -58,18 +58,20 @@ fun prepData(): Collection<WorkoutModel> {
     val dates =
         getDatesBetweenUsingJava7(startDayDate, endDayDate)
 
-
+    var id = 1
     for (i in dates) {
 
         list.add(
             WorkoutModel(
-                1,
+                id,
                 Category.values()[Random().nextInt(Category.values().size)],
                 zzz,
                 "2 гантели 8п, Бицепс 15п, Попа 10п", 2 * 3,
                 i
             )
         )
+
+        id++
     }
 
     return list

@@ -1,4 +1,4 @@
-package ru.jrd_prime.trainingdiary
+package ru.jrd_prime.trainingdiary.ui
 
 import android.graphics.Color
 import android.os.Bundle
@@ -11,12 +11,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.a_workout_list_pager.view.*
+import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutListPagerBinding
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.calcDateFromPosition
 import ru.jrd_prime.trainingdiary.utils.dateCut
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -34,7 +34,8 @@ class WorkoutPageFragment : Fragment() {
     */
     companion object {
         fun newInstance(page: Int): WorkoutPageFragment {
-            val pageFragment = WorkoutPageFragment()
+            val pageFragment =
+                WorkoutPageFragment()
             val arguments = Bundle()
 
             arguments.putInt(ARGUMENT_PAGE_NUMBER, page)

@@ -66,6 +66,12 @@ fun getDatesBetweenUsingJava7(
     return datesInRange
 }
 
+
+fun getMonthDayFromDate(date: Date): String {
+    return SimpleDateFormat("dd").format(date)
+}
+
+
 fun dateCut(startDate: Date): Collection<WorkoutModel> {
 
     val data = prepData()

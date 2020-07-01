@@ -13,10 +13,8 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import ru.jrd_prime.trainingdiary.R
-import ru.jrd_prime.trainingdiary.WorkoutPageFragment
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.utils.makeStatusBarTransparent
-import java.util.*
 
 
 const val TAG = "myLogs"

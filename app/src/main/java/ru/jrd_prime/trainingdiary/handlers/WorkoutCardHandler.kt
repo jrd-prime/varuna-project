@@ -1,19 +1,28 @@
-package ru.jrd_prime.trainingdiary
+package ru.jrd_prime.trainingdiary.handlers
 
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
+import com.google.android.material.snackbar.Snackbar
+import ru.jrd_prime.trainingdiary.R
 
-class MyHandler {
+class WorkoutCardHandler {
+    fun workoutDelete(view: View, workoutID: Int) {
+        Toast.makeText(view.context, "Del $workoutID", Toast.LENGTH_SHORT).show()
+        Snackbar.make(view, "asdasd", Snackbar.LENGTH_LONG)
+            .setAction("Cancel", View.OnClickListener { v ->
+                Toast.makeText(view.context, "Cancelled $workoutID", Toast.LENGTH_SHORT).show()
+            }).show()
+    }
 
+    fun workoutEdit(view: View, workoutID: Int) {
+        Toast.makeText(view.context, "Edit $workoutID", Toast.LENGTH_SHORT).show()
+    }
 
-    fun setImg(view: View?, category: String?) {
-
-//        Log.d("afaddasd", "setImg: $category")
-
-
+    fun workoutAdd(view: View, workoutID: Int) {
+        Toast.makeText(view.context, "Add $workoutID", Toast.LENGTH_SHORT).show()
     }
 
     fun onGo(view: View?) {
@@ -40,13 +49,11 @@ class MyHandler {
     }
 
     private fun setGone(contView: LinearLayout) {
-//        Toast.makeText(contView.context, "HIDE", Toast.LENGTH_SHORT).show()
         TransitionManager.beginDelayedTransition(contView, AutoTransition())
         contView.visibility = View.GONE
     }
 
     private fun setVisible(contView: LinearLayout) {
-//        Toast.makeText(contView.context, "SHOW", Toast.LENGTH_SHORT).show()
         TransitionManager.beginDelayedTransition(contView, AutoTransition())
         contView.visibility = View.VISIBLE
     }
