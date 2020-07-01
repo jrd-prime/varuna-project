@@ -1,0 +1,15 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="#333333"
+    android:alpha="0.6">
+  <group android:scaleX="0.046875"
+      android:scaleY="0.046875"
+      android:translateX="1.5">
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M296,432h16a8,8 0,0 0,8 -8L320,152a8,8 0,0 0,-8 -8h-16a8,8 0,0 0,-8 8v272a8,8 0,0 0,8 8zM136,432h16a8,8 0,0 0,8 -8L160,152a8,8 0,0 0,-8 -8h-16a8,8 0,0 0,-8 8v272a8,8 0,0 0,8 8zM440,64L336,64l-33.6,-44.8A48,48 0,0 0,264 0h-80a48,48 0,0 0,-38.4 19.2L112,64L8,64a8,8 0,0 0,-8 8v16a8,8 0,0 0,8 8h24v368a48,48 0,0 0,48 48h288a48,48 0,0 0,48 -48L416,96h24a8,8 0,0 0,8 -8L448,72a8,8 0,0 0,-8 -8zM171.2,38.4A16.1,16.1 0,0 1,184 32h80a16.1,16.1 0,0 1,12.8 6.4L296,64L152,64zM384,464a16,16 0,0 1,-16 16L80,480a16,16 0,0 1,-16 -16L64,96h320zM216,432h16a8,8 0,0 0,8 -8L240,152a8,8 0,0 0,-8 -8h-16a8,8 0,0 0,-8 8v272a8,8 0,0 0,8 8z"/>
+  </group>
+</vector>

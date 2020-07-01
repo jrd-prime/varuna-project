@@ -17,137 +17,319 @@
     </data>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardLayout"
+        android:id="@+id/wCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:animateLayoutChanges="true"
-        android:elevation="4dp"
         android:onClick="@{(view) -> handler.onGo(view)}"
-        app:cardCornerRadius="8dp">
+        android:padding="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginBottom="0dp"
+        app:cardCornerRadius="4dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:animateLayoutChanges="true">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/llMainContainer"
+            <RelativeLayout
+                android:id="@+id/cardLineFirst"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:animateLayoutChanges="true"
-                android:orientation="vertical"
-                android:padding="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-                <!--LAY FIRST LINE-->
+                android:layout_height="50dp">
+
                 <RelativeLayout
-                    android:id="@+id/rlFirstLine"
+                    android:id="@+id/categoryIconContainer"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true">
+
+                    <ImageView
+                        android:id="@+id/ivCategory"
+                        android:layout_width="@dimen/iconCardSize"
+                        android:layout_height="@dimen/iconCardSize"
+                        android:layout_centerInParent="true"
+                        android:contentDescription="@string/descIVCategory"
+                        android:src="@drawable/jp_heartbeat" />
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/leftCut"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@+id/categoryIconContainer"
+                    android:background="@color/colorLightGrey"
+                    android:orientation="vertical" />
+
+                <HorizontalScrollView
+                    android:id="@+id/horScroll"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_toStartOf="@+id/rightCut"
+                    android:layout_toEndOf="@+id/leftCut"
 
-                    <FrameLayout
-                        android:id="@+id/categoryIconContainer"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentStart="true">
+                    android:scrollbars="none">
 
-                        <ImageView
-                            android:id="@+id/ivCategory"
-                            android:layout_width="@dimen/iconCardSize"
-                            android:layout_height="@dimen/iconCardSize"
-                            android:layout_gravity="center"
-                            android:contentDescription="TODO"
+                    <TextView
+                        android:id="@+id/tvMuscleGroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:paddingStart="8dp"
+                        android:text="@{workoutModel.muscleGroup.toString()}" />
 
-                            android:src="@drawable/jp_heartbeat" />
-                    </FrameLayout>
+                </HorizontalScrollView>
 
-                    <HorizontalScrollView
+                <LinearLayout
+                    android:id="@+id/rightCut"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_toStartOf="@+id/weekDayContainer"
+                    android:background="@color/colorLightGrey"
+                    android:orientation="vertical" />
+
+                <RelativeLayout
+                    android:id="@+id/weekDayContainer"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_toStartOf="@id/weekDayContainer"
-                        android:layout_toEndOf="@id/categoryIconContainer"
-                        android:scrollbars="none">
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:orientation="vertical"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp">
+
 
                         <TextView
-                            android:id="@+id/tvMuscleGroup"
-                            android:layout_width="wrap_content"
-                            android:layout_height="40dp"
-                            android:gravity="center_vertical"
-                            android:paddingStart="8dp"
-                            android:text="@{workoutModel.muscleGroup.toString()}" />
+                            android:id="@+id/ivMonthDay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="16"
+                            android:textAlignment="center"
 
-                    </HorizontalScrollView>
-
-                    <FrameLayout
-                        android:id="@+id/weekDayContainer"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-
-                        android:layout_alignParentEnd="true">
+                            android:textAllCaps="true"
+                            android:textSize="14sp"
+                            tools:ignore="SmallSp" />
 
                         <TextView
                             android:id="@+id/ivWeekDay"
-                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:fontFamily="@font/montserrat_semibold"
-                            android:layout_width="40dp"
-                            android:layout_height="@dimen/iconCardSize"
-                            android:textAllCaps="true"
-
                             android:text="jrd"
-                            android:textSize="10sp" />
+                            android:textAlignment="center"
+
+                            android:textAllCaps="true"
+                            android:textSize="10sp"
+                            tools:ignore="SmallSp" />
+
+
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:id="@+id/dot"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_margin="4dp"
+
+                        android:background="@drawable/shapez"
+                        android:elevation="2dp"
+                        android:padding="0dp">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/grad1" />
                     </FrameLayout>
                 </RelativeLayout>
+            </RelativeLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/frameForHide"
+            <LinearLayout
+                android:id="@+id/frameForHide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone">
+                    android:layout_height="1dp"
+                    android:background="@color/colorLightGrey">
 
+                </LinearLayout>
+                <RelativeLayout
+                    android:id="@+id/cardLineSecond"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
 
                     <TextView
-                        android:id="@+id/tvDescription"
+                        android:paddingStart="16dp"
+                        android:paddingEnd="16dp"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="8dp"
-                        android:text="@{workoutModel.desc.toString()}"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:text="@string/long_text" />
+                </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/cardLineThird"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                    <RelativeLayout
-                        android:id="@+id/relativeLayout2"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvDescription">
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentBottom="true">
+
+                        <FrameLayout
+                            android:id="@+id/l3topcut"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#70F2F3F5"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/textView2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:paddingEnd="8dp"
-                            android:text='@{workoutModel.workoutDate.toString()}' />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:paddingEnd="8dp"
-                            android:text='@{Integer.toString(workoutModel.workoutTime) + "min"}' />
+                            android:paddingEnd="16dp"
+                            android:text="Time"
+                            android:textColor="@color/colorDrawerIcons"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/l3topcut" />
 
-                    </RelativeLayout>
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        <FrameLayout
+                            android:id="@+id/l3botcut"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/colorLightGrey"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/cardLineForth"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/btnContainerHeight"
+                        android:layout_weight="1">
+
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/jp_trash"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <FrameLayout
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorLightGrey">
+
+                    </FrameLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/btnContainerHeight"
+                        android:layout_weight="1">
+
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/jp_edit"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </LinearLayout>
             </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+
+    <!--                &lt;!&ndash;LAY SECOND LINE&ndash;&gt;-->
+    <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--                    android:id="@+id/frameForHide"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:visibility="visible">-->
+
+    <!--                    <FrameLayout-->
+    <!--                        android:id="@+id/frameLayout2"-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="1dp"-->
+    <!--                        android:background="@android:color/black"-->
+    <!--                        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--                        app:layout_constraintStart_toStartOf="parent"-->
+    <!--                        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--                    <TextView-->
+    <!--                        android:id="@+id/tvDescription"-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        android:padding="8dp"-->
+    <!--                        android:text="@{workoutModel.desc.toString()}"-->
+    <!--                        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--                        app:layout_constraintStart_toStartOf="parent"-->
+    <!--                        app:layout_constraintTop_toBottomOf="@+id/frameLayout2" />-->
+
+    <!--                    <RelativeLayout-->
+    <!--                        android:id="@+id/relativeLayout2"-->
+    <!--                        android:layout_width="match_parent"-->
+    <!--                        android:layout_height="wrap_content"-->
+    <!--                        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--                        app:layout_constraintStart_toStartOf="parent"-->
+    <!--                        app:layout_constraintTop_toBottomOf="@+id/tvDescription">-->
+
+    <!--                        <TextView-->
+    <!--                            android:layout_width="wrap_content"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:layout_alignParentStart="true"-->
+    <!--                            android:paddingEnd="8dp"-->
+    <!--                            android:text='@{workoutModel.workoutDate.toString()}' />-->
+
+    <!--                        <TextView-->
+    <!--                            android:layout_width="wrap_content"-->
+    <!--                            android:layout_height="wrap_content"-->
+    <!--                            android:layout_alignParentEnd="true"-->
+    <!--                            android:paddingEnd="8dp"-->
+    <!--                            android:text='@{Integer.toString(workoutModel.workoutTime) + "min"}' />-->
+
+    <!--                    </RelativeLayout>-->
+    <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <!--            </LinearLayout>-->
+
+    <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <!--    </androidx.cardview.widget.CardView>-->
 
 </layout>

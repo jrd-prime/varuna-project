@@ -7,6 +7,8 @@ import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutCardBinding
 import ru.jrd_prime.trainingdiary.model.Category.*
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
@@ -16,17 +18,41 @@ class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
         val cat = workoutCase?.workoutCategory
         Log.d("TAG", "bind: $position")
         val ivCategory = binding.ivCategory
-        val cardLayout = binding.ivCategory
+//        val cardLayout = binding.leftCut
+        val cardLayout = binding.dot
         val ivWeekDay = binding.ivWeekDay
-        when (position) {
-            0 -> ivWeekDay.setText("Mon")
-            1 -> ivWeekDay.setText("Tue")
-            2 -> ivWeekDay.setText("Wed")
-            3 -> ivWeekDay.setText("Thu")
-            4 -> ivWeekDay.setText("Fri")
-            5 -> ivWeekDay.setText("Sat")
-            6 -> ivWeekDay.setText("Sun")
-        }
+
+        val workoutCard = binding.wCard
+
+
+        /* CARD*/
+
+        workoutCard.elevation = 4f
+//        workoutCard.radius = 4f
+
+        val daysOfWeek = listOf<String>("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+
+        ivWeekDay.text = daysOfWeek[position]
+
+//        when (position) {
+//            0 -> ivWeekDay.text = daysOfWeek[0]
+//            1 -> ivWeekDay.text = "Tue"
+//            2 -> ivWeekDay.text = "Wed"
+//            3 -> ivWeekDay.text = "Thu"
+//            4 -> ivWeekDay.text = "Fri"
+//            5 -> ivWeekDay.text = "Sat"
+//            6 -> ivWeekDay.text = "Sun"
+//        }
+
+
+        val da: Date = workoutCase?.workoutDate as Date
+
+        val form = SimpleDateFormat("dd")
+        val str = form.format(da)
+
+        binding.ivMonthDay.text = str
+
+
 //
 //        Log.d("dfpmsdfqlwpr1123", ((cat == Cardio).toString()))
 //        Log.d("dfpmsdfqlwpr1123", ((cat == Rest).toString()))
@@ -41,7 +67,7 @@ class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
             cardLayout.setBackgroundResource(R.drawable.card_bg_pink)
         }
         if (cat == Power) {
-            ivCategory.setImageResource(R.drawable.jp_power)
+            ivCategory.setImageResource(R.drawable.jp_dumbbell)
             cardLayout.setBackgroundResource(R.drawable.card_bg_blue)
         }
         if (cat == Rest) {

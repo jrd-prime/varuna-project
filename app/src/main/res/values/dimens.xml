@@ -12,4 +12,5 @@
     <dimen name="fabBorderWidth">0dp</dimen>
     <dimen name="iconCardSize">24dp</dimen>
     <dimen name="dayTodayImgSize">32dp</dimen>
+    <dimen name="btnContainerHeight">40dp</dimen>
 </resources>

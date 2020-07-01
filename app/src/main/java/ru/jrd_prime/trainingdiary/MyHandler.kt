@@ -1,9 +1,8 @@
 package ru.jrd_prime.trainingdiary
 
-import android.util.Log
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 
@@ -16,9 +15,10 @@ class MyHandler {
 
 
     }
+
     fun onGo(view: View?) {
         if (view == null) return
-        val contView = view.findViewById<ConstraintLayout>(R.id.frameForHide)
+        val contView = view.findViewById<LinearLayout>(R.id.frameForHide)
 
         when (contView.visibility) {
             View.GONE -> setVisible(contView)
@@ -39,14 +39,14 @@ class MyHandler {
 
     }
 
-    private fun setGone(contView: ConstraintLayout) {
-        Toast.makeText(contView.context, "HIDE", Toast.LENGTH_SHORT).show()
+    private fun setGone(contView: LinearLayout) {
+//        Toast.makeText(contView.context, "HIDE", Toast.LENGTH_SHORT).show()
         TransitionManager.beginDelayedTransition(contView, AutoTransition())
         contView.visibility = View.GONE
     }
 
-    private fun setVisible(contView: ConstraintLayout) {
-        Toast.makeText(contView.context, "SHOW", Toast.LENGTH_SHORT).show()
+    private fun setVisible(contView: LinearLayout) {
+//        Toast.makeText(contView.context, "SHOW", Toast.LENGTH_SHORT).show()
         TransitionManager.beginDelayedTransition(contView, AutoTransition())
         contView.visibility = View.VISIBLE
     }
