@@ -2,11 +2,49 @@ package ru.jrd_prime.trainingdiary.utils
 
 import android.util.Log
 import ru.jrd_prime.trainingdiary.data.prepData
+import ru.jrd_prime.trainingdiary.data.prepData2
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.ui.START_PAGE
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+
+
+fun dateCut2(startDate: Date): Collection<WorkoutModel> {
+
+    val data = prepData2()
+
+    val newItems = mutableListOf<WorkoutModel>()
+//    val rr = SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+
+    val cal2: Calendar = Calendar.getInstance()
+    cal2.time = startDate
+    cal2.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+    cal2.add(Calendar.DAY_OF_WEEK, -1)
+    val start: Date = cal2.time;
+
+
+    val add1week = cal2.add(Calendar.DAY_OF_WEEK, 7)
+    val end = cal2.time
+
+
+    Log.d("asd2123`23123", "prepData: ${start.toString()}")
+    Log.d("asd2123`23123", "prepData: ${end.toString()}")
+
+//    for (item in data) {
+//
+//        if (item.workoutDate in start..end) {
+//            newItems.add(item)
+////            Log.d("123123123123", "onCreateViewHolder: ${item.workoutDate}")
+//        }
+//    }
+    return newItems
+}
+
+
+
+
+
 
 // ВОЗВРАЩАЕМ ДАТУ ПОНЕДЕЛЬНИКА В ВЫБРАННОЙ НЕДЕЛЕ
 fun calcDateFromPosition(pageNumber: Int): Date {
@@ -93,13 +131,13 @@ fun dateCut(startDate: Date): Collection<WorkoutModel> {
     Log.d("asd2123`23123", "prepData: ${start.toString()}")
     Log.d("asd2123`23123", "prepData: ${end.toString()}")
 
-    for (item in data) {
-
-        if (item.workoutDate in start..end) {
-            newItems.add(item)
-//            Log.d("123123123123", "onCreateViewHolder: ${item.workoutDate}")
-        }
-    }
+//    for (item in data) {
+//
+//        if (item.workoutDate in start..end) {
+//            newItems.add(item)
+////            Log.d("123123123123", "onCreateViewHolder: ${item.workoutDate}")
+//        }
+//    }
     return newItems
 }
 

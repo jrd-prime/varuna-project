@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutCardBinding
 import ru.jrd_prime.trainingdiary.handlers.WorkoutCardHandler
-import ru.jrd_prime.trainingdiary.model.Category.*
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.getMonthDayFromDate
 import java.util.*
@@ -40,22 +39,22 @@ class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
             ivMonthDay.text = getMonthDayFromDate(workoutCase.workoutDate as Date)
 
 
-            if (cat == Cardio) {
-                ivCategory.setImageResource(R.drawable.jp_heartbeat)
-                cardLayout.setBackgroundResource(R.drawable.card_bg_red)
-            }
-            if (cat == Stretch) {
-                ivCategory.setImageResource(R.drawable.jp_child)
-                cardLayout.setBackgroundResource(R.drawable.card_bg_pink)
-            }
-            if (cat == Power) {
-                ivCategory.setImageResource(R.drawable.jp_dumbbell)
-                cardLayout.setBackgroundResource(R.drawable.card_bg_blue)
-            }
-            if (cat == Rest) {
-                ivCategory.setImageResource(R.drawable.jp_sleep)
-                cardLayout.setBackgroundResource(R.drawable.card_bg_yellow)
-            }
+//            if (cat == Cardio) {
+//                ivCategory.setImageResource(R.drawable.jp_heartbeat)
+//                cardLayout.setBackgroundResource(R.drawable.card_bg_red)
+//            }
+//            if (cat == Stretch) {
+//                ivCategory.setImageResource(R.drawable.jp_child)
+//                cardLayout.setBackgroundResource(R.drawable.card_bg_pink)
+//            }
+//            if (cat == Power) {
+//                ivCategory.setImageResource(R.drawable.jp_dumbbell)
+//                cardLayout.setBackgroundResource(R.drawable.card_bg_blue)
+//            }
+//            if (cat == Rest) {
+//                ivCategory.setImageResource(R.drawable.jp_sleep)
+//                cardLayout.setBackgroundResource(R.drawable.card_bg_yellow)
+//            }
 
             binding.workoutModel = workoutCase
         }

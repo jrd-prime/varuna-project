@@ -17,6 +17,7 @@ import ru.jrd_prime.trainingdiary.databinding.AWorkoutListPagerBinding
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.calcDateFromPosition
 import ru.jrd_prime.trainingdiary.utils.dateCut
+import ru.jrd_prime.trainingdiary.utils.dateCut2
 import java.util.*
 
 
@@ -76,7 +77,9 @@ class WorkoutPageFragment : Fragment() {
 
         val rootView = pagerBinding.root
 
-        val data: Collection<WorkoutModel> = dateCut(calcDateFromPosition(pageNumber))
+        val data: Collection<WorkoutModel> = dateCut2(calcDateFromPosition(pageNumber))
+
+        /* DATA INN */
         val adapter = WorkoutListAdapter(data)
 
         rootView.recView.layoutManager = LinearLayoutManager(context)

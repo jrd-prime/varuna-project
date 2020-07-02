@@ -1,5 +1,6 @@
 package ru.jrd_prime.trainingdiary.impl
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
@@ -12,15 +13,21 @@ interface AppContainer {
     val workoutsRepository: WorkoutsRepository
 }
 
-class AppContainerImpl(appContext: TrainingDiaryApp) : AppContainer {
+class AppContainerImpl(private val appContext: TrainingDiaryApp) : AppContainer {
     override val workoutsRepository: WorkoutsRepository by lazy {
         Repository(
             executorService,
             mainThreadHandler
         )
     }
+
+
     private val executorService: ExecutorService by lazy {
         Executors.newFixedThreadPool(4)
+    }
+
+    fun getContextz(): Context {
+        return appContext.applicationContext
     }
 
     private val mainThreadHandler: Handler by lazy {

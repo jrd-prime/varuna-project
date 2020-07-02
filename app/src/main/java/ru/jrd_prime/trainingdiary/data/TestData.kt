@@ -1,13 +1,32 @@
 package ru.jrd_prime.trainingdiary.data
 
 import android.util.Log
-import ru.jrd_prime.trainingdiary.model.Category
+import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.getDatesBetweenUsingJava7
 import java.text.DateFormat
 import java.text.DateFormat.LONG
 import java.text.SimpleDateFormat
 import java.util.*
+
+
+fun prepData2(): Collection<WorkoutModel> {
+
+    val db = TrainingDiaryApp().getWorkoutDatabase()
+
+    db?.workoutDao()
+
+    return listOf(
+        WorkoutModel(
+            -1,
+            1,
+            "111",
+            "2 гантели 8п, Бицепс 15п, Попа 10п", 2 * 3,
+            123
+        )
+    )
+
+}
 
 fun prepData(): Collection<WorkoutModel> {
     val mlist = listOf<String>(
@@ -59,20 +78,20 @@ fun prepData(): Collection<WorkoutModel> {
         getDatesBetweenUsingJava7(startDayDate, endDayDate)
 
     var id = 1
-    for (i in dates) {
-
-        list.add(
-            WorkoutModel(
-                id,
-                Category.values()[Random().nextInt(Category.values().size)],
-                zzz,
-                "2 гантели 8п, Бицепс 15п, Попа 10п", 2 * 3,
-                i
-            )
-        )
-
-        id++
-    }
+//    for (i in dates) {
+//
+//        list.add(
+//            WorkoutModel(
+//                id,
+////                Category.values()[Random().nextInt(Category.values().size)],
+//                zzz,
+//                "2 гантели 8п, Бицепс 15п, Попа 10п", 2 * 3,
+//                i
+//            )
+//        )
+//
+//        id++
+//    }
 
     return list
 }
