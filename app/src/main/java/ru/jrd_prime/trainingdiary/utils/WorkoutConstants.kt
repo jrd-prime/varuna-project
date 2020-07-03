@@ -1,12 +1,29 @@
 package ru.jrd_prime.trainingdiary.utils
 
-import android.util.Log
-import kotlinx.coroutines.runBlocking
-import ru.jrd_prime.trainingdiary.data.db.WorkoutDatabase
-import ru.jrd_prime.trainingdiary.model.WorkoutModel
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.Executor
+import ru.jrd_prime.trainingdiary.R
 
 const val DATABASE_NAME = "varuna_db"
 
+val CATEGORIES = mutableMapOf<Int, String>(
+    0 to "empty",
+    1 to "cardio",
+    2 to "power",
+    3 to "stretch",
+    4 to "rest"
+)
+val catIcons =
+    mutableMapOf<Int, Int>(
+        0 to R.drawable.jp_question,
+        1 to R.drawable.jp_heartbeat,
+        2 to R.drawable.jp_dumbbell,
+        3 to R.drawable.jp_child,
+        4 to R.drawable.jp_sleep
+    )
+val catColor =
+    mutableMapOf<Int, Int>(
+        0 to R.color.colorWhite,
+        1 to R.drawable.card_bg_red,
+        2 to R.drawable.card_bg_blue,
+        3 to R.drawable.card_bg_pink,
+        4 to R.drawable.card_bg_yellow
+    )

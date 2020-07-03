@@ -2,89 +2,88 @@ package ru.jrd_prime.trainingdiary.adapter
 
 import android.util.Log
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutCardBinding
-import ru.jrd_prime.trainingdiary.handlers.WorkoutCardHandler
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
+import ru.jrd_prime.trainingdiary.utils.catColor
+import ru.jrd_prime.trainingdiary.utils.catIcons
 import ru.jrd_prime.trainingdiary.utils.getMonthDayFromDate
 import java.util.*
 
 /* Настраиваем КАРТОЧКУ*/
 class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
     RecyclerView.ViewHolder(binding.root) {
-
     fun bind(workoutCase: WorkoutModel?, position: Int) {
-
-
-        val daysOfWeek = listOf<String>("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-
-        if (workoutCase == null) {
+        val wCase = workoutCase
+        if (wCase == null) {
             //TODO Что мы делаем если нету кейса
             Log.d("JP_TAG", "bind: WORKOUTCASE NULL!")
         } else {
+            val wCategory: Int = wCase.workoutCategory
+            val daysOfWeek = listOf<String>("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+            /* WORKOUT CARD */
+            val mainCardLay = binding.cardLay
+            val frameForHide = binding.frameForHide
+            val mainWeekDay = binding.ivWeekDay
+            val mainMonthDay = binding.ivMonthDay
+            val dot = binding.dot
+            val ivCategory: ImageView = binding.ivCategory
+            val title = binding.tvMuscleGroup
+            val desc = binding.cardDescription
+            val time = binding.tvWorkoutTime
 
-            if (!workoutCase.workoutEmpty) {
+            /* EMPTY CARD */
+            val emptyCardLay = binding.cardOverLay
+            val emptyWeekDay = binding.ivWeekDay1
+            val emptyMonthDay = binding.ivMonthDay1
+            val emptyImageView = binding.ivEmptyCategory
 
-                binding.cardOverLay.visibility = View.GONE
-                val cat = workoutCase.workoutCategory
-                val myHandler = WorkoutCardHandler(binding.root)
-                val ivCategory = binding.ivCategory
-                val cardLayout = binding.dot
-                val ivWeekDay = binding.ivWeekDay
-                val workoutCard = binding.wCard
-                val ivMonthDay = binding.ivMonthDay
+            // Устанавливаем дату
+            mainWeekDay.text = daysOfWeek[position]
+            emptyWeekDay.text = daysOfWeek[position]
+            // Устанавливаем день недели
+            mainMonthDay.text = getMonthDayFromDate(Date(wCase.workoutDate))
+            emptyMonthDay.text = getMonthDayFromDate(Date(wCase.workoutDate))
 
-                binding.handler = myHandler
-
-
-                /* CARD*/
-                workoutCard.elevation = 4f
-                ivWeekDay.text = daysOfWeek[position]
-
-
-                ivMonthDay.text = getMonthDayFromDate(Date(workoutCase.workoutDate))
-
-
-//            if (cat == Cardio) {
-//                ivCategory.setImageResource(R.drawable.jp_heartbeat)
-//                cardLayout.setBackgroundResource(R.drawable.card_bg_red)
-//            }
-//            if (cat == Stretch) {
-//                ivCategory.setImageResource(R.drawable.jp_child)
-//                cardLayout.setBackgroundResource(R.drawable.card_bg_pink)
-//            }
-//            if (cat == Power) {
-//                ivCategory.setImageResource(R.drawable.jp_dumbbell)
-//                cardLayout.setBackgroundResource(R.drawable.card_bg_blue)
-//            }
-//            if (cat == Rest) {
-//                ivCategory.setImageResource(R.drawable.jp_sleep)
-//                cardLayout.setBackgroundResource(R.drawable.card_bg_yellow)
-//            }
-            } else if (workoutCase.workoutEmpty) {
-
-                val cat = workoutCase.workoutCategory
-                val myHandler = WorkoutCardHandler(binding.root)
-                val ivCategory = binding.ivCategory
-                val cardLayout = binding.dot
-                val ivWeekDay = binding.ivWeekDay
-                val workoutCard = binding.wCard
-                val ivMonthDay = binding.ivMonthDay
-
-                binding.cardLay.visibility = View.GONE
-
-                binding.ivWeekDay1.text = daysOfWeek[position]
-
-
-                binding.ivMonthDay1.text = getMonthDayFromDate(Date(workoutCase.workoutDate))
-                binding.ivEmptyCategory.setBackgroundResource(R.drawable.jp_question)
-
-                binding.cardOverLay.visibility = View.VISIBLE
+            if (!wCase.workoutEmpty) {
+                Log.d("JP_TAG", "bind: WORKOUTCASE NOT EMPTY")
+                frameForHide.visibility = View.GONE
+                emptyCardLay.visibility = View.GONE
+                mainCardLay.visibility = View.VISIBLE
+                title.text = wCase.muscleGroup
+                desc.text = wCase.desc
+                time.text = wCase.workoutTime.toString() + "min"
+            } else {
+                Log.d("JP_TAG", "WORKOUTCASE EMPTY")
+                setImageViewAndDot(0, emptyImageView, dot)
+                mainCardLay.visibility = View.GONE
+                emptyCardLay.visibility = View.VISIBLE
             }
-            binding.workoutModel = workoutCase
+
+            if (wCategory != 0) {
+                /* Категория есть */
+                setImageViewAndDot(wCase.workoutCategory, ivCategory, dot)
+            } else {
+                /* Категории нету */
+                Log.d("JP_TAG", "Item dont have category! ${wCase.workoutID}")
+                setImageViewAndDot(0, ivCategory, dot)
+            }
+
+            binding.workoutModel = workoutCase // Отправляем кейс в карточку
         }
         binding.executePendingBindings()
+    }
+
+    private fun setImageViewAndDot(
+        categoryID: Int,
+        ivCategory: ImageView,
+        dot: FrameLayout
+    ) {
+        ivCategory.setImageResource(catIcons[categoryID] as Int)
+        dot.setBackgroundResource(catColor[categoryID] as Int)
     }
 
 }

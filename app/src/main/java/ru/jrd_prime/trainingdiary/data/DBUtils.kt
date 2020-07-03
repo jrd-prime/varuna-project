@@ -10,6 +10,7 @@ import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.getDatesBetweenUsingJava7
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.random.Random
 
 fun initDB(context: Context) {
     val TAG = "INIT DB"
@@ -27,7 +28,8 @@ fun initDB(context: Context) {
 
     for (date in dates) {
         Log.d(TAG, "List+")
-        list.add(WorkoutModel(null, 2, "muscle", "desc", 33, date.time, false))
+        val randCat = Random.nextInt(0, 4)
+        list.add(WorkoutModel(null, randCat, "muscle", "Long description, lorem ipsum dolor amet non comorta", randCat + 3 * 6, date.time, false))
     }
 
     runBlocking {
