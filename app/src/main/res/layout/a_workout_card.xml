@@ -29,8 +29,11 @@
         app:cardCornerRadius="4dp">
 
         <LinearLayout
+            android:id="@+id/cardLay"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="visible"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -277,5 +280,116 @@
             </LinearLayout>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/cardOverLay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:onClick="@{(view) -> handler.workoutAdd(view, workoutModel.workoutID)}"
+            android:orientation="vertical"
+            android:visibility="visible" >
+
+            <RelativeLayout
+                android:id="@+id/cardLineFirst1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+
+                <RelativeLayout
+                    android:id="@+id/emptyCategoryIconContainer"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true">
+
+                    <ImageView
+                        android:id="@+id/ivEmptyCategory"
+                        android:layout_width="@dimen/iconCardSize"
+                        android:layout_height="@dimen/iconCardSize"
+                        android:layout_centerInParent="true"
+                        android:contentDescription="@string/descIVCategory"/>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/leftCut1"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_toEndOf="@+id/emptyCategoryIconContainer"
+                    android:background="@color/colorLightGrey"
+                    android:orientation="vertical" />
+
+                <FrameLayout
+                    android:id="@+id/horScroll1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toStartOf="@+id/rightCut1"
+                    android:layout_toEndOf="@+id/leftCut1">
+
+                    <ImageView
+                        android:id="@+id/tvMuscleGroup1"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/jp_plus"
+/>
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:id="@+id/rightCut1"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_toStartOf="@+id/weekDayContainer1"
+                    android:background="@color/colorLightGrey"
+                    android:orientation="vertical" />
+
+                <RelativeLayout
+                    android:id="@+id/weekDayContainer1"
+                    android:layout_width="56dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:orientation="vertical"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp">
+
+
+                        <TextView
+                            android:id="@+id/ivMonthDay1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="16"
+                            android:textAlignment="center"
+
+                            android:textAllCaps="true"
+                            android:textSize="14sp"
+                            tools:ignore="SmallSp" />
+
+                        <TextView
+                            android:id="@+id/ivWeekDay1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/montserrat_semibold"
+                            android:text="jrd"
+                            android:textAlignment="center"
+
+                            android:textAllCaps="true"
+                            android:textSize="10sp"
+                            tools:ignore="SmallSp" />
+
+
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+
+        </LinearLayout>
     </androidx.cardview.widget.CardView>
 </layout>

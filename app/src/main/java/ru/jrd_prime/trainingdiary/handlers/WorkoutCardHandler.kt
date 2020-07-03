@@ -6,14 +6,33 @@ import android.widget.Toast
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import ru.jrd_prime.trainingdiary.R
+import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 
-class WorkoutCardHandler {
+class WorkoutCardHandler(root: View) {
+    val appContainer = (root.context.applicationContext as TrainingDiaryApp).container
+
+
     fun workoutDelete(view: View, workoutID: Int) {
         Toast.makeText(view.context, "Del $workoutID", Toast.LENGTH_SHORT).show()
+
+        runBlocking {
+            launch(Dispatchers.IO) {
+//                WorkoutDatabase.getInstance(view.context).workoutDao().delete(workoutID)
+                appContainer.workoutsRepository.clearWorkout(workoutID, true)
+            }
+        }
         Snackbar.make(view, "asdasd", Snackbar.LENGTH_LONG)
             .setAction("Cancel", View.OnClickListener { v ->
-                Toast.makeText(view.context, "Cancelled $workoutID", Toast.LENGTH_SHORT).show()
+                runBlocking {
+                    launch(Dispatchers.IO) {
+//                WorkoutDatabase.getInstance(view.context).workoutDao().delete(workoutID)
+                        appContainer.workoutsRepository.restoreWorkout(workoutID, false)
+                    }
+                }
             }).show()
     }
 

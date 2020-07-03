@@ -1,5 +1,6 @@
 package ru.jrd_prime.trainingdiary.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +14,10 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import ru.jrd_prime.trainingdiary.R
+import ru.jrd_prime.trainingdiary.TrainingDiaryApp
+import ru.jrd_prime.trainingdiary.data.initDB
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
+import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.utils.makeStatusBarTransparent
 
 
@@ -22,25 +26,32 @@ const val PAGE_COUNT = 5000
 const val START_PAGE = 1500
 
 class DashboardActivity : AppCompatActivity() {
-
-
     private val dashboardViewModel by lazy {
         ViewModelProvider(this).get(DashboardViewModel::class.java)
     }
-
     var workoutPager: ViewPager? = null
     var workoutPagerAdapter: PagerAdapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val appContainer = (application as TrainingDiaryApp).container
+
+        val sha = getSharedPreferences("jrd", Context.MODE_PRIVATE)
+
+        if (sha.getInt("need_db", 1) == 1) {
+            Log.d("DASHBOARD_ACTIVITY", "DB INIT")
+            initDB(this)
+            sha.edit().putInt("need_db", 0).apply()
+        }
+
         val binding: ActivityDashboardBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         val viewmodel = dashboardViewModel
         binding.viewmodel = viewmodel
 
         setWindow()
-
 
         workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
         workoutPagerAdapter = WorkoutPageAdapter(supportFragmentManager)
@@ -65,7 +76,9 @@ class DashboardActivity : AppCompatActivity() {
     }
 
 
-    private class WorkoutPageAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm!!) {
+    private class WorkoutPageAdapter(
+        fm: FragmentManager?
+    ) : FragmentPagerAdapter(fm!!) {
 
 
         override fun getItem(position: Int): Fragment {
@@ -99,4 +112,5 @@ class DashboardActivity : AppCompatActivity() {
             applicationContext.theme
         )
     }
+
 }

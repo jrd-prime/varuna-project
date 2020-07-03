@@ -7,24 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutCardBinding
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
-import ru.jrd_prime.trainingdiary.utils.dateCut
 
 
-class WorkoutListAdapter(val data: Collection<WorkoutModel>) :
+class WorkoutListAdapter :
     RecyclerView.Adapter<WorkoutListViewHolder>() {
-    private val items: MutableList<WorkoutModel> = data as MutableList<WorkoutModel>
-//    private val newItems: MutableList<WorkoutModel> = dateCut(data) as MutableList<WorkoutModel>
-
-//    fun setData() {
-//        items.clear()
-//        items.addAll(data)
-//        Log.d("TAG", "setData: $items" )
-//    }
-
+    private var items: MutableList<WorkoutModel> = mutableListOf<WorkoutModel>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutListViewHolder {
-
-
-
 
         val inflater = LayoutInflater.from(parent.context)
         val binding: AWorkoutCardBinding =
@@ -34,6 +22,12 @@ class WorkoutListAdapter(val data: Collection<WorkoutModel>) :
 
     override fun onBindViewHolder(holder: WorkoutListViewHolder, position: Int) {
         holder.bind(items.get(position), position)
+    }
+
+    fun setNewData(newData: List<WorkoutModel>) {
+        items.clear()
+        items.addAll(newData)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

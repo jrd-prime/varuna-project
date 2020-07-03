@@ -1,32 +1,15 @@
 package ru.jrd_prime.trainingdiary.data
 
 import android.util.Log
-import ru.jrd_prime.trainingdiary.TrainingDiaryApp
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.getDatesBetweenUsingJava7
 import java.text.DateFormat
 import java.text.DateFormat.LONG
 import java.text.SimpleDateFormat
 import java.util.*
-
-
-fun prepData2(): Collection<WorkoutModel> {
-
-    val db = TrainingDiaryApp().getWorkoutDatabase()
-
-    db?.workoutDao()
-
-    return listOf(
-        WorkoutModel(
-            -1,
-            1,
-            "111",
-            "2 гантели 8п, Бицепс 15п, Попа 10п", 2 * 3,
-            123
-        )
-    )
-
-}
 
 fun prepData(): Collection<WorkoutModel> {
     val mlist = listOf<String>(
@@ -64,7 +47,7 @@ fun prepData(): Collection<WorkoutModel> {
 
 
 
-    Log.d("TAG", "prepData: $myString")
+//    Log.d("TAG", "prepData: $myString")
     val list = mutableListOf<WorkoutModel>()
 
 
