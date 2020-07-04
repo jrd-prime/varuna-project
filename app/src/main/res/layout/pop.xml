@@ -199,9 +199,11 @@
                 android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:text="cancel"
+                android:fontFamily="@font/montserrat_regular"
                 android:textColor="#ccc" />
 
             <Button
+                android:fontFamily="@font/montserrat_regular"
                 android:id="@+id/btnSave"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
