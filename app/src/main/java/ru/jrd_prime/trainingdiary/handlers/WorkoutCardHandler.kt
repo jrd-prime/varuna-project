@@ -78,10 +78,10 @@ class WorkoutCardHandler(root: View) {
         val btnCancel = popupContainer.btnCancel
         val btnSave = popupContainer.btnSave
 
-        btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
         // DEF SET
         layGrpAndTime.visibility = View.VISIBLE
         popupContainer.viewForHide.visibility = View.VISIBLE
+        btnSave.isEnabled = false
 
         /* Обработка радио*/
         // set defaults
@@ -100,6 +100,7 @@ class WorkoutCardHandler(root: View) {
                     rCardio.setTransBg()
                     layGrpAndTime.visibility = View.GONE
                     popupContainer.viewForHide.visibility = View.GONE
+                    btnSave.isEnabled = true
                     Log.d("TAG", "workoutAdd: ${rRest.isChecked}")
                 }
                 rStretch.id -> {
@@ -110,6 +111,7 @@ class WorkoutCardHandler(root: View) {
                     rCardio.setTransBg()
                     layGrpAndTime.visibility = View.VISIBLE
                     popupContainer.viewForHide.visibility = View.VISIBLE
+                    btnSave.isEnabled = true
                     Log.d("TAG", "workoutAdd: ${rStretch.isChecked}")
                 }
                 rPower.id -> {
@@ -120,6 +122,7 @@ class WorkoutCardHandler(root: View) {
                     rCardio.setTransBg()
                     layGrpAndTime.visibility = View.VISIBLE
                     popupContainer.viewForHide.visibility = View.VISIBLE
+                    btnSave.isEnabled = true
                     Log.d("TAG", "workoutAdd: ${rPower.isChecked}")
                 }
                 rCardio.id -> {
@@ -130,6 +133,7 @@ class WorkoutCardHandler(root: View) {
                     rCardio.setColoredBg()
                     layGrpAndTime.visibility = View.VISIBLE
                     popupContainer.viewForHide.visibility = View.VISIBLE
+                    btnSave.isEnabled = true
                     Log.d("TAG", "workoutAdd: ${rCardio.isChecked}")
                 }
             }
@@ -141,6 +145,21 @@ class WorkoutCardHandler(root: View) {
         rCardio.setOnClickListener(rbListener)
 
 
+
+        btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
+        btnSave.setOnClickListener { _ ->
+            Log.d(
+                "TAG",
+                "workoutAdd: ${categoryRadio.checkedRadioButtonId} [etGroup = ${etGroup.text}], [etMins = ${etMins.text}], [etDesc = ${etDesc.text}]"
+            )
+
+//            runBlocking {
+//                launch(Dispatchers.IO) {
+////                WorkoutDatabase.getInstance(view.context).workoutDao().delete(workoutID)
+//                    appContainer.workoutsRepository.up
+//                }
+//            }
+        }
 
         popupWindow.elevation = 20f
         popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);

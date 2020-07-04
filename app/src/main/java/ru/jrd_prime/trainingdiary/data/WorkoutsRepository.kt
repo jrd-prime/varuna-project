@@ -1,9 +1,11 @@
 package ru.jrd_prime.trainingdiary.data
 
 import ru.jrd_prime.trainingdiary.data.db.WorkoutDao
+import ru.jrd_prime.trainingdiary.model.WorkoutModel
 
 class WorkoutsRepository(private val workoutDao: WorkoutDao) {
     fun getWorkouts() = workoutDao.getWorkouts()
+    fun insert(workout: WorkoutModel) = workoutDao.insert(workout)
 
     fun getWorkout(workoutID: Int) = workoutDao.getWorkout(workoutID)
 

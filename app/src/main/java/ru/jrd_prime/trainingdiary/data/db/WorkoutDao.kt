@@ -30,6 +30,6 @@ interface WorkoutDao {
     @Query("UPDATE workouts SET empty = :empty WHERE workout_id = :workoutID")
     fun restoreWorkout(workoutID: Int, empty: Boolean)
 
-    @Query("SELECT * FROM workouts WHERE date >= :startDate AND date <= :endDate")
+    @Query("SELECT * FROM workouts WHERE date >= :startDate AND date < :endDate")
     fun getWorkoutsForWeek(startDate: Long, endDate: Long): LiveData<List<WorkoutModel>>
 }

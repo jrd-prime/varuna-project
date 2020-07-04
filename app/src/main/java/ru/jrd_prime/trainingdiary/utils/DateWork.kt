@@ -1,5 +1,6 @@
 package ru.jrd_prime.trainingdiary.utils
 
+import android.util.Log
 import ru.jrd_prime.trainingdiary.data.prepData
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.ui.START_PAGE
@@ -43,88 +44,54 @@ fun dateCut2(startDate: Date): Collection<WorkoutModel> {
 
 
 // ВОЗВРАЩАЕМ ДАТУ ПОНЕДЕЛЬНИКА В ВЫБРАННОЙ НЕДЕЛЕ
-fun calcDateFromPosition(pageNumber: Int): Date {
-    val today: Date by lazy {
-        Calendar.getInstance().time
-    }
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd");
-    val strDate = dateFormat.format(today);
-
+fun calcDateFromPosition(pageNumber: Int): Long {
     val week = Calendar.getInstance()
-    week.time = today // Установили текущую дату
     week.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY) // Установили дату на понедельник
-
+    week.set(Calendar.HOUR_OF_DAY, week.getActualMinimum(Calendar.HOUR_OF_DAY))
+    week.set(Calendar.MINUTE, week.getActualMinimum(Calendar.MINUTE))
+    week.set(Calendar.SECOND, week.getActualMinimum(Calendar.SECOND))
+    week.set(Calendar.MILLISECOND, week.getActualMinimum(Calendar.MILLISECOND))
     val weekChanged = pageNumber - START_PAGE
-
-    var weekStartDate = week.time
-
+    var weekStartDate = week.timeInMillis
     if (pageNumber == START_PAGE) {
         /* START PAGE */
-//        Log.d("DATE CALC --- ", "calcDateFromPosition: ${weekStartDate.toString()}")
         return weekStartDate
     } else {
         /* Считаем разницу и выясняем на сколько недель сдвинут список */
         if (weekChanged > 0) {
             /* Страница увеличилась, значит добавляем недели на сколько сдвинулось */
-
             week.add(Calendar.WEEK_OF_MONTH, weekChanged)
-            weekStartDate = week.time
-
-//            Log.d("DATE CALC --- ", "calcDateFromPosition: ${weekStartDate.toString()}")
+            weekStartDate = week.timeInMillis
             return weekStartDate
         } else if (weekChanged < 0) {
             /* Страница уменьшилась, значит отнимаем недели */
             week.add(Calendar.WEEK_OF_MONTH, weekChanged)
-            weekStartDate = week.time
-//            Log.d("DATE CALC --- ", "calcDateFromPosition: ${weekStartDate.toString()}")
+            weekStartDate = week.timeInMillis
             return weekStartDate
         }
-
         return weekStartDate
     }
 }
 
 
-fun dateCut(startDate: Date): List<Long> {
-
-    val data = prepData()
-
-
-    val newItems = mutableListOf<Long>()
-//    val rr = SimpleDateFormat("yyyy-MM-dd").parse(startDate);
-
+fun dateCut(startDate: Long): List<Long> {
     val cal2: Calendar = Calendar.getInstance()
-    cal2.time = startDate
+    cal2.time = Date(startDate)
     cal2.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
-    cal2.add(Calendar.DAY_OF_WEEK, -1)
     val start: Date = cal2.time;
-
-
-    val add1week = cal2.add(Calendar.DAY_OF_WEEK, 7)
-    val end = cal2.time
-
-    val map = listOf<Long>(start.time, end.time)
-
-//
-//    Log.d("asd2123`23123", "prepData: ${start.toString()}")
-//    Log.d("asd2123`23123", "prepData: ${end.toString()}")
-
-//    for (item in data) {
-//
-//        if (item.workoutDate in start..end) {
-//            newItems.add(item)
-////            Log.d("123123123123", "onCreateViewHolder: ${item.workoutDate}")
-//        }
-//    }
-    return map
+    cal2.add(Calendar.DAY_OF_WEEK, 6)
+    cal2.set(Calendar.HOUR_OF_DAY, cal2.getActualMaximum(Calendar.HOUR_OF_DAY))
+    cal2.set(Calendar.MINUTE, cal2.getActualMaximum(Calendar.MINUTE))
+    cal2.set(Calendar.SECOND, cal2.getActualMaximum(Calendar.SECOND))
+    cal2.set(Calendar.MILLISECOND, cal2.getActualMaximum(Calendar.MILLISECOND))
+    val end: Date = cal2.time
+    return listOf(start.time, end.time)
 }
 
 
 fun getMonthDayFromDate(date: Date): String {
     return SimpleDateFormat("dd").format(date)
 }
-
-
 
 
 fun getDatesBetweenUsingJava7(

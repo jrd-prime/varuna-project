@@ -3,6 +3,7 @@ package ru.jrd_prime.trainingdiary.ui
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -17,8 +18,9 @@ import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.data.initDB
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
-import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.utils.makeStatusBarTransparent
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 const val TAG = "myLogs"
@@ -40,16 +42,17 @@ class DashboardActivity : AppCompatActivity() {
 
         val sha = getSharedPreferences("jrd", Context.MODE_PRIVATE)
 
-        if (sha.getInt("need_db", 1) == 1) {
-            Log.d("DASHBOARD_ACTIVITY", "DB INIT")
-            initDB(this)
-            sha.edit().putInt("need_db", 0).apply()
-        }
+//        if (sha.getInt("need_db", 1) == 1) {
+//            Log.d("DASHBOARD_ACTIVITY", "DB INIT")
+//            initDB(this)
+//            sha.edit().putInt("need_db", 0).apply()
+//        }
 
         val binding: ActivityDashboardBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         val viewmodel = dashboardViewModel
         binding.viewmodel = viewmodel
+
 
         setWindow()
 

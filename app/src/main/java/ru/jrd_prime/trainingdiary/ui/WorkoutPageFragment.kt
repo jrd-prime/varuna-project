@@ -5,21 +5,26 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.a_workout_list_pager.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutListPagerBinding
-import ru.jrd_prime.trainingdiary.handlers.WorkoutCardHandler
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.calcDateFromPosition
 import ru.jrd_prime.trainingdiary.utils.dateCut
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 const val ARGUMENT_PAGE_NUMBER = "arg_page_number"
@@ -54,6 +59,7 @@ class WorkoutPageFragment : Fragment() {
         super.onCreate(savedInstanceState)
         pageNumber = requireArguments().getInt(ARGUMENT_PAGE_NUMBER)
         Log.d("HERE", "pageNum $pageNumber")
+
     }
 
     /*
@@ -75,13 +81,69 @@ class WorkoutPageFragment : Fragment() {
         myAdapter.notifyDataSetChanged()
         rootView.recView.adapter = myAdapter
         val date: List<Long> = dateCut(calcDateFromPosition(pageNumber))
+
+
+        val r = activity?.findViewById<TextView>(R.id.tvTodayDay)
+        r?.text =
+            SimpleDateFormat("dd").format(date[0]) + " - " + SimpleDateFormat("dd.MM.yyyy").format(
+                date[1]
+            ) + " DONT TRUST!"
+
         val data = appContainerz.workoutsRepository.getWorkoutsForWeek(date[0], date[1])
+
+
+
         data.observe(viewLifecycleOwner, Observer { dataz ->
-                myAdapter.setNewData(dataz as List<WorkoutModel>)
+            Log.d(TAG, "onCreateView: ${dataz.size}")
+            myAdapter.setNewData(dataz as List<WorkoutModel>)
+//            if (dataz.size < 7 && dataz.isNotEmpty()) {
+//                addWorkoutsToEnd(7 - dataz.size, dataz[0].workoutDate)
+//            }
         })
+
+
         rootView.recView.layoutManager = LinearLayoutManager(context)
         val scrollView = rootView.cont_layz as NestedScrollView
         scrollView.isFillViewport = true
         return rootView
     }
+
+    fun addWorkoutsToEnd(count: Int, workoutDate: Long) {
+        val cal = Calendar.getInstance()
+        cal.time = Date(workoutDate)
+        var localCount = count
+        Log.d(TAG, "addWorkoutsToEnd: add $localCount to end from date = ${cal.time}")
+        cal.add(Calendar.DAY_OF_WEEK, 7 - localCount)
+        Log.d(TAG, "addWorkoutsToEnd: date foe first = ${cal.time}")
+        val constDate = cal
+
+        localCount += 3
+        for (i in 1..localCount) {
+
+            Log.d(TAG, "addWorkoutsToEnd: $i")
+
+            constDate.add(Calendar.DAY_OF_WEEK, 1)
+            runBlocking {
+                launch(Dispatchers.IO) {
+                    appContainerz.workoutsRepository.insert(
+                        WorkoutModel(
+                            null,
+                            0,
+                            "",
+                            "",
+                            0,
+                            constDate.timeInMillis,
+                            true
+                        )
+                    )
+                }
+            }
+            Log.d(TAG, "addWorkoutsToEnd: on date ${constDate.time}")
+        }
+
+        val date = SimpleDateFormat("dd.MM.yyyy").format(cal.time)
+
+
+    }
+
 }

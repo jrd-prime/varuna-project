@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <!--    <color name="colorPrimary">#67AC59</color>-->
-    <color name="colorPrimaryDark">#538c47</color>
+
+    <color name="colorPrimaryDark">#4c4b63</color>
     <color name="colorAccent">#000000</color>
     <color name="colorSnackbarButton">#ef7f3e</color>
+    <color name="colorPrimaryDarkX">#FF39752b</color>
+    <color name="colorLightGrey">#f2f3f5</color>
+    <color name="colorPrimaryLight">#C8E6C9</color>
+    <color name="colorPrimary">#5386e4</color>
+    <color name="colorPrimaryX">#588DEF</color>
+
+    <color name="jpPrimary2">#4c4b63</color>
+    <color name="jpPrimary3">#949396</color>
+    <color name="jpPrimary4">#aba8b2</color>
+    <color name="jpPrimary5">#c3c3c3</color>
+
+<!--    <color name="colorPrimaryDark">#538c47</color>-->
+<!--    <color name="colorAccent">#000000</color>-->
+<!--    <color name="colorSnackbarButton">#ef7f3e</color>-->
+<!--    <color name="colorPrimaryDarkX">#FF39752b</color>-->
+<!--    <color name="colorLightGrey">#f2f3f5</color>-->
+<!--    <color name="colorPrimaryLight">#C8E6C9</color>-->
+<!--    <color name="colorPrimary">#558949</color>-->
+<!--    <color name="colorPrimaryX">#538c47</color>-->
+
 
     <color name="colorDrawerIcons">#686868</color>
     <color name="colorDrawerIconsChecked">#82acf7</color>
@@ -12,11 +33,8 @@
     <color name="colorDrawerBackgroundChecked">#7079e0</color>
     <color name="gray">#D1D1D1</color>
     <color name="colorWhite">#FFFFFFFF</color>
-    <color name="colorPrimaryDarkX">#FF39752b</color>
-    <color name="colorLightGrey">#f2f3f5</color>
-    <color name="colorPrimaryLight">#C8E6C9</color>
-    <color name="colorPrimary">#558949</color>
-    <color name="colorPrimaryX">#538c47</color>
+
+
     <color name="appMainBackground">#FFFFFFFF</color>
     <color name="jpYellow">#FFF176</color>
 </resources>
