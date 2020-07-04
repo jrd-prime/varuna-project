@@ -1,16 +1,18 @@
 package ru.jrd_prime.trainingdiary.handlers
 
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import android.widget.ImageSwitcher
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import android.widget.RadioButton
 import android.widget.Toast
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.pop.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -47,12 +49,8 @@ class WorkoutCardHandler(root: View) {
     }
 
     fun workoutAdd(view: View, workoutID: Int) {
-        val context = view.context
-//        Toast.makeText(view.context, "Add $workoutID", Toast.LENGTH_SHORT).show()
-
         val popupView: View =
-            LayoutInflater.from(context).inflate(R.layout.pop, null)
-
+            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
 
         val popupWindow = PopupWindow(
             popupView,
@@ -61,24 +59,99 @@ class WorkoutCardHandler(root: View) {
             true
         )
 
+        // main container
+        val popupContainer = popupView.puMainContainer
+        // layouts
+        val categoryRadio = popupContainer.categoryRadio// radio container
+        val layGrpAndTime = popupContainer.layoutGroupsAndTime // group and time container
+        val layDesc = popupContainer.layoutDescription // desc container
+        // radio btns
+        val rRest = popupContainer.btnRest
+        val rStretch = popupContainer.btnStretch
+        val rPower = popupContainer.btnPower
+        val rCardio = popupContainer.btnCardio
+        // edit fields
+        val etGroup = popupContainer.etGroups
+        val etMins = popupContainer.etMins
+        val etDesc = popupContainer.etDescription
+        // btns
+        val btnCancel = popupContainer.btnCancel
+        val btnSave = popupContainer.btnSave
+
+        btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
+        // DEF SET
+        layGrpAndTime.visibility = View.VISIBLE
+        popupContainer.viewForHide.visibility = View.VISIBLE
+
+        /* Обработка радио*/
+        // set defaults
+        rRest.isChecked = false
+        rStretch.isChecked = false
+        rPower.isChecked = false
+        rCardio.isChecked = false
+
+        val rbListener = View.OnClickListener { btn ->
+            when (btn.id) {
+                rRest.id -> {
+                    rRest.isChecked = true
+                    rRest.setColoredBg()
+                    rStretch.setTransBg()
+                    rPower.setTransBg()
+                    rCardio.setTransBg()
+                    layGrpAndTime.visibility = View.GONE
+                    popupContainer.viewForHide.visibility = View.GONE
+                    Log.d("TAG", "workoutAdd: ${rRest.isChecked}")
+                }
+                rStretch.id -> {
+                    rStretch.isChecked = true
+                    rRest.setTransBg()
+                    rStretch.setColoredBg()
+                    rPower.setTransBg()
+                    rCardio.setTransBg()
+                    layGrpAndTime.visibility = View.VISIBLE
+                    popupContainer.viewForHide.visibility = View.VISIBLE
+                    Log.d("TAG", "workoutAdd: ${rStretch.isChecked}")
+                }
+                rPower.id -> {
+                    rPower.isChecked = true
+                    rRest.setTransBg()
+                    rStretch.setTransBg()
+                    rPower.setColoredBg()
+                    rCardio.setTransBg()
+                    layGrpAndTime.visibility = View.VISIBLE
+                    popupContainer.viewForHide.visibility = View.VISIBLE
+                    Log.d("TAG", "workoutAdd: ${rPower.isChecked}")
+                }
+                rCardio.id -> {
+                    rCardio.isChecked = true
+                    rRest.setTransBg()
+                    rStretch.setTransBg()
+                    rPower.setTransBg()
+                    rCardio.setColoredBg()
+                    layGrpAndTime.visibility = View.VISIBLE
+                    popupContainer.viewForHide.visibility = View.VISIBLE
+                    Log.d("TAG", "workoutAdd: ${rCardio.isChecked}")
+                }
+            }
+        }
+
+        rRest.setOnClickListener(rbListener)
+        rStretch.setOnClickListener(rbListener)
+        rPower.setOnClickListener(rbListener)
+        rCardio.setOnClickListener(rbListener)
+
 
 
         popupWindow.elevation = 20f
         popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
-// define your view here that found in popup_layout
-// for example let consider you have a button
+    }
 
+    private fun RadioButton.setTransBg() {
+        setBackgroundResource(R.drawable.jp_radio_bg_transparent)
+    }
 
-        // If you need the PopupWindow to dismiss when when touched outside
-
-        // If you need the PopupWindow to dismiss when when touched outside
-//        popupWindow.setBackgroundDrawable(ColorDrawable())
-
-
-// finally show up your popwindow
-
-//        popupWindow.showAsDropDown(popupView, 0, 0)
-
+    private fun RadioButton.setColoredBg() {
+        setBackgroundResource(R.drawable.jp_radio_bg)
     }
 
     fun onGo(view: View?) {

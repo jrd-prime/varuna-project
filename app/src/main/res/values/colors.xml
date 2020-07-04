@@ -18,4 +18,5 @@
     <color name="colorPrimary">#558949</color>
     <color name="colorPrimaryX">#538c47</color>
     <color name="appMainBackground">#FFFFFFFF</color>
+    <color name="jpYellow">#FFF176</color>
 </resources>
