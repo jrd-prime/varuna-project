@@ -18,7 +18,7 @@ interface WorkoutDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(workout: WorkoutModel)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(workouts: List<WorkoutModel>)
 
     @Query("DELETE FROM workouts WHERE workout_id = :workoutID")

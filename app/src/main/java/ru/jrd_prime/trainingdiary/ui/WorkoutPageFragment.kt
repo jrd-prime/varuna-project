@@ -38,8 +38,7 @@ class WorkoutPageFragment : Fragment() {
     /*
     Метод newInstance создает новый экземпляр фрагмента и записывает ему в атрибуты число,
     которое пришло на вход. Это число – номер страницы, которую хочет показать ViewPager.
-    По нему фрагмент будет определять, какое содержимое создавать в фрагменте.
-    */
+    По нему фрагмент будет определять, какое содержимое создавать в фрагменте. */
     companion object {
         fun newInstance(page: Int): WorkoutPageFragment {
             val pageFragment = WorkoutPageFragment()
@@ -53,19 +52,16 @@ class WorkoutPageFragment : Fragment() {
     /*
     В onCreate читаем номер страницы из аргументов.
     Далее формируем цвет из рандомных компонентов.
-    Он будет использоваться для фона страниц, чтобы визуально отличать одну страницу от другой.
-    */
+    Он будет использоваться для фона страниц, чтобы визуально отличать одну страницу от другой.*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pageNumber = requireArguments().getInt(ARGUMENT_PAGE_NUMBER)
         Log.d("HERE", "pageNum $pageNumber")
-
     }
 
     /*
     В onCreateView создаем View, находим на нем TextView, пишем ему простой текст с номером страницы и ставим фоновый цвет.
-    Т.е. на вход у нас идет номер страницы, а на выходе получаем фрагмент, который отображает этот номер и имеет случайный фоновый цвет.
-*/
+    Т.е. на вход у нас идет номер страницы, а на выходе получаем фрагмент, который отображает этот номер и имеет случайный фоновый цвет.*/
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -81,6 +77,9 @@ class WorkoutPageFragment : Fragment() {
         myAdapter.notifyDataSetChanged()
         rootView.recView.adapter = myAdapter
         val date: List<Long> = dateCut(calcDateFromPosition(pageNumber))
+        Log.d(TAG, "onCreateView: DATE ${SimpleDateFormat("dd").format(date[0])} ${SimpleDateFormat("dd.MM.yyyy").format(
+            date[1]
+        )}")
 
 
         val r = activity?.findViewById<TextView>(R.id.tvTodayDay)
@@ -96,9 +95,9 @@ class WorkoutPageFragment : Fragment() {
         data.observe(viewLifecycleOwner, Observer { dataz ->
             Log.d(TAG, "onCreateView: ${dataz.size}")
             myAdapter.setNewData(dataz as List<WorkoutModel>)
-//            if (dataz.size < 7 && dataz.isNotEmpty()) {
-//                addWorkoutsToEnd(7 - dataz.size, dataz[0].workoutDate)
-//            }
+            if (dataz.size < 7 || dataz.isEmpty()) {
+                addWorkoutsToEnd(7 - dataz.size, date[0])
+            }
         })
 
 
@@ -109,41 +108,36 @@ class WorkoutPageFragment : Fragment() {
     }
 
     fun addWorkoutsToEnd(count: Int, workoutDate: Long) {
-        val cal = Calendar.getInstance()
-        cal.time = Date(workoutDate)
-        var localCount = count
-        Log.d(TAG, "addWorkoutsToEnd: add $localCount to end from date = ${cal.time}")
-        cal.add(Calendar.DAY_OF_WEEK, 7 - localCount)
-        Log.d(TAG, "addWorkoutsToEnd: date foe first = ${cal.time}")
-        val constDate = cal
+        val list = mutableListOf<WorkoutModel>()
+        val cal1 = Calendar.getInstance()
+        cal1.time = Date(workoutDate)
+//        Log.d(TAG, "addWorkoutsToEnd: week start ${cal1.time}")
 
-        localCount += 3
-        for (i in 1..localCount) {
+        for (i in 1..count) {
+            list.add(
+                WorkoutModel(
+                    null,
+                    0,
+                    "",
+                    "",
+                    0,
+                    cal1.timeInMillis,
+                    true
+                )
+            )
+//            Log.d(
+//                TAG,
+//                "addWorkoutsToEnd: $i with " + cal1.time
+//            )
 
-            Log.d(TAG, "addWorkoutsToEnd: $i")
-
-            constDate.add(Calendar.DAY_OF_WEEK, 1)
-            runBlocking {
-                launch(Dispatchers.IO) {
-                    appContainerz.workoutsRepository.insert(
-                        WorkoutModel(
-                            null,
-                            0,
-                            "",
-                            "",
-                            0,
-                            constDate.timeInMillis,
-                            true
-                        )
-                    )
-                }
-            }
-            Log.d(TAG, "addWorkoutsToEnd: on date ${constDate.time}")
+            cal1.add(Calendar.DAY_OF_WEEK, 1)
         }
 
-        val date = SimpleDateFormat("dd.MM.yyyy").format(cal.time)
-
-
+//        Log.d(TAG, "addWorkoutsToEnd: ${list.toString()}")
+        runBlocking {
+            launch(Dispatchers.IO) {
+                appContainerz.workoutsRepository.insertAll(list)
+            }
+        }
     }
-
 }

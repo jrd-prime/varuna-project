@@ -5,6 +5,7 @@ import ru.jrd_prime.trainingdiary.data.prepData
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.ui.START_PAGE
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -45,14 +46,27 @@ fun dateCut2(startDate: Date): Collection<WorkoutModel> {
 
 // ВОЗВРАЩАЕМ ДАТУ ПОНЕДЕЛЬНИКА В ВЫБРАННОЙ НЕДЕЛЕ
 fun calcDateFromPosition(pageNumber: Int): Long {
+    val TAG = "calcDateFromPosition"
     val week = Calendar.getInstance()
+    week.time = Date()
+//    week.set(Calendar.HOUR_OF_DAY, week.getActualMinimum(Calendar.HOUR_OF_DAY))
+//    week.set(Calendar.MINUTE, week.getActualMinimum(Calendar.MINUTE))
+//    week.set(Calendar.SECOND, week.getActualMinimum(Calendar.SECOND))
+//    week.set(Calendar.MILLISECOND, week.getActualMinimum(Calendar.MILLISECOND))
+val c = org.threeten.bp.LocalDate.now()
+
+
+    Log.d(TAG, "cal instance ${c.dayOfMonth}")
+
     week.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY) // Установили дату на понедельник
+    Log.d(TAG, "this week monday ${week.time}")
     week.set(Calendar.HOUR_OF_DAY, week.getActualMinimum(Calendar.HOUR_OF_DAY))
     week.set(Calendar.MINUTE, week.getActualMinimum(Calendar.MINUTE))
     week.set(Calendar.SECOND, week.getActualMinimum(Calendar.SECOND))
     week.set(Calendar.MILLISECOND, week.getActualMinimum(Calendar.MILLISECOND))
     val weekChanged = pageNumber - START_PAGE
     var weekStartDate = week.timeInMillis
+    Log.d(TAG, "this week monday ${week.time}")
     if (pageNumber == START_PAGE) {
         /* START PAGE */
         return weekStartDate
