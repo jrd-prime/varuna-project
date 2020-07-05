@@ -44,50 +44,6 @@ fun dateCut2(startDate: Date): Collection<WorkoutModel> {
 }
 
 
-// ВОЗВРАЩАЕМ ДАТУ ПОНЕДЕЛЬНИКА В ВЫБРАННОЙ НЕДЕЛЕ
-fun calcDateFromPosition(pageNumber: Int): Long {
-    val TAG = "calcDateFromPosition"
-    val week = Calendar.getInstance()
-    week.time = Date()
-//    week.set(Calendar.HOUR_OF_DAY, week.getActualMinimum(Calendar.HOUR_OF_DAY))
-//    week.set(Calendar.MINUTE, week.getActualMinimum(Calendar.MINUTE))
-//    week.set(Calendar.SECOND, week.getActualMinimum(Calendar.SECOND))
-//    week.set(Calendar.MILLISECOND, week.getActualMinimum(Calendar.MILLISECOND))
-val c = org.threeten.bp.LocalDate.now()
-
-
-    Log.d(TAG, "cal instance ${c.dayOfMonth}")
-
-    week.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY) // Установили дату на понедельник
-    Log.d(TAG, "this week monday ${week.time}")
-    week.set(Calendar.HOUR_OF_DAY, week.getActualMinimum(Calendar.HOUR_OF_DAY))
-    week.set(Calendar.MINUTE, week.getActualMinimum(Calendar.MINUTE))
-    week.set(Calendar.SECOND, week.getActualMinimum(Calendar.SECOND))
-    week.set(Calendar.MILLISECOND, week.getActualMinimum(Calendar.MILLISECOND))
-    val weekChanged = pageNumber - START_PAGE
-    var weekStartDate = week.timeInMillis
-    Log.d(TAG, "this week monday ${week.time}")
-    if (pageNumber == START_PAGE) {
-        /* START PAGE */
-        return weekStartDate
-    } else {
-        /* Считаем разницу и выясняем на сколько недель сдвинут список */
-        if (weekChanged > 0) {
-            /* Страница увеличилась, значит добавляем недели на сколько сдвинулось */
-            week.add(Calendar.WEEK_OF_MONTH, weekChanged)
-            weekStartDate = week.timeInMillis
-            return weekStartDate
-        } else if (weekChanged < 0) {
-            /* Страница уменьшилась, значит отнимаем недели */
-            week.add(Calendar.WEEK_OF_MONTH, weekChanged)
-            weekStartDate = week.timeInMillis
-            return weekStartDate
-        }
-        return weekStartDate
-    }
-}
-
-
 fun dateCut(startDate: Long): List<Long> {
     val cal2: Calendar = Calendar.getInstance()
     cal2.time = Date(startDate)

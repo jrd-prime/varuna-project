@@ -3,6 +3,7 @@ package ru.jrd_prime.trainingdiary.utils
 import ru.jrd_prime.trainingdiary.R
 
 const val DATABASE_NAME = "varuna_db"
+const val JP_DATE_FORMAT = "yyyy-MM-dd"
 
 val CATEGORIES = mutableMapOf<Int, String>(
     0 to "empty",
