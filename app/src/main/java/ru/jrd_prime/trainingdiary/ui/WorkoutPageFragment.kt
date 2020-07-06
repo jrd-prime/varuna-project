@@ -22,7 +22,7 @@ import ru.jrd_prime.trainingdiary.databinding.AWorkoutListPagerBinding
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.getStartDateForPosition
-import ru.jrd_prime.trainingdiary.utils.dateCut
+import ru.jrd_prime.trainingdiary.utils.getWeekStartAndEndFromDate
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -76,10 +76,11 @@ class WorkoutPageFragment : Fragment() {
         val myAdapter = WorkoutListAdapter()
         myAdapter.notifyDataSetChanged()
         rootView.recView.adapter = myAdapter
-        val date: List<Long> = dateCut(getStartDateForPosition(pageNumber))
-        Log.d(TAG, "onCreateView: DATE ${SimpleDateFormat("dd").format(date[0])} ${SimpleDateFormat("dd.MM.yyyy").format(
+        val date: MutableList<Long> = getWeekStartAndEndFromDate(getStartDateForPosition(pageNumber))
+        Log.d(TAG, "onCreateView: DATE ${SimpleDateFormat("dd").format(date[0])} - ${SimpleDateFormat("dd.MM.yyyy").format(
             date[1]
         )}")
+
 
 
         val r = activity?.findViewById<TextView>(R.id.tvTodayDay)

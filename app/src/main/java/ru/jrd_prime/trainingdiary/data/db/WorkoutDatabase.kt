@@ -1,16 +1,14 @@
 package ru.jrd_prime.trainingdiary.data.db
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.room.TypeConverters
+import androidx.room.*
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.DATABASE_NAME
+import ru.jrd_prime.trainingdiary.utils.TypeConverterForRoom
 
 
 @Database(entities = [WorkoutModel::class], version = 1, exportSchema = false)
-@TypeConverters(Converters::class)
+//@TypeConverters(TypeConverterForRoom::class)
 abstract class WorkoutDatabase : RoomDatabase() {
     abstract fun workoutDao(): WorkoutDao
 

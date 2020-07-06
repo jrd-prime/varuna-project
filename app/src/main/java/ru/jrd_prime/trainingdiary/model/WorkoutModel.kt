@@ -18,9 +18,9 @@ data class WorkoutModel(
     @ColumnInfo(name = "time")
     val workoutTime: Int,
     @ColumnInfo(name = "date")
-    val workoutDate: Long,
+    val workoutDate: Long?,
     @ColumnInfo(name = "empty")
-    val workoutEmpty: Boolean
+    val workoutEmpty: Boolean = true
 ) {
 
 }

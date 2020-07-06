@@ -47,8 +47,8 @@ class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
             mainWeekDay.text = daysOfWeek[position]
             emptyWeekDay.text = daysOfWeek[position]
             // Устанавливаем день недели
-            mainMonthDay.text = getMonthDayFromDate(Date(wCase.workoutDate))
-            emptyMonthDay.text = getMonthDayFromDate(Date(wCase.workoutDate))
+            mainMonthDay.text = getMonthDayFromDate(Date(wCase.workoutDate!!))
+            emptyMonthDay.text = getMonthDayFromDate(Date(wCase.workoutDate!!))
 
             if (!wCase.workoutEmpty) {
 //                Log.d("JP_TAG", "bind: WORKOUTCASE NOT EMPTY")

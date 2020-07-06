@@ -12,10 +12,16 @@ class WorkoutsRepository(private val workoutDao: WorkoutDao) {
 
     fun clearWorkout(workoutID: Int, empty: Boolean) = workoutDao.clearWorkout(workoutID, empty)
     fun restoreWorkout(workoutID: Int, empty: Boolean) = workoutDao.restoreWorkout(workoutID, empty)
-    fun getWorkoutsForWeek(start: Long, end: Long) =
-//        liveData { emit(
-        workoutDao.getWorkoutsForWeek(start, end)
-//        ) }
+    fun getWorkoutsForWeek(start: Long, end: Long) = workoutDao.getWorkoutsForWeek(start, end)
+    fun addWorkout(
+        workoutID: Int,
+        categoryID: Int,
+        muscleGroup: String,
+        desc: String,
+        time: Int,
+        empty: Boolean
+    ) = workoutDao.addWorkout(workoutID, categoryID, muscleGroup, desc, time, empty)
+
 
     companion object {
         // For Singleton instantiation

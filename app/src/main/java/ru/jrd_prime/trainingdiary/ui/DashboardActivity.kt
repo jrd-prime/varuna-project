@@ -1,10 +1,14 @@
 package ru.jrd_prime.trainingdiary.ui
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -16,16 +20,13 @@ import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
-import ru.jrd_prime.trainingdiary.data.initDB
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.utils.makeStatusBarTransparent
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 const val TAG = "myLogs"
 const val PAGE_COUNT = 5000
-const val START_PAGE = 1500
+const val START_PAGE = 313
 
 class DashboardActivity : AppCompatActivity() {
     private val dashboardViewModel by lazy {
@@ -37,8 +38,30 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val appContainer = (application as TrainingDiaryApp).container
+
+//        when (PackageManager.PERMISSION_GRANTED) {
+//            ContextCompat.checkSelfPermission(
+//                this,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            ) -> {
+//                // You can use the API that requires the permission.
+//                Log.d(TAG, "onCreate: YES!")
+//             //   BackUpDB().backUpDB() //TODO checkpermissions, then backup
+//            }
+//            else -> {
+//                // You can directly ask for the permission.
+//                ActivityCompat.requestPermissions(
+//                    this,
+//                    arrayOf(
+//                        Manifest.permission.READ_EXTERNAL_STORAGE,
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                    ),
+//                    1
+//                )
+//            }
+//        }
+
 
         val sha = getSharedPreferences("jrd", Context.MODE_PRIVATE)
 
@@ -77,7 +100,34 @@ class DashboardActivity : AppCompatActivity() {
             override fun onPageScrollStateChanged(state: Int) {}
         })
     }
-
+//
+//    override fun onRequestPermissionsResult(
+//        requestCode: Int,
+//        permissions: Array<out String>,
+//        grantResults: IntArray
+//    ) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        when (requestCode) {
+//            1 -> {
+//                // If request is cancelled, the result arrays are empty.
+//                if (grantResults.isNotEmpty()
+//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
+//                ) {
+//                    // permission was granted, yay! Do the
+//                    // contacts-related task you need to do.
+//                } else {
+//                    // permission denied, boo! Disable the
+//                    // functionality that depends on this permission.
+//                    Toast.makeText(
+//                        this,
+//                        "Permission denied to read your External storage",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//                return
+//            }
+//        }
+//    }
 
     private class WorkoutPageAdapter(
         fm: FragmentManager?
