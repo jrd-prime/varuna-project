@@ -7,9 +7,7 @@ class WorkoutsRepository(private val workoutDao: WorkoutDao) {
     fun getWorkouts() = workoutDao.getWorkouts()
     fun insert(workout: WorkoutModel) = workoutDao.insert(workout)
     fun insertAll(workouts: List<WorkoutModel>) = workoutDao.insertAll(workouts)
-
     fun getWorkout(workoutID: Int) = workoutDao.getWorkout(workoutID)
-
     fun clearWorkout(workoutID: Int, empty: Boolean) = workoutDao.clearWorkout(workoutID, empty)
     fun restoreWorkout(workoutID: Int, empty: Boolean) = workoutDao.restoreWorkout(workoutID, empty)
     fun getWorkoutsForWeek(start: Long, end: Long) = workoutDao.getWorkoutsForWeek(start, end)
@@ -24,7 +22,6 @@ class WorkoutsRepository(private val workoutDao: WorkoutDao) {
 
 
     companion object {
-        // For Singleton instantiation
         @Volatile
         private var instance: WorkoutsRepository? = null
 
@@ -34,20 +31,3 @@ class WorkoutsRepository(private val workoutDao: WorkoutDao) {
             }
     }
 }
-
-
-//class WorkoutsRepository(appContext: TrainingDiaryApp) {
-//    private var context = appContext
-//
-//    companion object {
-//
-//        @Volatile
-//        private var instance: WorkoutsRepository? = null
-//        final fun getInstance(_context: Context): WorkoutsRepository {
-//            if (instance == null) {
-//                instance = WorkoutsRepository.getInstance(_context)
-//            }
-//            return instance as WorkoutsRepository
-//        }
-//    }
-//}

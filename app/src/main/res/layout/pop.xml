@@ -135,10 +135,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
+                android:inputType="textCapWords"
                 android:background="@drawable/input_ield"
                 android:hint="Muscle groups"
                 android:importantForAutofill="no"
-                android:inputType="textAutoCorrect"
                 android:maxLength="512"
                 android:padding="8dp" />
 
@@ -176,7 +176,7 @@
                 android:background="@drawable/input_ield"
                 android:hint="Description"
                 android:importantForAutofill="no"
-                android:inputType="textAutoCorrect"
+                android:inputType="textCapWords"
                 android:maxLength="512"
                 android:padding="8dp" />
         </FrameLayout>

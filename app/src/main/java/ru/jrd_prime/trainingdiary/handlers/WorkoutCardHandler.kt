@@ -88,6 +88,13 @@ class WorkoutCardHandler(root: View) {
             popupContainer.viewForHide.visibility = View.VISIBLE
             btnSave.isEnabled = false
 
+
+            /* Обработка радио*/
+            // set defaults
+            rRest.isChecked = false
+            rStretch.isChecked = false
+            rPower.isChecked = false
+            rCardio.isChecked = false
             when (wo!!.workoutCategory) {
                 0 -> ""
                 1 -> {
@@ -149,13 +156,6 @@ class WorkoutCardHandler(root: View) {
 
             }
 
-
-            /* Обработка радио*/
-            // set defaults
-            rRest.isChecked = false
-            rStretch.isChecked = false
-            rPower.isChecked = false
-            rCardio.isChecked = false
 
             val rbListener = View.OnClickListener { btn ->
                 when (btn.id) {
