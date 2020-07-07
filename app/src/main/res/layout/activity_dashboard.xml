@@ -7,7 +7,7 @@
 
         <variable
             name="viewmodel"
-            type="ru.jrd_prime.trainingdiary.ui.DashboardViewModel" />
+            type="ru.jrd_prime.trainingdiary.viewmodels.DashboardViewModel" />
         <variable
             name="workoutModel"
             type="ru.jrd_prime.trainingdiary.model.WorkoutModel" />

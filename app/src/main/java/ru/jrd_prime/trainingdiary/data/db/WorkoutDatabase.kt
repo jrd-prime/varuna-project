@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.*
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.DATABASE_NAME
-import ru.jrd_prime.trainingdiary.utils.TypeConverterForRoom
 
 
 @Database(entities = [WorkoutModel::class], version = 1, exportSchema = false)

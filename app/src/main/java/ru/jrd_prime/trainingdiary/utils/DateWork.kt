@@ -1,7 +1,6 @@
 package ru.jrd_prime.trainingdiary.utils
 
 import android.util.Log
-import ru.jrd_prime.trainingdiary.data.prepData
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.ui.START_PAGE
 import java.text.SimpleDateFormat

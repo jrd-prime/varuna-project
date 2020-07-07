@@ -1,4 +1,4 @@
-package ru.jrd_prime.trainingdiary.utils
+package ru.jrd_prime.trainingdiary.workers
 
 import android.os.Handler
 import android.os.Looper
@@ -47,11 +47,12 @@ class AppExecutors private constructor(
             get() {
                 if (sInstance == null) {
                     synchronized(LOCK) {
-                        sInstance = AppExecutors(
-                            Executors.newSingleThreadExecutor(),
-                            Executors.newFixedThreadPool(3),
-                            MainThreadExecutor()
-                        )
+                        sInstance =
+                            AppExecutors(
+                                Executors.newSingleThreadExecutor(),
+                                Executors.newFixedThreadPool(3),
+                                MainThreadExecutor()
+                            )
                     }
                 }
                 return sInstance

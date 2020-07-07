@@ -8,7 +8,7 @@ import kotlin.math.abs
 
 const val TAG = "DateHelper.kt"
 val jpZoneId = ZoneId.systemDefault()
-val convertT = TypeConverterForRoom()
+val convertT = JPConverters()
 
 fun getStartDateForPosition(fragmentPageNumber: Int): Long {
     val today = LocalDateTime.now().toLocalDate().atTime(LocalTime.MIN) // today date YYYY-MM-DD
