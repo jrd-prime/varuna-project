@@ -8,6 +8,7 @@ import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutCardBinding
 import ru.jrd_prime.trainingdiary.handlers.WorkoutCardHandler
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
+import ru.jrd_prime.trainingdiary.ui.WorkoutListViewHolder
 
 
 class WorkoutListAdapter :

@@ -18,4 +18,8 @@
     <style name="MyRadioButtonStyle" parent="@android:style/Widget.CompoundButton.RadioButton">
         <item name="android:button">@drawable/custom_radio_btn</item>
     </style>
+
+    <style name="snackbar_style" parent="@style/Widget.MaterialComponents.Snackbar">
+        <item name="android:layout_margin">32dp</item>
+    </style>
 </resources>

@@ -1,4 +1,4 @@
-package ru.jrd_prime.trainingdiary.adapter
+package ru.jrd_prime.trainingdiary.ui
 
 import android.util.Log
 import android.view.View

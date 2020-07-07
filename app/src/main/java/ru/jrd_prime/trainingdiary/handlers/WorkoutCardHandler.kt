@@ -23,23 +23,28 @@ class WorkoutCardHandler(root: View) {
 
 
     fun workoutDelete(view: View, workoutID: Int) {
-        Toast.makeText(view.context, "Del $workoutID", Toast.LENGTH_SHORT).show()
-
         runBlocking {
             launch(Dispatchers.IO) {
-//                WorkoutDatabase.getInstance(view.context).workoutDao().delete(workoutID)
                 appContainer.workoutsRepository.clearWorkout(workoutID, true)
             }
         }
-        Snackbar.make(view, "asdasd", Snackbar.LENGTH_LONG)
-            .setAction("Cancel", View.OnClickListener { _ ->
+        val snack = Snackbar.make(view, "Record deleted", 25000)
+            .setAction("Restore", View.OnClickListener { _ ->
                 runBlocking {
                     launch(Dispatchers.IO) {
-//                WorkoutDatabase.getInstance(view.context).workoutDao().delete(workoutID)
                         appContainer.workoutsRepository.restoreWorkout(workoutID, false)
                     }
                 }
-            }).show()
+            }).setActionTextColor(view.context.getColor(R.color.colorSnackbarButton))
+
+        val snackView = snack.view
+        val snackText =
+            snackView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+
+        snackText.setTextColor(view.context.getColor(R.color.colorLightGrey))
+        snackView.setBackgroundResource(R.drawable.snack_bg)
+
+        snack.show()
     }
 
     fun workoutEdit(view: View, workoutID: Int) {
