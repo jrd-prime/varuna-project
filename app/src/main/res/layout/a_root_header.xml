@@ -46,9 +46,12 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/statIVCont1"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentStart="true">
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/stat_icon_bg"
+                android:padding="2dp">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -92,8 +95,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="45%"
                     android:paddingBottom="1dp"
+                    android:text="45%"
                     android:textColor="@color/colorPrimaryLight"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -111,9 +114,12 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/statIVCont2"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentStart="true">
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/stat_icon_bg"
+                android:padding="2dp">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -158,8 +164,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="38%"
                     android:paddingBottom="1dp"
+                    android:text="38%"
                     android:textColor="@color/colorPrimaryLight"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -177,9 +183,12 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/statIVCont3"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentStart="true">
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/stat_icon_bg"
+                android:padding="2dp">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -223,8 +232,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="15%"
                     android:paddingBottom="1dp"
+                    android:text="15%"
                     android:textColor="@color/colorPrimaryLight"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -242,9 +251,12 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/statIVCont4"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentStart="true">
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/stat_icon_bg"
+                android:padding="2dp">
 
                 <ImageView
                     android:layout_width="20dp"
@@ -288,8 +300,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2%"
                     android:paddingBottom="1dp"
+                    android:text="2%"
                     android:textColor="@color/colorPrimaryLight"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
