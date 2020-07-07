@@ -15,6 +15,8 @@ import kotlinx.android.synthetic.main.a_workout_list_pager.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.format.DateTimeFormatter
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
@@ -76,19 +78,39 @@ class WorkoutPageFragment : Fragment() {
         val myAdapter = WorkoutListAdapter()
         myAdapter.notifyDataSetChanged()
         rootView.recView.adapter = myAdapter
-        val date: MutableList<Long> = getWeekStartAndEndFromDate(getStartDateForPosition(pageNumber))
-        Log.d(TAG, "onCreateView: DATE ${SimpleDateFormat("dd").format(date[0])} - ${SimpleDateFormat("dd.MM.yyyy").format(
-            date[1]
-        )}")
-
+        val date: MutableList<Long> =
+            getWeekStartAndEndFromDate(getStartDateForPosition(pageNumber))
+        Log.d(
+            TAG,
+            "onCreateView: DATE ${SimpleDateFormat("dd").format(date[0])} - ${SimpleDateFormat("dd.MM.yyyy").format(
+                date[1]
+            )}"
+        )
 
 
         val r = activity?.findViewById<TextView>(R.id.tvTodayDay)
-        r?.text =
-            SimpleDateFormat("dd").format(date[0]) + " - " + SimpleDateFormat("dd.MM.yyyy").format(
-                date[1]
-            ) + " DONT TRUST!"
 
+        val start = LocalDateTime.now()
+        val end = start.plusWeeks(1)
+        val day = Integer.parseInt(DateTimeFormatter.ofPattern("dd").format(start))
+        val month = Integer.parseInt(DateTimeFormatter.ofPattern("MM").format(start))
+        val year = Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(start))
+        val textMonth = when (month) {
+            1 -> "January"
+            2 -> "February"
+            3 -> "March"
+            4 -> "April"
+            5 -> "May"
+            6 -> "June"
+            7 -> "July"
+            8 -> "August"
+            9 -> "September"
+            10 -> "October"
+            11 -> "November"
+            12 -> "December"
+            else -> ""
+        }
+        r?.text = "$day $textMonth $year"
         val data = appContainerz.workoutsRepository.getWorkoutsForWeek(date[0], date[1])
 
 

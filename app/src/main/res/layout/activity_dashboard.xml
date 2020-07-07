@@ -8,6 +8,7 @@
         <variable
             name="viewmodel"
             type="ru.jrd_prime.trainingdiary.viewmodels.DashboardViewModel" />
+
         <variable
             name="workoutModel"
             type="ru.jrd_prime.trainingdiary.model.WorkoutModel" />
@@ -46,7 +47,7 @@
                     android:id="@+id/frameShowDay"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/showDayHeight"
-                    android:background="@color/colorSnackbarButton"
+                    android:background="@drawable/show_date_bg"
                     android:elevation="@dimen/showDayElevation"
                     app:layout_constraintTop_toBottomOf="@+id/frameHeader">
 
@@ -75,6 +76,13 @@
 
         </LinearLayout>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_gravity="top"
+            android:background="@drawable/shadow"
+            app:layout_anchor="@id/vBottomAppBar"
+            app:layout_anchorGravity="top" />
 
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/vBottomAppBar"
@@ -86,19 +94,36 @@
             app:fabCradleMargin="@dimen/fabMargin"
             app:fabCradleRoundedCornerRadius="@dimen/fabCornerRadius"
             app:hideOnScroll="false"
-            android:elevation="10dp"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:navigationIcon="@drawable/ic_nav_menu" />
+            app:navigationIcon="@drawable/ic_nav_menu" >
 
-<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--            android:id="@+id/vFloatActionBar"-->
-<!--            style="@style/Widget.MaterialComponents.FloatingActionButton"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="@android:color/white"-->
-<!--            android:backgroundTint="@color/colorPrimaryDark"-->
-<!--            android:src="@android:drawable/ic_menu_add"-->
-<!--            app:borderWidth="@dimen/fabBorderWidth"-->
-<!--            app:layout_anchor="@id/vBottomAppBar" />-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/your_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textColor="@color/colorLightGrey"
+                    android:layout_alignParentEnd="true"
+                    android:paddingEnd="16dp"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"/>
+
+            </RelativeLayout>
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
+
+        <!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+        <!--            android:id="@+id/vFloatActionBar"-->
+        <!--            style="@style/Widget.MaterialComponents.FloatingActionButton"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:background="@android:color/white"-->
+        <!--            android:backgroundTint="@color/colorPrimaryDark"-->
+        <!--            android:src="@android:drawable/ic_menu_add"-->
+        <!--            app:borderWidth="@dimen/fabBorderWidth"-->
+        <!--            app:layout_anchor="@id/vBottomAppBar" />-->
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

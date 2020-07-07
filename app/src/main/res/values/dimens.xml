@@ -8,7 +8,7 @@
     <dimen name="day_show_height">48dp</dimen>
     <dimen name="showDayHeight">48dp</dimen>
     <dimen name="headerHeight">150dp</dimen>
-    <dimen name="showDayElevation">4dp</dimen>
+    <dimen name="showDayElevation">8dp</dimen>
     <dimen name="fabBorderWidth">0dp</dimen>
     <dimen name="iconCardSize">24dp</dimen>
     <dimen name="dayTodayImgSize">32dp</dimen>
