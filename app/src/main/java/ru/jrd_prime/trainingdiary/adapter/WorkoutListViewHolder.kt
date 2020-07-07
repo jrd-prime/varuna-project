@@ -17,13 +17,12 @@ import java.util.*
 class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(workoutCase: WorkoutModel?, position: Int) {
-        val wCase = workoutCase
-        if (wCase == null) {
+        if (workoutCase == null) {
             //TODO Что мы делаем если нету кейса
             Log.d("JP_TAG", "bind: WORKOUTCASE NULL!")
         } else {
 //            Log.d("TAG", "bind: wdate ${SimpleDateFormat("dd.MM.yyyy").format(wCase.workoutDate)}")
-            val wCategory: Int = wCase.workoutCategory
+            val wCategory: Int = workoutCase.workoutCategory
             val daysOfWeek = listOf<String>("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
             /* WORKOUT CARD */
             val mainCardLay = binding.cardLay
@@ -47,17 +46,17 @@ class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
             mainWeekDay.text = daysOfWeek[position]
             emptyWeekDay.text = daysOfWeek[position]
             // Устанавливаем день недели
-            mainMonthDay.text = getMonthDayFromDate(Date(wCase.workoutDate!!))
-            emptyMonthDay.text = getMonthDayFromDate(Date(wCase.workoutDate!!))
+            mainMonthDay.text = getMonthDayFromDate(Date(workoutCase.workoutDate!!))
+            emptyMonthDay.text = getMonthDayFromDate(Date(workoutCase.workoutDate))
 
-            if (!wCase.workoutEmpty) {
+            if (!workoutCase.workoutEmpty) {
 //                Log.d("JP_TAG", "bind: WORKOUTCASE NOT EMPTY")
                 frameForHide.visibility = View.GONE
                 emptyCardLay.visibility = View.GONE
                 mainCardLay.visibility = View.VISIBLE
-                title.text = wCase.muscleGroup
-                desc.text = wCase.desc
-                time.text = wCase.workoutTime.toString() + "min"
+                title.text = workoutCase.muscleGroup
+                desc.text = workoutCase.desc
+                time.text = workoutCase.workoutTime.toString() + "min"
             } else {
 //                Log.d("JP_TAG", "WORKOUTCASE EMPTY")
                 setImageViewAndDot(0, emptyImageView, dot)
@@ -67,10 +66,9 @@ class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
 
             if (wCategory != 0) {
                 /* Категория есть */
-                setImageViewAndDot(wCase.workoutCategory, ivCategory, dot)
+                setImageViewAndDot(workoutCase.workoutCategory, ivCategory, dot)
             } else {
                 /* Категории нету */
-//                Log.d("JP_TAG", "Item dont have category! ${wCase.workoutID}")
                 setImageViewAndDot(0, ivCategory, dot)
             }
 
