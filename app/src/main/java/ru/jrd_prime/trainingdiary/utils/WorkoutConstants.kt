@@ -28,3 +28,4 @@ val catColor =
         3 to R.drawable.card_bg_pink,
         4 to R.drawable.card_bg_yellow
     )
+val lightGrey = R.color.jpLight

@@ -1,5 +1,6 @@
 package ru.jrd_prime.trainingdiary.handlers
 
+import android.content.Context
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -23,28 +24,34 @@ class WorkoutCardHandler(root: View) {
 
 
     fun workoutDelete(view: View, workoutID: Int) {
+        val ctx: Context = view.context
+        clearWorkout(workoutID) /* Set workout empty = true */
+        val snack = Snackbar.make(view, R.string.snack_record_deleted, 25000)
+        val snackView = snack.view
+        snack.setAction(R.string.snack_restore, View.OnClickListener { _ ->
+            restoreWorkout(workoutID) /* Set workout empty = false */
+        })
+        snack.setActionTextColor(ctx.getColor(R.color.colorSnackbarButton))
+        snackView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+            .setTextColor(ctx.getColor(R.color.colorLightGrey))
+        snackView.setBackgroundResource(R.drawable.snack_bg)
+        snack.show()
+    }
+
+    private fun restoreWorkout(workoutID: Int) {
+        runBlocking {
+            launch(Dispatchers.IO) {
+                appContainer.workoutsRepository.restoreWorkout(workoutID, false)
+            }
+        }
+    }
+
+    private fun clearWorkout(workoutID: Int) {
         runBlocking {
             launch(Dispatchers.IO) {
                 appContainer.workoutsRepository.clearWorkout(workoutID, true)
             }
         }
-        val snack = Snackbar.make(view, "Record deleted", 25000)
-            .setAction("Restore", View.OnClickListener { _ ->
-                runBlocking {
-                    launch(Dispatchers.IO) {
-                        appContainer.workoutsRepository.restoreWorkout(workoutID, false)
-                    }
-                }
-            }).setActionTextColor(view.context.getColor(R.color.colorSnackbarButton))
-
-        val snackView = snack.view
-        val snackText =
-            snackView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-
-        snackText.setTextColor(view.context.getColor(R.color.colorLightGrey))
-        snackView.setBackgroundResource(R.drawable.snack_bg)
-
-        snack.show()
     }
 
     fun workoutEdit(view: View, workoutID: Int) {

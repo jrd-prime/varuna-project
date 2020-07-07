@@ -16,6 +16,7 @@
     <color name="colorPrimaryLight">#C8E6C9</color>
     <color name="colorPrimary">#558949</color>
     <color name="colorPrimaryX">#538c47</color>
+    <color name="jpLight">#2CFF00</color>
 
 
     <color name="colorDrawerIcons">#686868</color>
@@ -29,4 +30,5 @@
 
     <color name="appMainBackground">#FFFFFFFF</color>
     <color name="jpYellow">#FFF176</color>
+    <color name="colorGreyDark">#686868</color>
 </resources>

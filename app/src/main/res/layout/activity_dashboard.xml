@@ -86,6 +86,7 @@
             app:fabCradleMargin="@dimen/fabMargin"
             app:fabCradleRoundedCornerRadius="@dimen/fabCornerRadius"
             app:hideOnScroll="false"
+            android:elevation="10dp"
             app:layout_scrollFlags="scroll|enterAlways"
             app:navigationIcon="@drawable/ic_nav_menu" />
 

@@ -1,5 +1,6 @@
 package ru.jrd_prime.trainingdiary.ui
 
+import android.graphics.Color
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
@@ -56,7 +57,64 @@ class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
                 mainCardLay.visibility = View.VISIBLE
                 title.text = workoutCase.muscleGroup
                 desc.text = workoutCase.desc
-                time.text = workoutCase.workoutTime.toString() + "min"
+
+
+                var timeString = ""
+                val timeInt = workoutCase.workoutTime
+
+                if (timeInt == 0) {
+                    binding.l3topcut.visibility = View.GONE
+                    binding.tvWorkoutTime.visibility = View.GONE
+                }
+
+                if (workoutCase.desc.isEmpty()) {
+                    binding.cardLineSecond.visibility = View.GONE
+                    binding.lineOverDesc.visibility = View.GONE
+                }
+
+                when {
+                    timeInt < 60 -> timeString = "${timeInt.toString()} mins"
+                    timeInt >= 60 -> {
+                        val mins = timeInt % 60
+                        val hrs = (timeInt - (timeInt % 60)) / 60
+
+                        timeString = when (mins) {
+                            0 -> ""
+                            1 -> "${mins.toString()} min"
+                            else -> "${mins.toString()} mins"
+                        }
+
+                        timeString = if (hrs == 1) {
+                            "${hrs.toString()} hour $timeString"
+                        } else {
+                            "${hrs.toString()} hours $timeString"
+                        }
+
+                    }
+                }
+
+
+
+                if (workoutCase.workoutCategory == 4) {
+
+                    binding.cardLineSecond.visibility = View.GONE
+                    binding.lineOverDesc.visibility = View.GONE
+                    if (workoutCase.muscleGroup.isEmpty()) {
+                        if (workoutCase.desc.isEmpty()) {
+
+                            binding.tvMuscleGroup.text = "No description"
+                        } else {
+                            binding.tvMuscleGroup.text = workoutCase.desc
+                        }
+                    }
+                } else {
+                    if (workoutCase.muscleGroup.isEmpty()) {
+
+                        binding.tvMuscleGroup.text = "No description"
+                        binding.tvMuscleGroup.setTextColor(Color.parseColor("#eeeeee"))
+                    }
+                }
+                time.text = timeString
             } else {
 //                Log.d("JP_TAG", "WORKOUTCASE EMPTY")
                 setImageViewAndDot(0, emptyImageView, dot)
