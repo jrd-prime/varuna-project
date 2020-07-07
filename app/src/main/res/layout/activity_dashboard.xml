@@ -39,7 +39,7 @@
                     android:id="@+id/viewPagerMainDashboard"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="198dp"
+                    android:layout_marginTop="268dp"
                     android:layout_marginBottom="?actionBarSize"
                     app:layout_constraintTop_toBottomOf="@+id/frameShowDay" />
 
@@ -51,10 +51,10 @@
                     android:elevation="@dimen/showDayElevation"
                     app:layout_constraintTop_toBottomOf="@+id/frameHeader">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{viewmodel.ele}" />
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="@{viewmodel.ele}" />-->
 
                     <include layout="@layout/a_root_show_date" />
                 </FrameLayout>
