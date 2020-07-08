@@ -110,7 +110,7 @@
                     android:paddingEnd="16dp"
                     android:text="@string/app_name"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-                    android:textColor="@color/colorLightGrey" />
+                    android:textColor="@color/gray" />
 
             </RelativeLayout>
 

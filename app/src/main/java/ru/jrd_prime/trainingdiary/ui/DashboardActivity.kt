@@ -16,14 +16,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
+import org.threeten.bp.format.DateTimeFormatter
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
-import ru.jrd_prime.trainingdiary.utils.getStartDateForPosition
-import ru.jrd_prime.trainingdiary.utils.getWeekStartAndEndFromDate
-import ru.jrd_prime.trainingdiary.utils.makeStatusBarTransparent
+import ru.jrd_prime.trainingdiary.utils.*
 import ru.jrd_prime.trainingdiary.viewmodels.DashboardViewModel
 
 
@@ -105,7 +104,17 @@ class DashboardActivity : AppCompatActivity() {
 
         val date: MutableList<Long> =
             getWeekStartAndEndFromDate(getStartDateForPosition(START_PAGE))
-        val data = appContainer.workoutsRepository.getWorkoutsForWeek(date[0], date[1])
+        val dt1 = date[1]
+        val dt2 = fromTimestamp(dt1).minusMonths(1)
+        Log.d(
+            TAG,
+            "onCreate: ${DateTimeFormatter.ofPattern("dd.MM.yyyy").format(fromTimestamp(dt1))}"
+        )
+        Log.d(TAG, "onCreate: ${DateTimeFormatter.ofPattern("dd.MM.yyyy").format(dt2)}")
+        val data = appContainer.workoutsRepository.getWorkoutsForWeek(
+            dateToTimestamp(dt2),
+            dt1
+        )
 
 
         data.observe(this, Observer { dataz ->

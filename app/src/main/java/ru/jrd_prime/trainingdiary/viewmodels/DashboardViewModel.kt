@@ -10,7 +10,7 @@ class DashboardViewModel : ViewModel() {
     var statTitle = "Statistics for the last month"
     val TAG = "dashVM"
     var place: PlaceStatisticModel? = null
-
+    var workoutsSum = 0
     var p1icon: Int = R.drawable.jp_day_fri
     var p2icon: Int = R.drawable.jp_day_fri
     var p3icon: Int = R.drawable.jp_day_fri
@@ -36,10 +36,11 @@ class DashboardViewModel : ViewModel() {
         val stretchSize = data.filter { workoutModel -> workoutModel.workoutCategory == 3 }.size
         val restSize = data.filter { workoutModel -> workoutModel.workoutCategory == 4 }.size
 
-        val workoutsSum = cardioSize + powerSize + stretchSize + restSize
+        workoutsSum = cardioSize + powerSize + stretchSize + restSize
+
+
         val onePercent: Float =
             if (workoutsSum != 0) 100f / workoutsSum else 0f // no records - set def
-        Log.d(TAG, "setNewStatistic: ${100 / workoutsSum}")
 
         val cardioPercent = onePercent * cardioSize
         val powerPercent = onePercent * powerSize

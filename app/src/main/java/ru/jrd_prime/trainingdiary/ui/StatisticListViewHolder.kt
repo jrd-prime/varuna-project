@@ -36,6 +36,7 @@ class StatisticListViewHolder(private var binding: AStatPlaceItemBinding) :
             aset.duration = 2000
             aset.start()
 
+
             val tt = "%.1f".format(placeItem.catPercent)
             binding.precentText.text = "$tt %"
             binding.statIV.setImageResource(catIcons[placeItem.catId]!!)
