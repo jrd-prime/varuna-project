@@ -26,7 +26,7 @@ class WorkoutCardHandler(root: View) {
     fun workoutDelete(view: View, workoutID: Int) {
         val ctx: Context = view.context
         clearWorkout(workoutID) /* Set workout empty = true */
-        val snack = Snackbar.make(view, R.string.snack_record_deleted, 25000)
+        val snack = Snackbar.make(view, R.string.snack_record_deleted, 7000)
         val snackView = snack.view
         snack.setAction(R.string.snack_restore, View.OnClickListener { _ ->
             restoreWorkout(workoutID) /* Set workout empty = false */

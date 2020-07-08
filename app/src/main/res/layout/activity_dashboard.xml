@@ -51,10 +51,10 @@
                     android:elevation="@dimen/showDayElevation"
                     app:layout_constraintTop_toBottomOf="@+id/frameHeader">
 
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="@{viewmodel.ele}" />-->
+                    <!--                    <TextView-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:text="@{viewmodel.ele}" />-->
 
                     <include layout="@layout/a_root_show_date" />
                 </FrameLayout>
@@ -68,7 +68,8 @@
                     app:layout_constraintTop_toTopOf="parent">
 
 
-                    <include layout="@layout/a_root_header" />
+                    <include
+                        layout="@layout/a_root_header"/>
                 </FrameLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -95,7 +96,7 @@
             app:fabCradleRoundedCornerRadius="@dimen/fabCornerRadius"
             app:hideOnScroll="false"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:navigationIcon="@drawable/ic_nav_menu" >
+            app:navigationIcon="@drawable/ic_nav_menu">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -105,11 +106,11 @@
                     android:id="@+id/your_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textColor="@color/colorLightGrey"
                     android:layout_alignParentEnd="true"
                     android:paddingEnd="16dp"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"/>
+                    android:text="@string/app_name"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                    android:textColor="@color/colorLightGrey" />
 
             </RelativeLayout>
 

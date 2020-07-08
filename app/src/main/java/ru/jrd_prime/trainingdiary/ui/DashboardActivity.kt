@@ -9,13 +9,20 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
+import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
+import ru.jrd_prime.trainingdiary.model.WorkoutModel
+import ru.jrd_prime.trainingdiary.utils.getStartDateForPosition
+import ru.jrd_prime.trainingdiary.utils.getWeekStartAndEndFromDate
 import ru.jrd_prime.trainingdiary.utils.makeStatusBarTransparent
 import ru.jrd_prime.trainingdiary.viewmodels.DashboardViewModel
 
@@ -28,14 +35,13 @@ class DashboardActivity : AppCompatActivity() {
     private val dashboardViewModel by lazy {
         ViewModelProvider(this).get(DashboardViewModel::class.java)
     }
-    var workoutPager: ViewPager? = null
-    var workoutPagerAdapter: PagerAdapter? = null
+    private var workoutPager: ViewPager? = null
+    private var workoutPagerAdapter: PagerAdapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val appContainer = (application as TrainingDiaryApp).container
-
 //        when (PackageManager.PERMISSION_GRANTED) {
 //            ContextCompat.checkSelfPermission(
 //                this,
@@ -61,27 +67,19 @@ class DashboardActivity : AppCompatActivity() {
 
         val sha = getSharedPreferences("jrd", Context.MODE_PRIVATE)
 
-//        if (sha.getInt("need_db", 1) == 1) {
-//            Log.d("DASHBOARD_ACTIVITY", "DB INIT")
-//            initDB(this)
-//            sha.edit().putInt("need_db", 0).apply()
-//        }
-
         val binding: ActivityDashboardBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         val viewmodel = dashboardViewModel
         binding.viewmodel = viewmodel
 
+        dashboardViewModel.statTitle = "new"
 
         setWindow()
 
         workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
         workoutPagerAdapter = WorkoutPageAdapter(supportFragmentManager)
-
         workoutPager!!.adapter = workoutPagerAdapter
-
         workoutPager!!.setCurrentItem(START_PAGE, false)
-
         workoutPager!!.setOnPageChangeListener(object : OnPageChangeListener {
             override fun onPageSelected(position: Int) {
                 Log.d(TAG, "onPageSelected, position = $position")
@@ -95,6 +93,27 @@ class DashboardActivity : AppCompatActivity() {
 
             override fun onPageScrollStateChanged(state: Int) {}
         })
+
+
+        val lvMain: RecyclerView = findViewById<RecyclerView>(R.id.statListView)
+        var datata: List<WorkoutModel>? = null
+
+        val myAdapter = StatisticListAdapter()
+        myAdapter.notifyDataSetChanged()
+        lvMain.adapter = myAdapter
+
+
+        val date: MutableList<Long> =
+            getWeekStartAndEndFromDate(getStartDateForPosition(START_PAGE))
+        val data = appContainer.workoutsRepository.getWorkoutsForWeek(date[0], date[1])
+
+
+        data.observe(this, Observer { dataz ->
+            Log.d(TAG, "onCreateView: ${dataz.size}")
+            myAdapter.setNewData(viewmodel.setNewStatistic(dataz))
+        })
+
+        lvMain.layoutManager = LinearLayoutManager(this)
     }
 //
 //    override fun onRequestPermissionsResult(
@@ -128,8 +147,6 @@ class DashboardActivity : AppCompatActivity() {
     private class WorkoutPageAdapter(
         fm: FragmentManager?
     ) : FragmentPagerAdapter(fm!!) {
-
-
         override fun getItem(position: Int): Fragment {
             return WorkoutPageFragment.newInstance(position)
         }
@@ -142,7 +159,6 @@ class DashboardActivity : AppCompatActivity() {
     private fun setWindow() {
         makeStatusBarTransparent()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.coordinatorAppContainer)) { _, insets ->
-//            findViewById<FloatingActionButton>(R.id.vFloatActionBar).setMarginTop(insets.systemWindowInsetTop)
             insets.consumeSystemWindowInsets()
         }
 

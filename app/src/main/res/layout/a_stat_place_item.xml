@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <!--        <import type="android.view.View" />-->
+        <variable
+            name="handler"
+            type="ru.jrd_prime.trainingdiary.handlers.WorkoutCardHandler" />
+
+        <variable
+            name="place"
+            type="ru.jrd_prime.trainingdiary.model.PlaceStatisticModel" />
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/stat1stLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/statPlaceContainerHeight"
+        app:layout_constraintTop_toBottomOf="@+id/statTitleLayout"
+        tools:showIn="@layout/activity_dashboard"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/statIVCont1"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/stat_icon_bg"
+            android:padding="2dp">
+
+            <ImageView
+                android:id="@+id/statIV"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/jp_dumbbell"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/statPBCont1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@+id/statProcCont1"
+            android:layout_toEndOf="@id/statIVCont1">
+
+            <ProgressBar
+                android:id="@+id/statPB"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/stat_pb_height"
+                android:indeterminate="false"
+                android:max="1000"
+                android:progress="0"
+                android:progressDrawable="@drawable/dadada"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/statProcCont1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true">
+
+            <TextView
+                android:id="@+id/precentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="1dp"
+                android:text="45%"
+                android:textColor="@color/colorPrimaryLight"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </RelativeLayout>
+</layout>

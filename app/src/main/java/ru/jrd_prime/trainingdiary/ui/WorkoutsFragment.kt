@@ -58,7 +58,7 @@ class WorkoutPageFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pageNumber = requireArguments().getInt(ARGUMENT_PAGE_NUMBER)
-        Log.d("HERE", "pageNum $pageNumber")
+//        Log.d("HERE", "pageNum $pageNumber")
     }
 
     /*
@@ -80,12 +80,12 @@ class WorkoutPageFragment : Fragment() {
         rootView.recView.adapter = myAdapter
         val date: MutableList<Long> =
             getWeekStartAndEndFromDate(getStartDateForPosition(pageNumber))
-        Log.d(
-            TAG,
-            "onCreateView: DATE ${SimpleDateFormat("dd").format(date[0])} - ${SimpleDateFormat("dd.MM.yyyy").format(
-                date[1]
-            )}"
-        )
+//        Log.d(
+//            TAG,
+//            "onCreateView: DATE ${SimpleDateFormat("dd").format(date[0])} - ${SimpleDateFormat("dd.MM.yyyy").format(
+//                date[1]
+//            )}"
+//        )
 
 
         val r = activity?.findViewById<TextView>(R.id.tvTodayDay)
@@ -111,12 +111,14 @@ class WorkoutPageFragment : Fragment() {
             else -> ""
         }
         r?.text = "$day $textMonth $year"
+
+
         val data = appContainerz.workoutsRepository.getWorkoutsForWeek(date[0], date[1])
 
 
 
         data.observe(viewLifecycleOwner, Observer { dataz ->
-            Log.d(TAG, "onCreateView: ${dataz.size}")
+//            Log.d(TAG, "onCreateView: ${dataz.size}")
             myAdapter.setNewData(dataz as List<WorkoutModel>)
             if (dataz.size < 7 || dataz.isEmpty()) {
                 addWorkoutsToEnd(7 - dataz.size, date[0])

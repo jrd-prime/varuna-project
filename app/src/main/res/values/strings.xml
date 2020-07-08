@@ -26,4 +26,5 @@
     <string name="descIVCategory">ivCategory</string>
     <string name="snack_restore">Restore</string>
     <string name="snack_record_deleted">Record deleted</string>
+    <string name="stat_last_month">Statistics for the last month</string>
 </resources>
