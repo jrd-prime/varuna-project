@@ -1,7 +1,6 @@
 package ru.jrd_prime.trainingdiary.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,8 +23,7 @@ import ru.jrd_prime.trainingdiary.databinding.AWorkoutListPagerBinding
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
 import ru.jrd_prime.trainingdiary.utils.getStartDateForPosition
-import ru.jrd_prime.trainingdiary.utils.getWeekStartAndEndFromDate
-import java.text.SimpleDateFormat
+import ru.jrd_prime.trainingdiary.utils.getWeekFromDate
 import java.util.*
 
 
@@ -58,7 +56,6 @@ class WorkoutPageFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pageNumber = requireArguments().getInt(ARGUMENT_PAGE_NUMBER)
-//        Log.d("HERE", "pageNum $pageNumber")
     }
 
     /*
@@ -79,14 +76,7 @@ class WorkoutPageFragment : Fragment() {
         myAdapter.notifyDataSetChanged()
         rootView.recView.adapter = myAdapter
         val date: MutableList<Long> =
-            getWeekStartAndEndFromDate(getStartDateForPosition(pageNumber))
-//        Log.d(
-//            TAG,
-//            "onCreateView: DATE ${SimpleDateFormat("dd").format(date[0])} - ${SimpleDateFormat("dd.MM.yyyy").format(
-//                date[1]
-//            )}"
-//        )
-
+            getWeekFromDate(getStartDateForPosition(pageNumber))
 
         val r = activity?.findViewById<TextView>(R.id.tvTodayDay)
 
@@ -112,19 +102,14 @@ class WorkoutPageFragment : Fragment() {
         }
         r?.text = "$day $textMonth $year"
 
-
         val data = appContainerz.workoutsRepository.getWorkoutsForWeek(date[0], date[1])
 
-
-
         data.observe(viewLifecycleOwner, Observer { dataz ->
-//            Log.d(TAG, "onCreateView: ${dataz.size}")
             myAdapter.setNewData(dataz as List<WorkoutModel>)
             if (dataz.size < 7 || dataz.isEmpty()) {
                 addWorkoutsToEnd(7 - dataz.size, date[0])
             }
         })
-
 
         rootView.recView.layoutManager = LinearLayoutManager(context)
         val scrollView = rootView.cont_layz as NestedScrollView
@@ -136,8 +121,6 @@ class WorkoutPageFragment : Fragment() {
         val list = mutableListOf<WorkoutModel>()
         val cal1 = Calendar.getInstance()
         cal1.time = Date(workoutDate)
-//        Log.d(TAG, "addWorkoutsToEnd: week start ${cal1.time}")
-
         for (i in 1..count) {
             list.add(
                 WorkoutModel(
@@ -150,15 +133,8 @@ class WorkoutPageFragment : Fragment() {
                     true
                 )
             )
-//            Log.d(
-//                TAG,
-//                "addWorkoutsToEnd: $i with " + cal1.time
-//            )
-
             cal1.add(Calendar.DAY_OF_WEEK, 1)
         }
-
-//        Log.d(TAG, "addWorkoutsToEnd: ${list.toString()}")
         runBlocking {
             launch(Dispatchers.IO) {
                 appContainerz.workoutsRepository.insertAll(list)

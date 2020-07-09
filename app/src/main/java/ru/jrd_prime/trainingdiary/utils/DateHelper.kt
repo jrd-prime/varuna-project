@@ -21,7 +21,7 @@ fun getStartDateForPosition(fragmentPageNumber: Int): Long {
     }
 }
 
-fun getWeekStartAndEndFromDate(startDate: Long): MutableList<Long> {
+fun getWeekFromDate(startDate: Long): MutableList<Long> {
     val dates = mutableListOf<Long>()
     dates.add(startDate)
     dates.add(

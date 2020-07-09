@@ -11,11 +11,11 @@ data class WorkoutModel(
     val workoutID: Int?,
     @ColumnInfo(name = "workout_category")
     val workoutCategory: Int,
-    val muscleGroup: String,
+    var muscleGroup: String,
     @ColumnInfo(name = "description")
-    val desc: String,
+    var desc: String,
     @ColumnInfo(name = "time")
-    val workoutTime: Int,
+    var workoutTime: Int,
     @ColumnInfo(name = "date")
     val workoutDate: Long?,
     @ColumnInfo(name = "empty")

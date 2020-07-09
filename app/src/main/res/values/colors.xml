@@ -13,6 +13,8 @@
     <color name="colorSnackbarButton">#ef7f3e</color>
     <color name="colorPrimaryDarkX">#FF39752b</color>
     <color name="colorLightGrey">#f2f3f5</color>
+    <color name="colorForLightBorder">#f2f3f5</color>
+    <color name="colorForLightText">#cccccc</color>
     <color name="colorPrimaryLight">#C8E6C9</color>
     <color name="colorPrimary">#558949</color>
     <color name="colorPrimaryX">#538c47</color>
@@ -31,4 +33,5 @@
     <color name="appMainBackground">#FFFFFFFF</color>
     <color name="jpYellow">#FFF176</color>
     <color name="colorGreyDark">#686868</color>
+    <color name="colorVeryLightBack">#FAFAFA</color>
 </resources>

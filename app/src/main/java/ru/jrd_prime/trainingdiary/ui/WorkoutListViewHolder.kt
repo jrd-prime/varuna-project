@@ -1,147 +1,123 @@
 package ru.jrd_prime.trainingdiary.ui
 
-import android.graphics.Color
+import android.content.Context
+import android.content.res.Resources
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutCardBinding
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
-import ru.jrd_prime.trainingdiary.utils.catColor
-import ru.jrd_prime.trainingdiary.utils.catIcons
-import ru.jrd_prime.trainingdiary.utils.getMonthDayFromDate
-import java.text.SimpleDateFormat
+import ru.jrd_prime.trainingdiary.utils.*
 import java.util.*
 
 /* Настраиваем КАРТОЧКУ*/
-class WorkoutListViewHolder(private var binding: AWorkoutCardBinding) :
-    RecyclerView.ViewHolder(binding.root) {
-    fun bind(workoutCase: WorkoutModel?, position: Int) {
-        if (workoutCase == null) {
+class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
+    RecyclerView.ViewHolder(_binding.root) {
+    val binding: AWorkoutCardBinding = _binding
+    val root: View = binding.root
+    private val ctx: Context = root.context
+    val res: Resources = ctx.resources
+
+    // clr
+    private val clrLightForText = ContextCompat.getColor(ctx, R.color.colorForLightText)
+
+    // str
+    private val strNoTitle = res.getString(R.string.no_title)
+    private val strNoDesc = res.getString(R.string.no_description)
+
+    fun bind(workout: WorkoutModel?, position: Int) {
+        if (workout == null) {
             //TODO Что мы делаем если нету кейса
             Log.d("JP_TAG", "bind: WORKOUTCASE NULL!")
         } else {
-//            Log.d("TAG", "bind: wdate ${SimpleDateFormat("dd.MM.yyyy").format(wCase.workoutDate)}")
-            val wCategory: Int = workoutCase.workoutCategory
-            val daysOfWeek = listOf<String>("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
-            /* WORKOUT CARD */
-            val mainCardLay = binding.cardLay
-            val frameForHide = binding.frameForHide
-            val mainWeekDay = binding.ivWeekDay
-            val mainMonthDay = binding.ivMonthDay
-            val dot = binding.dot
-            val ivCategory: ImageView = binding.ivCategory
-            val title = binding.tvMuscleGroup
-            val desc = binding.cardDescription
-            val time = binding.tvWorkoutTime
+            /* DEF HIDE */
+            hide(binding.frameForHide)
 
-            mainMonthDay.text = SimpleDateFormat("dd").format(workoutCase.workoutDate)
-            /* EMPTY CARD */
-            val emptyCardLay = binding.cardOverLay
-            val emptyWeekDay = binding.ivWeekDay1
-            val emptyMonthDay = binding.ivMonthDay1
-            val emptyImageView = binding.ivEmptyCategory
+            steCategoryImage(workout.workoutCategory)
 
+            val weekDays = res.getStringArray(R.array.weekDays)
             // Устанавливаем дату
-            mainWeekDay.text = daysOfWeek[position]
-            emptyWeekDay.text = daysOfWeek[position]
+            binding.ivWeekDay.text = weekDays[position]
+            binding.ivWeekDay1.text = weekDays[position]
             // Устанавливаем день недели
-            mainMonthDay.text = getMonthDayFromDate(Date(workoutCase.workoutDate!!))
-            emptyMonthDay.text = getMonthDayFromDate(Date(workoutCase.workoutDate))
+            binding.ivMonthDay.text = getMonthDayFromDate(Date(workout.workoutDate!!))
+            binding.ivMonthDay1.text = getMonthDayFromDate(Date(workout.workoutDate))
 
-            if (!workoutCase.workoutEmpty) {
-//                Log.d("JP_TAG", "bind: WORKOUTCASE NOT EMPTY")
-                frameForHide.visibility = View.GONE
-                emptyCardLay.visibility = View.GONE
-                mainCardLay.visibility = View.VISIBLE
-                title.text = workoutCase.muscleGroup
-                desc.text = workoutCase.desc
-
-
-                var timeString = ""
-                val timeInt = workoutCase.workoutTime
-
-                if (timeInt == 0) {
-                    binding.l3topcut.visibility = View.GONE
-                    binding.tvWorkoutTime.visibility = View.GONE
-                }
-
-                if (workoutCase.desc.isEmpty()) {
-                    binding.cardLineSecond.visibility = View.GONE
-                    binding.lineOverDesc.visibility = View.GONE
-                }
-
-                when {
-                    timeInt < 60 -> timeString = "${timeInt.toString()} mins"
-                    timeInt >= 60 -> {
-                        val mins = timeInt % 60
-                        val hrs = (timeInt - (timeInt % 60)) / 60
-
-                        timeString = when (mins) {
-                            0 -> ""
-                            1 -> "${mins.toString()} min"
-                            else -> "${mins.toString()} mins"
-                        }
-
-                        timeString = if (hrs == 1) {
-                            "${hrs.toString()} hour $timeString"
-                        } else {
-                            "${hrs.toString()} hours $timeString"
-                        }
-
-                    }
-                }
-
-
-
-                if (workoutCase.workoutCategory == 4) {
-
-                    binding.cardLineSecond.visibility = View.GONE
-                    binding.lineOverDesc.visibility = View.GONE
-                    if (workoutCase.muscleGroup.isEmpty()) {
-                        if (workoutCase.desc.isEmpty()) {
-
-                            binding.tvMuscleGroup.text = "No description"
-                        } else {
-                            binding.tvMuscleGroup.text = workoutCase.desc
-                        }
-                    }
-                } else {
-                    if (workoutCase.muscleGroup.isEmpty()) {
-
-                        binding.tvMuscleGroup.text = "No description"
-                        binding.tvMuscleGroup.setTextColor(Color.parseColor("#eeeeee"))
-                    }
-                }
-                time.text = timeString
-            } else {
-//                Log.d("JP_TAG", "WORKOUTCASE EMPTY")
-                setImageViewAndDot(0, emptyImageView, dot)
-                mainCardLay.visibility = View.GONE
-                emptyCardLay.visibility = View.VISIBLE
+            when (workout.workoutEmpty) {
+                true -> showEmptyView()
+                false -> showClassicView(workout)
             }
-
-            if (wCategory != 0) {
-                /* Категория есть */
-                setImageViewAndDot(workoutCase.workoutCategory, ivCategory, dot)
-            } else {
-                /* Категории нету */
-                setImageViewAndDot(0, ivCategory, dot)
-            }
-
-            binding.workoutModel = workoutCase // Отправляем кейс в карточку
+            binding.workoutModel = workout // Отправляем кейс в карточку
         }
         binding.executePendingBindings()
     }
 
-    private fun setImageViewAndDot(
-        categoryID: Int,
-        ivCategory: ImageView,
-        dot: FrameLayout
+    private fun showClassicView(
+        workout: WorkoutModel
     ) {
-        ivCategory.setImageResource(catIcons[categoryID] as Int)
-        dot.setBackgroundResource(catColor[categoryID] as Int)
+        val cat = workout.workoutCategory
+        val title = workout.muscleGroup
+        val desc = workout.desc
+        val time = workout.workoutTime
+        if (cat == 4) { // if REST
+            if (desc.isEmpty()) { // desc empty
+                workout.muscleGroup = strNoDesc
+                binding.tvMuscleGroup.setTextColor(clrLightForText)
+                hide(binding.textDescription)
+                hide(binding.timeContainer)
+            } else { // desc OK
+                workout.muscleGroup = desc
+                hide(binding.timeContainer)
+                hide(binding.textDescription)
+            }
+        } else if (cat == 0) { // if EMPTY
+            lg("showClassicView", "EMPTY")
+        } else { // ELSE
+            if (title.isEmpty()) {
+                workout.muscleGroup = strNoTitle
+                binding.tvMuscleGroup.setTextColor(clrLightForText)
+            }
+            if (desc.isEmpty()) {
+                workout.desc = strNoDesc
+                binding.textDescription.setTextColor(clrLightForText)
+            }
+            if (time == 0) {
+                hide(binding.textTime)
+            } else {
+                binding.textTime.text = minutesToHoursAndMinutes(time, res)
+                show(binding.timeContainer)
+            }
+        }
     }
 
+    private fun showEmptyView() {
+        show(binding.cardOverLay)
+    }
+
+    private fun hide(view: View) {
+        view.visibility = View.GONE
+    }
+
+    private fun show(view: View) {
+        view.visibility = View.VISIBLE
+    }
+
+    private fun steCategoryImage(catId: Int) {
+        if (catId != 0) {
+            /* Категория есть */
+            setImageFromConstants(catId, binding.ivCategory, binding.dot)
+        } else {
+            /* Категории нету */
+            setImageFromConstants(0, binding.ivCategory, binding.dot)
+        }
+    }
+
+    private fun setImageFromConstants(catId: Int, catIv: ImageView, dot: FrameLayout) {
+        catIv.setImageResource(catIcons[catId] as Int)
+        dot.setBackgroundResource(catColor[catId] as Int)
+    }
 }

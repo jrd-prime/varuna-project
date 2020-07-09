@@ -5,7 +5,7 @@
     <string name="procent">100%</string>
     <string name="minusDay">На день назад</string>
     <string name="plusDay">На день вперед</string>
-    <string name="textMock">Заглушка</string>
+    <string name="textDummy">dummy</string>
     <string name="primary_screen_text">primary screen</string>
     <string name="app_name">Varuna\'s Sport Diary</string>
     <string name="bottom_sheet_name">btm sheet name</string>
@@ -27,4 +27,23 @@
     <string name="snack_restore">Restore</string>
     <string name="snack_record_deleted">Record deleted</string>
     <string name="stat_last_month">Statistics for the last month</string>
+    <string name="no_description">No description specified</string>
+    <string name="no_title">No groups specified</string>
+    <string name="no_time">No time specified</string>
+    <string name="abbr_minute">m</string>
+    <string name="abbr_hour">h</string>
+    <string name="textDummyShort">dum</string>
+    <string name="numDummyShort">13</string>
+    <string name="descDelete">Delete</string>
+    <string name="descEdit">Edit</string>
+    <string name="descAdd">Add</string>
+    <string-array name="weekDays">
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wed</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+        <item>Sun</item>
+    </string-array>
 </resources>
