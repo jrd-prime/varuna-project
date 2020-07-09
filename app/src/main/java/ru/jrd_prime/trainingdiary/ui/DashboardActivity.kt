@@ -1,6 +1,8 @@
 package ru.jrd_prime.trainingdiary.ui
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -9,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import kotlinx.android.synthetic.main.activity_dashboard.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
@@ -30,6 +33,7 @@ class DashboardActivity : AppCompatActivity() {
     private val workoutPagerAdapter by lazy {
         WorkoutPageAdapter(supportFragmentManager)
     }
+    private var navDrawerFragment: NavDrawerFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +54,8 @@ class DashboardActivity : AppCompatActivity() {
         statisticAdapter.notifyDataSetChanged()
         statisticRecyclerView.adapter = statisticAdapter
 
+        setSupportActionBar(vBottomAppBar)
+
         val date: MutableList<Long> = getWeekFromDate(getStartDateForPosition(START_PAGE))
         val statEndDate = date[1]
         val statStartDate = fromTimestamp(statEndDate).minusMonths(1)
@@ -63,6 +69,31 @@ class DashboardActivity : AppCompatActivity() {
 
         statisticRecyclerView.layoutManager = LinearLayoutManager(this)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.bottom_nav_drawer_menu, menu)
+        return true
+    }
+
+//    override fun onResume() {
+//        super.onResume()
+//        navDrawerFragment = NavDrawerFragment()
+//        navDrawerFragment!!.show(supportFragmentManager, navDrawerFragment!!.getTag())
+//    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                navDrawerFragment = NavDrawerFragment()
+                navDrawerFragment!!.show(supportFragmentManager, navDrawerFragment!!.getTag())
+                return true
+            }
+            1 -> return true
+        }
+        return true
+    }
+
 
     private fun setWindow() {
         makeStatusBarTransparent()

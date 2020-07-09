@@ -367,7 +367,7 @@ class WorkoutCardHandler(root: View) {
                     appContainer.workoutsRepository.addWorkout(
                         workoutID,
                         category,
-                        etGroup.text.toString(),
+                        popupContainer.etGroups.text.toString(),
                         etDesc.text.toString(),
                         mins,
                         false

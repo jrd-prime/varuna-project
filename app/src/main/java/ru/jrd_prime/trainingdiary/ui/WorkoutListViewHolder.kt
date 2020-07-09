@@ -17,13 +17,14 @@ import java.util.*
 /* Настраиваем КАРТОЧКУ*/
 class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
     RecyclerView.ViewHolder(_binding.root) {
-    val binding: AWorkoutCardBinding = _binding
-    val root: View = binding.root
+    private val binding: AWorkoutCardBinding = _binding
+    private val root: View = binding.root
     private val ctx: Context = root.context
-    val res: Resources = ctx.resources
+    private val res: Resources = ctx.resources
 
     // clr
     private val clrLightForText = ContextCompat.getColor(ctx, R.color.colorForLightText)
+    private val clrDarkGrey = ContextCompat.getColor(ctx, R.color.colorGreyDark)
 
     // str
     private val strNoTitle = res.getString(R.string.no_title)
@@ -36,6 +37,9 @@ class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
         } else {
             /* DEF HIDE */
             hide(binding.frameForHide)
+
+
+
 
             steCategoryImage(workout.workoutCategory)
 
@@ -63,6 +67,14 @@ class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
         val title = workout.muscleGroup
         val desc = workout.desc
         val time = workout.workoutTime
+
+        binding.tvMuscleGroup.setTextColor(clrDarkGrey)
+        binding.textDescription.setTextColor(clrDarkGrey)
+        binding.textTime.setTextColor(clrDarkGrey)
+        show(binding.textDescription)
+        show(binding.timeContainer)
+        show(binding.textTime)
+
         if (cat == 4) { // if REST
             if (desc.isEmpty()) { // desc empty
                 workout.muscleGroup = strNoDesc
