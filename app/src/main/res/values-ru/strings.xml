@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="stat_last_month">Статистика за последний месяц</string>
     <string-array name="weekDays">
         <item>Пн</item>
         <item>Вт</item>
