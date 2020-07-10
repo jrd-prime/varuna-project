@@ -14,9 +14,11 @@ import kotlinx.android.synthetic.main.pop.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import org.threeten.bp.LocalDateTime
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.model.WorkoutModel
+import ru.jrd_prime.trainingdiary.utils.dateToTimestamp
 
 
 class WorkoutCardHandler(root: View) {
@@ -53,6 +55,47 @@ class WorkoutCardHandler(root: View) {
         }
     }
 
+    fun workoutAdd(view: View, workoutID: Int) {
+        val popupView: View =
+            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
+
+        popupView.textTitle.setText(R.string.add_dialog_title)
+        val popupWindow = PopupWindow(
+            popupView,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            true
+        )
+
+        val TAG = "edit"
+        Log.d(TAG, "card id = $workoutID ")
+        setCategoryListeners(popupView)
+
+        popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
+        popupView.btnSave.setOnClickListener { _ ->
+            val dataFromUI = collectDataFromUI(popupView, workoutID)
+            Log.d(TAG, "data to save: $dataFromUI")
+
+            runBlocking {
+                launch(Dispatchers.IO) {
+                    appContainer.workoutsRepository.addWorkout(
+                        workoutID,
+                        dataFromUI.workoutCategory,
+                        dataFromUI.muscleGroup,
+                        dataFromUI.desc,
+                        dataFromUI.workoutTime,
+                        false
+                    )
+                }
+            }
+            popupWindow.dismiss()
+        }
+
+            popupWindow.elevation = 20f
+            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0)
+
+    }
+
     fun workoutEdit(view: View, workoutID: Int) {
         val popupView: View =
             LayoutInflater.from(view.context).inflate(R.layout.pop, null)
@@ -85,7 +128,7 @@ class WorkoutCardHandler(root: View) {
 
             popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
             popupView.btnSave.setOnClickListener { _ ->
-                val dataFromUI = collectDataFromUI(popupView, workoutID, wo!!)
+                val dataFromUI = collectDataFromUI(popupView, workoutID)
                 Log.d(TAG, "data to save: $dataFromUI")
 
                 runBlocking {
@@ -142,8 +185,7 @@ class WorkoutCardHandler(root: View) {
 
     private fun collectDataFromUI(
         container: View,
-        workoutID: Int,
-        wo: WorkoutModel
+        workoutID: Int
     ): WorkoutModel {
         val category: Int = when {
             container.btnCardio.isChecked -> 1
@@ -169,7 +211,7 @@ class WorkoutCardHandler(root: View) {
             grp,
             container.etDescription.text.toString(),
             mins,
-            wo.workoutDate,
+            dateToTimestamp(LocalDateTime.now()),
             false
         )
     }
@@ -261,7 +303,7 @@ class WorkoutCardHandler(root: View) {
 
     }
 
-    fun workoutAdd(view: View, workoutID: Int) {
+    fun workoutAdd1(view: View, workoutID: Int) {
 
 
         val popupView: View =

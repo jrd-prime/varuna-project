@@ -37,6 +37,7 @@ class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
         } else {
             /* DEF HIDE */
             hide(binding.frameForHide)
+            hide(binding.cardOverLay)
 
 
 
@@ -51,6 +52,7 @@ class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
             binding.ivMonthDay.text = getMonthDayFromDate(Date(workout.workoutDate!!))
             binding.ivMonthDay1.text = getMonthDayFromDate(Date(workout.workoutDate))
 
+            Log.d(TAG, "empty?: ID ${workout.workoutID} ${workout.workoutEmpty}")
             when (workout.workoutEmpty) {
                 true -> showEmptyView()
                 false -> showClassicView(workout)
