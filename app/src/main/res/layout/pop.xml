@@ -29,7 +29,7 @@
             android:padding="8dp">
 
             <TextView
-                android:id="@+id/tvv"
+                android:id="@+id/textTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_medium"

@@ -22,7 +22,6 @@ import ru.jrd_prime.trainingdiary.model.WorkoutModel
 class WorkoutCardHandler(root: View) {
     private val appContainer = (root.context.applicationContext as TrainingDiaryApp).container
 
-
     fun workoutDelete(view: View, workoutID: Int) {
         val ctx: Context = view.context
         clearWorkout(workoutID) /* Set workout empty = true */
@@ -58,6 +57,215 @@ class WorkoutCardHandler(root: View) {
         val popupView: View =
             LayoutInflater.from(view.context).inflate(R.layout.pop, null)
 
+        popupView.textTitle.text = "Edit case"
+        val popupWindow = PopupWindow(
+            popupView,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            true
+        )
+        var wo: WorkoutModel? = null
+        runBlocking {
+            launch(Dispatchers.IO) {
+                wo = appContainer.workoutsRepository.getWorkout(workoutID)
+            }
+        }
+
+        if (wo == null) {
+            Toast.makeText(view.context, "Error on get workout ID: $workoutID", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            val TAG = "edit"
+            Log.d(TAG, "Load Workout: $wo")
+            // main container
+            putDataToUI(wo!!, popupView)
+
+            setCategoryListeners(popupView)
+
+
+            popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
+            popupView.btnSave.setOnClickListener { _ ->
+                val dataFromUI = collectDataFromUI(popupView, workoutID, wo!!)
+                Log.d(TAG, "data to save: $dataFromUI")
+
+                runBlocking {
+                    launch(Dispatchers.IO) {
+                        appContainer.workoutsRepository.addWorkout(
+                            workoutID,
+                            dataFromUI.workoutCategory,
+                            dataFromUI.muscleGroup,
+                            dataFromUI.desc,
+                            dataFromUI.workoutTime,
+                            false
+                        )
+                    }
+                }
+                popupWindow.dismiss()
+            }
+
+            popupWindow.elevation = 20f
+            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
+        }
+    }
+
+    private fun setCategoryListeners(popupView: View) {
+        val btnCardio = popupView.btnCardio // 1
+        val btnPower = popupView.btnPower // 2
+        val btnStretch = popupView.btnStretch // 3
+        val btnRest = popupView.btnRest // 4
+        val rbListener = View.OnClickListener {
+            when {
+                btnCardio.isChecked -> setCardioChecked(popupView)
+                btnPower.isChecked -> setPowerChecked(popupView)
+                btnStretch.isChecked -> setStretchChecked(popupView)
+                btnRest.isChecked -> setRestChecked(popupView)
+            }
+        }
+
+        btnCardio.setOnClickListener(rbListener)
+        btnPower.setOnClickListener(rbListener)
+        btnStretch.setOnClickListener(rbListener)
+        btnRest.setOnClickListener(rbListener)
+
+    }
+
+    private fun putDataToUI(wo: WorkoutModel, container: View) {
+        val cat = wo.workoutCategory
+        val grp = wo.muscleGroup
+        val time = wo.workoutTime
+        val desc = wo.desc
+        setCategory(container, cat)
+        container.etGroups.setText(grp.toString())
+        container.etDescription.setText(desc.toString())
+        container.etMins.setText(time.toString())
+    }
+
+    private fun collectDataFromUI(
+        container: View,
+        workoutID: Int,
+        wo: WorkoutModel
+    ): WorkoutModel {
+        val category: Int = when {
+            container.btnCardio.isChecked -> 1
+            container.btnPower.isChecked -> 2
+            container.btnStretch.isChecked -> 3
+            container.btnRest.isChecked -> 4
+            else -> 0
+        }
+
+        var grp = container.etGroups.text.toString()
+
+        var mins =
+            if (container.etMins.text.isNotEmpty()) Integer.parseInt(container.etMins.text.toString()) else 0
+
+        if (category == 4) {
+            mins = 0
+            grp = ""
+        }
+
+        return WorkoutModel(
+            workoutID,
+            category,
+            grp,
+            container.etDescription.text.toString(),
+            mins,
+            wo.workoutDate,
+            false
+        )
+    }
+
+    private fun setCategory(container: View, cat: Int) {
+        when (cat) {
+            0 -> setAllBtnToFalse(container)
+            1 -> {
+                container.btnCardio.isChecked = true
+                container.btnCardio.setColoredBg()
+                container.layoutGroupsAndTime.visibility = View.VISIBLE
+            }
+            2 -> {
+                container.btnPower.isChecked = true
+                container.btnPower.setColoredBg()
+                container.layoutGroupsAndTime.visibility = View.VISIBLE
+            }
+            3 -> {
+                container.btnStretch.isChecked = true
+                container.btnStretch.setColoredBg()
+                container.layoutGroupsAndTime.visibility = View.VISIBLE
+            }
+            4 -> {
+                container.btnRest.isChecked = true
+                container.btnRest.setColoredBg()
+                container.layoutGroupsAndTime.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun setRestChecked(container: View) {
+        container.btnRest.setColoredBg()
+        container.btnCardio.isChecked = false
+        container.btnPower.isChecked = false
+        container.btnStretch.isChecked = false
+        container.btnRest.isChecked = true
+        container.btnCardio.setTransBg()
+        container.btnPower.setTransBg()
+        container.btnStretch.setTransBg()
+        container.layoutGroupsAndTime.visibility = View.GONE
+    }
+
+    private fun setStretchChecked(container: View) {
+        container.btnStretch.setColoredBg()
+        container.btnCardio.isChecked = false
+        container.btnPower.isChecked = false
+        container.btnStretch.isChecked = true
+        container.btnRest.isChecked = false
+        container.btnCardio.setTransBg()
+        container.btnPower.setTransBg()
+        container.btnRest.setTransBg()
+        container.layoutGroupsAndTime.visibility = View.VISIBLE
+    }
+
+    private fun setPowerChecked(container: View) {
+        container.btnPower.setColoredBg()
+        container.btnCardio.isChecked = false
+        container.btnPower.isChecked = true
+        container.btnStretch.isChecked = false
+        container.btnRest.isChecked = false
+        container.btnCardio.setTransBg()
+        container.btnStretch.setTransBg()
+        container.btnRest.setTransBg()
+        container.layoutGroupsAndTime.visibility = View.VISIBLE
+    }
+
+    private fun setCardioChecked(container: View) {
+        container.btnCardio.setColoredBg()
+        container.btnCardio.isChecked = true
+        container.btnPower.isChecked = false
+        container.btnStretch.isChecked = false
+        container.btnRest.isChecked = false
+        container.btnPower.setTransBg()
+        container.btnStretch.setTransBg()
+        container.btnRest.setTransBg()
+        container.layoutGroupsAndTime.visibility = View.VISIBLE
+    }
+
+    private fun setAllBtnToFalse(container: View) {
+        container.btnCardio.isChecked = false
+        container.btnPower.isChecked = false
+        container.btnStretch.isChecked = false
+        container.btnRest.isChecked = false
+        container.btnCardio.setTransBg()
+        container.btnPower.setTransBg()
+        container.btnStretch.setTransBg()
+        container.btnRest.setTransBg()
+        container.layoutGroupsAndTime.visibility = View.VISIBLE
+
+    }
+
+    fun workoutEdit1(view: View, workoutID: Int) {
+        val popupView: View =
+            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
+
+        popupView.textTitle.text = "Edit case"
         val popupWindow = PopupWindow(
             popupView,
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -99,7 +307,6 @@ class WorkoutCardHandler(root: View) {
             layGrpAndTime.visibility = View.VISIBLE
             popupContainer.viewForHide.visibility = View.VISIBLE
             btnSave.isEnabled = false
-
 
             /* Обработка радио*/
             // set defaults
@@ -164,11 +371,7 @@ class WorkoutCardHandler(root: View) {
                     btnSave.isEnabled = true
                     Log.d("TAG", "workoutAdd: ${rRest.isChecked}")
                 }
-
-
             }
-
-
             val rbListener = View.OnClickListener { btn ->
                 when (btn.id) {
                     rRest.id -> {
@@ -217,12 +420,10 @@ class WorkoutCardHandler(root: View) {
                     }
                 }
             }
-
             rRest.setOnClickListener(rbListener)
             rStretch.setOnClickListener(rbListener)
             rPower.setOnClickListener(rbListener)
             rCardio.setOnClickListener(rbListener)
-
             btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
             btnSave.setOnClickListener { _ ->
                 val category: Int = when {
@@ -234,7 +435,6 @@ class WorkoutCardHandler(root: View) {
                 }
                 val mins =
                     if (etMins.text.isNotEmpty()) Integer.parseInt(etMins.text.toString()) else 0
-
                 runBlocking {
                     launch(Dispatchers.IO) {
                         appContainer.workoutsRepository.addWorkout(
@@ -249,16 +449,17 @@ class WorkoutCardHandler(root: View) {
                 }
                 popupWindow.dismiss()
             }
-
             popupWindow.elevation = 20f
             popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0);
         }
     }
 
     fun workoutAdd(view: View, workoutID: Int) {
+
+
         val popupView: View =
             LayoutInflater.from(view.context).inflate(R.layout.pop, null)
-
+        popupView.textTitle.text = "Add new case"
         val popupWindow = PopupWindow(
             popupView,
             WindowManager.LayoutParams.MATCH_PARENT,
@@ -392,13 +593,10 @@ class WorkoutCardHandler(root: View) {
     fun onGo(view: View?) {
         if (view == null) return
         val contView = view.findViewById<LinearLayout>(R.id.frameForHide)
-
         when (contView.visibility) {
             View.GONE -> setVisible(contView)
             View.VISIBLE -> setGone(contView)
         }
-
-//
 //        contView?.animate()
 //            ?.translationY(contView.height.toFloat())
 //            ?.alpha(1.0f)?.duration = 500
@@ -409,7 +607,6 @@ class WorkoutCardHandler(root: View) {
 //                    contView.visibility = View.VISIBLE
 //                }
 //            })
-
     }
 
     private fun setGone(contView: LinearLayout) {
