@@ -1,8 +1,16 @@
 package ru.jrd_prime.trainingdiary.ui
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Process
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -17,8 +25,10 @@ import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
+import ru.jrd_prime.trainingdiary.gauth.GAuth
 import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.utils.*
+import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 import ru.jrd_prime.trainingdiary.viewmodels.DashboardViewModel
 
 
@@ -33,19 +43,30 @@ class DashboardActivity : AppCompatActivity() {
     private val workoutPagerAdapter by lazy {
         WorkoutPageAdapter(supportFragmentManager)
     }
+    private var gAuth: GAuth? = null
     private var navDrawerFragment: NavDrawerFragment? = null
+    private val cfg: AppConfig = AppConfig()
+    private var utils: AppUtils? = null
+    internal val activity: Activity = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val appContainer = (application as TrainingDiaryApp).container
+        utils = appContainer.appUtils
         val binding: ActivityDashboardBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         val viewmodel = dashboardViewModel
         val workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
         val statisticRecyclerView: RecyclerView = findViewById<RecyclerView>(R.id.statListView)
         val statisticAdapter = StatisticListAdapter()
+        navDrawerFragment = NavDrawerFragment(appContainer)
 
+/* START */
+        val mSettings = getSharedPreferences(cfg.getSharedPreferenceName(), Context.MODE_PRIVATE)
+
+        gAuth = appContainer.gAuth
+/* END */
         binding.viewmodel = viewmodel
         setWindow()
         workoutPager.adapter = workoutPagerAdapter
@@ -55,6 +76,13 @@ class DashboardActivity : AppCompatActivity() {
         statisticRecyclerView.adapter = statisticAdapter
 
         setSupportActionBar(vBottomAppBar)
+/* START */
+        if (mSettings.getBoolean(cfg.getSpNameFirstRun(), true)) {
+            // Выполняем необходимые настройки для первого запуска
+            utils!!.setDefaultConfig(mSettings, cfg)
+        }
+
+/* END */
 
         val date: MutableList<Long> = getWeekFromDate(getStartDateForPosition(START_PAGE))
         val statEndDate = date[1]
@@ -70,22 +98,69 @@ class DashboardActivity : AppCompatActivity() {
         statisticRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart: ")
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        gAuth!!.getLastSignedInAccount()
+    }
+
+    //    override fun onResume() {
+//        super.onResume()
+//        navDrawerFragment = NavDrawerFragment()
+//        navDrawerFragment!!.show(supportFragmentManager, navDrawerFragment!!.getTag())
+//    }
+    protected override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        result: Intent?
+    ): Unit {
+        super.onActivityResult(requestCode, resultCode, result)
+        gAuth!!.onActivityResult(requestCode, resultCode, result)
+    }
+
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.bottom_nav_drawer_menu, menu)
         return true
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        navDrawerFragment = NavDrawerFragment()
-//        navDrawerFragment!!.show(supportFragmentManager, navDrawerFragment!!.getTag())
-//    }
+    override fun onResume() {
+        super.onResume()
+        Log.d(TAG, "MainActivity: onResume()")
+        if (utils!!.getShowMenu()) {
+            Log.d(TAG, "onResume: show menu")
+            navDrawerFragment!!.show(supportFragmentManager, navDrawerFragment!!.tag)
+            utils?.setShowMenu(false)
+        }
+    }
+
+    fun isAuthenticatedUser(mSettings: SharedPreferences): Boolean {
+        return mSettings.getBoolean(cfg.getSpNameUserAuth(), false)
+    }
+
+    fun off() {
+        if (gAuth!!.getGoogleSignInClient() != null) {
+            gAuth!!.GSignOut()
+        }
+        Process.killProcess(Process.myPid())
+    }
+
+    private fun show_children(v: View) {
+        val viewgroup = v as ViewGroup
+        for (i in 0 until viewgroup.childCount) {
+            val v1 = viewgroup.getChildAt(i)
+            (v1 as? ViewGroup)?.let { show_children(it) }
+            Log.d("APPNAME", v1.toString())
+        }
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                navDrawerFragment = NavDrawerFragment()
                 navDrawerFragment!!.show(supportFragmentManager, navDrawerFragment!!.getTag())
                 return true
             }
@@ -94,6 +169,21 @@ class DashboardActivity : AppCompatActivity() {
         return true
     }
 
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "MainActivity: onPause()")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "MainActivity: onStop()")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "MainActivity: onDestroy()")
+    }
 
     private fun setWindow() {
         makeStatusBarTransparent()

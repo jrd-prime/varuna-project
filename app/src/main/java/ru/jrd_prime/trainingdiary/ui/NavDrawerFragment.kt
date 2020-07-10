@@ -1,12 +1,14 @@
 package ru.jrd_prime.trainingdiary.ui
 
 import android.app.Dialog
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -14,16 +16,29 @@ import com.google.android.material.internal.NavigationMenuView
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import ru.jrd_prime.trainingdiary.R
+import ru.jrd_prime.trainingdiary.impl.AppContainer
 
 
-class NavDrawerFragment : BottomSheetDialogFragment() {
+class NavDrawerFragment(private val appContainer: AppContainer) : BottomSheetDialogFragment() {
     private var navigationView: NavigationView? = null
     private var btmShBeh: BottomSheetBehavior<*>? = null
     private var isUserAuth = false
     var containerX: ViewGroup? = null
     private var mainLayout = 0
+    private val shPref = appContainer.sharedPreferences
+    private val cfg = appContainer.appConfig
+    private val utils = appContainer.appUtils
+    private val gAuth = appContainer.gAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isUserAuth = shPref.getBoolean(cfg.getSpNameUserAuth(), false)
+        mainLayout = if (isUserAuth) {
+            // AUTH
+            R.layout.lay_frg_navdrawer_with_auth
+        } else {
+            // NOT AUTH
+            R.layout.lay_frg_navdrawer_not_auth
+        }
     }
 
     override fun onCreateView(
@@ -31,8 +46,40 @@ class NavDrawerFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.lay_frg_navdrawer_not_auth, container, false)
+        val root = inflater.inflate(mainLayout, container, false)
+        if (isUserAuth) {
+            // AUTH
+            // Update UI
+            val ivUserPhoto =
+                root.findViewById<ImageView>(R.id.ivUserAvatar)
+            val tvUserName = root.findViewById<TextView>(R.id.tvUserName)
+            val tvUserMail = root.findViewById<TextView>(R.id.tvUserMail)
+            val bLogOut =
+                root.findViewById<ImageView>(R.id.ivLogOut)
+
+            ivUserPhoto.setImageDrawable(utils.getUserAvatar())
+            tvUserName.setText(shPref.getString(cfg.getSpNameUserName(), "Err"))
+            tvUserMail.setText(shPref.getString(cfg.getSpNameUserMail(), "Err"))
+            bLogOut.setOnClickListener { //TODO SIGN OUT
+                gAuth.GSignOut()
+                dismiss()
+                show(requireActivity().supportFragmentManager, "asd")
+            }
+        } else {
+            // NOT AUTH
+            // Update UI
+            shPref.edit().putBoolean(cfg.getSpNameUserAuth(), false).apply()
+            // FIND VIEWS IN NOT AUTH NAV
+            val bLogIn = root.findViewById<View>(R.id.bSignIn)
+            bLogIn.setOnClickListener {
+                Log.d("TAG", "SIGN IN")
+                //TODO SIGN IN
+                gAuth.GSignIn(activity)
+                dismiss()
+            }
+        }
         navigationView = root.findViewById(R.id.vNavigationView)
+        // closeImage = root.findViewById(R.id.close_imageview);
         return root
     }
 
@@ -61,8 +108,9 @@ class NavDrawerFragment : BottomSheetDialogFragment() {
                 d.findViewById<View>(R.id.design_bottom_sheet) as FrameLayout?
             btmShBeh = BottomSheetBehavior.from(bottomSheet)
 
-                            BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
-            (btmShBeh as BottomSheetBehavior<FrameLayout?>?)?.setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            BottomSheetBehavior.from(bottomSheet).state = BottomSheetBehavior.STATE_EXPANDED;
+            (btmShBeh as BottomSheetBehavior<FrameLayout?>?)?.setBottomSheetCallback(object :
+                BottomSheetBehavior.BottomSheetCallback() {
                 override fun onStateChanged(
                     view: View,
                     newState: Int
@@ -97,4 +145,3 @@ class NavDrawerFragment : BottomSheetDialogFragment() {
         return dialog
     }
 }
-

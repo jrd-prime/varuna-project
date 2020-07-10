@@ -1,0 +1,244 @@
+package ru.jrd_prime.trainingdiary.utils
+
+import android.content.ContentResolver
+import android.content.Context
+import android.content.ContextWrapper
+import android.content.SharedPreferences
+import android.content.res.Resources.NotFoundException
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Log
+import androidx.annotation.AnyRes
+import androidx.core.graphics.drawable.RoundedBitmapDrawable
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import ru.jrd_prime.trainingdiary.R
+import ru.jrd_prime.trainingdiary.TrainingDiaryApp
+import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
+import ru.jrd_prime.trainingdiary.workers.AsyncDownloadUserPhoto
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.lang.String
+import java.util.concurrent.ExecutionException
+
+class AppUtils(
+    private val appContext: TrainingDiaryApp
+) {
+    private val appContainer = appContext.container
+    private val shPref = appContainer.sharedPreferences
+    private val cfg = appContainer.appConfig
+    private val context = appContext.applicationContext
+
+
+    companion object {
+        const val SHOW_MENU = "ShowMenu"
+    }
+
+    //    public static Uri getSavedPhotoURI(Uri src, Context context) {
+    //        // Получаем фото и сохраняем его на девайс
+    //        // Пишем адрес в префы
+    //        AsyncDownloadUserPhoto asyncDownloadUserPhoto = new AsyncDownloadUserPhoto();
+    //        Bitmap bitmap = null;
+    //        try {
+    //            bitmap = asyncDownloadUserPhoto.execute(src.toString()).get();
+    //        } catch (ExecutionException | InterruptedException e) {
+    //            e.printStackTrace();
+    //        }
+    //
+    //        try {
+    //            bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, false);
+    //        } catch (NullPointerException e) {
+    //            Log.d(TAG, "getSavedPhotoURI: BITMAP NULL " + e);
+    //        }
+    //
+    //        ContextWrapper wrapper = new ContextWrapper(context);
+    //        File file = wrapper.getDir("Images", MODE_PRIVATE);
+    //        file = new File(file, JPCfg.getSpNameUserPhotoOnDevice() + ".jpg");
+    //        try {
+    //            OutputStream stream = null;
+    //            stream = new FileOutputStream(file);
+    //            Objects.requireNonNull(bitmap).compress(Bitmap.CompressFormat.JPEG, 100, stream);
+    //            stream.flush();
+    //            stream.close();
+    //        } catch (IOException e) {
+    //            e.printStackTrace();
+    //        }
+    //        Log.d(TAG, "PHOTO SAVED: " + Uri.parse(file.getAbsolutePath()));
+    //        // Parse the gallery image url to uri
+    //        return Uri.parse(file.getAbsolutePath());
+    //
+    //    }
+    fun getUserAvatar(): RoundedBitmapDrawable? {
+        return if (shPref.getString(
+                cfg.getSpNameUserPhotoOnDevice(),
+                "error"
+            ) == "error"
+        ) {
+            // NO PHOTO ON DEV
+            Log.d(
+                TAG,
+                "getUserAvatar:// NO PHOTO ON DEV "
+            )
+            val bitmap =
+                BitmapFactory.decodeResource(context.resources, R.drawable.user)
+            val path =
+                Uri.parse("android.resource://ru.jrd_prime.go_calories/" + R.drawable.user)
+            //img2.setCornerRadius(120);
+            RoundedBitmapDrawableFactory.create(
+                context.resources,
+                String.valueOf(R.drawable.user)
+            )
+        } else {
+            // HAS PHOTO ON DEV
+            //img2.setCornerRadius(120);
+            RoundedBitmapDrawableFactory.create(
+                context.resources,
+                shPref.getString(
+                    cfg.getSpNameUserPhotoOnDevice(),
+                    getUriToResource(context, R.drawable.user)
+                        .toString()
+                ).toString()
+            )
+        }
+    }
+
+    fun setDefaultConfig(mSettings: SharedPreferences, cfg: AppConfig) {
+        mSettings.edit().putBoolean(cfg.getSpNameFirstRun(), false).apply()
+    }
+
+    // SETTINGS AFTER SIGN IN
+    fun setConfigAfterSignIn(userAccount: GoogleSignInAccount?) {
+        setUserAuth(true)
+        setUserAvatar(userAccount)
+        setSettings(userAccount)
+        setShowMenu(true)
+    }
+
+    private fun setSettings(userAccount: GoogleSignInAccount?) {
+        // Пишем данные пользователя в префы
+        shPref.edit()
+            .putString(cfg.getSpNameUserName(), userAccount?.displayName)
+            .putString(cfg.getSpNameUserID(), userAccount?.id)
+            .putString(cfg.getSpNameUserMail(), userAccount?.email)
+            .putBoolean(cfg.getSpNameUserAuth(), true)
+            .apply()
+    }
+
+    private fun setUserAvatar(userAccount: GoogleSignInAccount?) {
+        if (userAccount?.photoUrl == null) {
+            // НЕТУ - Записать в превы ЕРРОР
+            Log.d(TAG, "URI NULL")
+            shPref.edit()
+                .putString(cfg.getSpNameUserPhotoOnDevice(), "error").apply()
+        } else {
+            // Получить аватар
+            // обработать
+            // сохранить
+            // ЕСТЬ - Записать аватар в префы
+            Log.d(TAG, "URI NOT NULL")
+            val asyncDownloadUserPhoto = AsyncDownloadUserPhoto()
+            var bitmap: Bitmap? = null
+            try {
+                bitmap = asyncDownloadUserPhoto.execute(userAccount.photoUrl.toString()).get()
+                Log.d(TAG, "BITMAP RECIEVED")
+                bitmap = Bitmap.createScaledBitmap(bitmap!!, 120, 120, false)
+                Log.d(TAG, "BITMAP RESIZE")
+            } catch (e: NullPointerException) {
+                Log.d(
+                    TAG,
+                    "getSavedPhotoURI: BITMAP NULL $e"
+                )
+            } catch (e: ExecutionException) {
+                Log.d(TAG, "ERROR ON EXEC ASYC")
+                //                e.printStackTrace();
+            } catch (e: InterruptedException) {
+                Log.d(TAG, "ERROR ON EXEC ASYC")
+            }
+            val img2 =
+                RoundedBitmapDrawableFactory.create(context.getResources(), bitmap)
+            img2.cornerRadius = 120f
+            bitmap = (img2 as RoundedBitmapDrawable).bitmap
+            val wrapper = ContextWrapper(context)
+            var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
+            file = File(file, cfg.getSpNameUserPhotoOnDevice().toString() + ".jpg")
+            try {
+                var stream: OutputStream? = null
+                stream = FileOutputStream(file)
+                bitmap!!.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                stream.flush()
+                stream.close()
+            } catch (e: IOException) {
+                Log.d(TAG, "ERROR ON SAVE BITMAP")
+                //                e.printStackTrace();
+            } catch (e: ClassCastException) {
+                Log.d(TAG, "ERROR ON cast class")
+            }
+            Log.d(
+                TAG,
+                "LoadAndSaveAvatar: " + getUriToResource(
+                    context,
+                    R.drawable.user
+                )
+            )
+            Log.d(
+                TAG,
+                "PHOTO SAVED: " + Uri.parse(file.absolutePath)
+            )
+            // Parse the gallery image url to uri
+            shPref.edit().putString(
+                cfg.getSpNameUserPhotoOnDevice(),
+                Uri.parse(file.absolutePath).toString()
+            ).apply()
+        }
+    }
+
+    @Throws(NotFoundException::class)
+    fun getUriToResource(
+        context: Context,
+        @AnyRes resId: Int
+    ): Uri {
+        /** Return a Resources instance for your application's package.  */
+        val res = context.resources
+
+        /** return uri  */
+        return Uri.parse(
+            ContentResolver.SCHEME_ANDROID_RESOURCE +
+                    "://" + res.getResourcePackageName(resId)
+                    + '/' + res.getResourceTypeName(resId)
+                    + '/' + res.getResourceEntryName(resId)
+        )
+    }
+
+    fun clearSettings() {
+        Log.d(TAG, "Setting CLEARED!")
+        shPref.edit().clear().apply()
+    }
+
+    private fun setUserAuth(b: Boolean) {
+        shPref.edit()
+            .putBoolean(cfg.getSpNameUserAuth(), b).apply()
+        Log.d(
+            TAG,
+            "setUserAuth: need true : " + shPref.getBoolean(
+                cfg.getSpNameUserAuth(),
+                false
+            )
+        )
+    }
+
+    // SHOW MENU
+    fun setShowMenu(b: Boolean) {
+        shPref.edit().putBoolean(SHOW_MENU, b).apply()
+    }
+
+    fun getShowMenu(): Boolean {
+        return shPref.getBoolean(SHOW_MENU, false)
+    }
+
+    fun setDefaultConfig() {
+        shPref.edit().putBoolean(cfg.getSpNameFirstRun(), false).apply()
+    }
+}

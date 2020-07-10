@@ -1,0 +1,51 @@
+package ru.jrd_prime.trainingdiary.utils.cfg
+
+class AppConfig {
+    companion object {
+        const val SHARED_PREFERENCE_NAME = "settings.jp"
+        const val SP_NAME_FIRST_RUN = "appFirstRun"
+        const val SP_NAME_USER_AUTH = "isUserAuthenticated"
+        const val SP_NAME_USER_NAME = "userName"
+        const val SP_NAME_USER_MAIL = "userMail"
+        const val SP_NAME_USER_ID = "userID"
+        const val SP_NAME_USER_REMOTE_PHOTO_URI = "userRemotePhotoURI"
+        const val SP_NAME_USER_PHOTO_ON_DEVICE = "userPhotoOnDevice"
+        const val GLOBAL_TAG = "--- TAG ---"
+    }
+
+    fun getSharedPreferenceName(): String? {
+        return SHARED_PREFERENCE_NAME
+    }
+
+    fun getSpNameFirstRun(): String? {
+        return SP_NAME_FIRST_RUN
+    }
+
+    fun getSpNameUserAuth(): String? {
+        return SP_NAME_USER_AUTH
+    }
+
+    fun getSpNameUserName(): String? {
+        return SP_NAME_USER_NAME
+    }
+
+    fun getSpNameUserID(): String? {
+        return SP_NAME_USER_ID
+    }
+
+    fun getSpNameUserRemotePhotoURI(): String? {
+        return SP_NAME_USER_REMOTE_PHOTO_URI
+    }
+
+    fun getSpNameUserPhotoOnDevice(): String? {
+        return SP_NAME_USER_PHOTO_ON_DEVICE
+    }
+
+    fun getSpNameUserMail(): String? {
+        return SP_NAME_USER_MAIL
+    }
+
+    fun getGlobalTag(): String? {
+        return GLOBAL_TAG
+    }
+}
