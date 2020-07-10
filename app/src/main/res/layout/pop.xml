@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="Add new case"
+                android:text="@string/textDummy"
                 android:textAllCaps="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -137,7 +137,7 @@
                 android:layout_weight="1"
                 android:inputType="textCapWords"
                 android:background="@drawable/input_ield"
-                android:hint="Muscle groups"
+                android:hint="@string/edit_text_groups_hint"
                 android:importantForAutofill="no"
                 android:maxLength="512"
                 android:padding="8dp" />
@@ -149,7 +149,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_weight="4"
                 android:background="@drawable/input_ield"
-                android:hint="Min"
+                android:hint="@string/edit_text_minutes_hint"
                 android:importantForAutofill="no"
                 android:inputType="number"
                 android:maxLength="3"
@@ -174,7 +174,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/input_ield"
-                android:hint="Description"
+                android:hint="@string/edit_text_description_hint"
                 android:importantForAutofill="no"
                 android:inputType="textCapWords"
                 android:maxLength="512"
@@ -203,7 +203,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="cancel"
+                android:text="@string/dialog_cancel_btn"
                 android:textColor="#ccc" />
 
             <Button
@@ -217,7 +217,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimaryX"
                 android:fontFamily="@font/montserrat_medium"
-                android:text="save"
+                android:text="@string/dialog_save_btn"
                 android:textColor="@color/colorPrimaryLight" />
         </LinearLayout>
 

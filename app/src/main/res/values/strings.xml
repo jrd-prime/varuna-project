@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Varuna\'s Sport Diary</string>
+
+    <string name="textDummy">dummy</string>
+
     <string name="logout">Выйти</string>
     <string name="avatar">Avatar</string>
     <string name="procent">100%</string>
     <string name="minusDay">На день назад</string>
     <string name="plusDay">На день вперед</string>
-    <string name="textDummy">dummy</string>
     <string name="primary_screen_text">primary screen</string>
-    <string name="app_name">Varuna\'s Sport Diary</string>
     <string name="bottom_sheet_name">btm sheet name</string>
     <string name="bottom_sheet_email">btm sheet mail</string>
     <string name="toggle_fab_string">toogle fab</string>
@@ -24,19 +26,30 @@
     <string name="long_text">Legs asdas dasd asd asd asd asda\nad asd asda sdasd asd asd ad asd asd\nasd asd asd asd asd asd asda sd asdasd</string>
     <string name="long_text1">Legs asdas dasd asd asd asd asda ad asd asda sdasd asd asd ad asd asd asd asd asd asd asd asd asda sd asdasd</string>
     <string name="descIVCategory">ivCategory</string>
-    <string name="snack_restore">Restore</string>
-    <string name="snack_record_deleted">Record deleted</string>
-    <string name="stat_last_month">Statistics for the last month</string>
-    <string name="no_description">No description specified</string>
-    <string name="no_title">No groups specified</string>
-    <string name="no_time">No time specified</string>
-    <string name="abbr_minute">m</string>
-    <string name="abbr_hour">h</string>
     <string name="textDummyShort">dum</string>
     <string name="numDummyShort">13</string>
     <string name="descDelete">Delete</string>
     <string name="descEdit">Edit</string>
     <string name="descAdd">Add</string>
+
+
+    <string name="snack_restore">Restore</string>
+    <string name="snack_record_deleted">Record deleted</string>
+    <string name="no_description">No description specified</string>
+    <string name="no_title">No groups specified</string>
+    <string name="no_time">No time specified</string>
+
+    <string name="abbr_minute">m</string>
+    <string name="abbr_hour">h</string>
+    <string name="stat_last_month">Statistics for the last month</string>
+
+    <string name="edit_dialog_title">EDIT</string>
+    <string name="add_dialog_title">ADD</string>
+    <string name="edit_text_groups_hint">Title (muscle groups, etc)</string>
+    <string name="edit_text_minutes_hint">Min</string>
+    <string name="edit_text_description_hint">Description</string>
+    <string name="dialog_cancel_btn">Cancel</string>
+    <string name="dialog_save_btn">Save</string>
     <string-array name="weekDays">
         <item>Mon</item>
         <item>Tue</item>
