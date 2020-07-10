@@ -5,11 +5,11 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.a_workout_card.view.*
 import kotlinx.android.synthetic.main.pop.view.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
@@ -93,7 +93,8 @@ class WorkoutCardHandler(root: View) {
 
     fun showAdditionalInfo(view: View?) {
         if (view == null) return
-        val contView = view.findViewById<LinearLayout>(R.id.frameForHide)
+        val contView = view.frameForHide
+
         when (contView.visibility) {
             View.GONE -> setVisible(contView)
             View.VISIBLE -> setGone(contView)
