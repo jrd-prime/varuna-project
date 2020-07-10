@@ -32,45 +32,22 @@ class AppUtils(
     private val cfg = appContainer.appConfig
     private val context = appContext.applicationContext
 
-
     companion object {
         const val SHOW_MENU = "ShowMenu"
     }
 
-    //    public static Uri getSavedPhotoURI(Uri src, Context context) {
-    //        // Получаем фото и сохраняем его на девайс
-    //        // Пишем адрес в префы
-    //        AsyncDownloadUserPhoto asyncDownloadUserPhoto = new AsyncDownloadUserPhoto();
-    //        Bitmap bitmap = null;
-    //        try {
-    //            bitmap = asyncDownloadUserPhoto.execute(src.toString()).get();
-    //        } catch (ExecutionException | InterruptedException e) {
-    //            e.printStackTrace();
-    //        }
-    //
-    //        try {
-    //            bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, false);
-    //        } catch (NullPointerException e) {
-    //            Log.d(TAG, "getSavedPhotoURI: BITMAP NULL " + e);
-    //        }
-    //
-    //        ContextWrapper wrapper = new ContextWrapper(context);
-    //        File file = wrapper.getDir("Images", MODE_PRIVATE);
-    //        file = new File(file, JPCfg.getSpNameUserPhotoOnDevice() + ".jpg");
-    //        try {
-    //            OutputStream stream = null;
-    //            stream = new FileOutputStream(file);
-    //            Objects.requireNonNull(bitmap).compress(Bitmap.CompressFormat.JPEG, 100, stream);
-    //            stream.flush();
-    //            stream.close();
-    //        } catch (IOException e) {
-    //            e.printStackTrace();
-    //        }
-    //        Log.d(TAG, "PHOTO SAVED: " + Uri.parse(file.getAbsolutePath()));
-    //        // Parse the gallery image url to uri
-    //        return Uri.parse(file.getAbsolutePath());
-    //
-    //    }
+    fun setDefaultConfig(mSettings: SharedPreferences, cfg: AppConfig) {
+        mSettings.edit().putBoolean(cfg.getSpNameFirstRun(), false).apply()
+    }
+
+    // SETTINGS AFTER SIGN IN
+    fun setConfigAfterSignIn(userAccount: GoogleSignInAccount?) {
+        setUserAuth(true)
+        setUserAvatar(userAccount)
+        setSettings(userAccount)
+        setShowMenu(true)
+    }
+
     fun getUserAvatar(): RoundedBitmapDrawable? {
         return if (shPref.getString(
                 cfg.getSpNameUserPhotoOnDevice(),
@@ -103,18 +80,6 @@ class AppUtils(
                 ).toString()
             )
         }
-    }
-
-    fun setDefaultConfig(mSettings: SharedPreferences, cfg: AppConfig) {
-        mSettings.edit().putBoolean(cfg.getSpNameFirstRun(), false).apply()
-    }
-
-    // SETTINGS AFTER SIGN IN
-    fun setConfigAfterSignIn(userAccount: GoogleSignInAccount?) {
-        setUserAuth(true)
-        setUserAvatar(userAccount)
-        setSettings(userAccount)
-        setShowMenu(true)
     }
 
     private fun setSettings(userAccount: GoogleSignInAccount?) {

@@ -143,7 +143,7 @@ class DashboardActivity : AppCompatActivity() {
 
     fun off() {
         if (gAuth!!.getGoogleSignInClient() != null) {
-            gAuth!!.GSignOut()
+            gAuth!!.gSignOut()
         }
         Process.killProcess(Process.myPid())
     }
@@ -160,6 +160,9 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.navCloseApp -> {
+                activity.finish()
+            }
             android.R.id.home -> {
                 navDrawerFragment!!.show(supportFragmentManager, navDrawerFragment!!.getTag())
                 return true

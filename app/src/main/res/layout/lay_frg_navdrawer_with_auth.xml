@@ -4,8 +4,8 @@
     android:id="@+id/navigation_view_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/kitty"
     app:behavior_hideable="true"
+    android:background="@drawable/nav_menu_head_bg"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
     <androidx.cardview.widget.CardView
@@ -83,6 +83,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dip"
         android:background="#447e7e7e"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,11 +95,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:paddingBottom="40dp"
+        android:background="@drawable/nav_menu_list_bg"
+        android:elevation="30dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/view2"
         app:menu="@menu/bottom_nav_drawer_menu"
         app:theme="@style/NavigationDrawerStyle" />
 

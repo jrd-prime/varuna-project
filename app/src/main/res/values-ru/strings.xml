@@ -23,6 +23,7 @@
     <string name="edit_text_description_hint">Описание</string>
     <string name="dialog_cancel_btn">Отмена</string>
     <string name="dialog_save_btn">Сохранить</string>
+    <string name="nav_menu_exit">Закрыть приложение</string>
     <!-- DIALOG -->
     <string-array name="weekDays">
         <item>Пн</item>

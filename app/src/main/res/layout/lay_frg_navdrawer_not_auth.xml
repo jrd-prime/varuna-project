@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation_view_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/nav_menu_head_bg"
     app:behavior_hideable="true"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
@@ -32,15 +32,18 @@
         android:layout_width="match_parent"
         android:layout_height="2dip"
         android:background="@color/gray"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
+
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/vNavigationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:paddingBottom="40dp"
+        android:background="@drawable/nav_menu_list_bg"
+        android:elevation="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view2"
