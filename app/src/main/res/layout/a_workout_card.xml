@@ -26,7 +26,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginRight="12dp"
         android:layout_marginBottom="4dp"
-        android:onClick="@{(view) -> handler.onGo(view)}"
+        android:onClick="@{(view) -> handler.showAdditionalInfo(view)}"
         android:padding="8dp"
         app:cardCornerRadius="4dp">
 

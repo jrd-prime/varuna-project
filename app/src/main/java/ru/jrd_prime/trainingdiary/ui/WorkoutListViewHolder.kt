@@ -39,9 +39,6 @@ class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
             hide(binding.frameForHide)
             hide(binding.cardOverLay)
 
-
-
-
             steCategoryImage(workout.workoutCategory)
 
             val weekDays = res.getStringArray(R.array.weekDays)
