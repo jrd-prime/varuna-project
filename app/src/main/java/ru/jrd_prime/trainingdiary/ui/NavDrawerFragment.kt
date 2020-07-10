@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.view.marginBottom
+import androidx.core.app.ActivityCompat.finishAffinity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.lay_frg_navdrawer_not_auth.view.ivUserAvat
 import kotlinx.android.synthetic.main.lay_frg_navdrawer_with_auth.view.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.impl.AppContainer
+import kotlin.system.exitProcess
 
 
 class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment() {
@@ -77,7 +78,13 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
         super.onActivityCreated(savedInstanceState)
         Snackbar.make(navigationView!!, "dada", Snackbar.LENGTH_SHORT)
         navigationView!!.setNavigationItemSelectedListener { menuItem ->
-            menuItem.itemId
+            when (menuItem.itemId) {
+                R.id.navCloseApp -> {
+                    Log.d(TAG, "onOptionsItemSelected: close")
+                    finishAffinity(DashboardActivity())
+                    exitProcess(0)
+                }
+            }
             true
         }
         disableNavigationViewScrollbars(navigationView)
@@ -94,12 +101,8 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
         dialog.setOnShowListener { bsdialog ->
             val d = bsdialog as BottomSheetDialog
             val bottomSheet = d.findViewById<View>(R.id.design_bottom_sheet) as FrameLayout?
-
             bottomSheet?.setBackgroundColor(context?.resources?.getColor(R.color.jpPrimary2)!!)
-
             btmShBeh = BottomSheetBehavior.from(bottomSheet)
-
-
             BottomSheetBehavior.from(bottomSheet).state = BottomSheetBehavior.STATE_EXPANDED
 //            (btmShBeh as BottomSheetBehavior<FrameLayout?>?)?.setBottomSheetCallback(object : // OLD LINE
             btmShBeh?.setBottomSheetCallback(object :

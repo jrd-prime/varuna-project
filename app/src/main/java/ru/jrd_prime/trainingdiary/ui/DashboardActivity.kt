@@ -159,10 +159,9 @@ class DashboardActivity : AppCompatActivity() {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        Log.d(TAG, "onOptionsItemSelected: ${item.itemId}")
         when (item.itemId) {
-            R.id.navCloseApp -> {
-                activity.finish()
-            }
+
             android.R.id.home -> {
                 navDrawerFragment!!.show(supportFragmentManager, navDrawerFragment!!.getTag())
                 return true
