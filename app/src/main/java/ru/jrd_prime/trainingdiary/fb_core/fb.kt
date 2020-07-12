@@ -1,6 +1,9 @@
 package ru.jrd_prime.trainingdiary.fb_core
 
 import android.util.Log
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import ru.jrd_prime.trainingdiary.fb_core.config._CATEGORIES
 import ru.jrd_prime.trainingdiary.fb_core.config._USERS
 import ru.jrd_prime.trainingdiary.fb_core.models.Category
@@ -33,7 +36,25 @@ class FireBaseCore(appContainer: AppContainer) {
             Category(3, "stretch"),
             Category(4, "rest")
         )
-        for (cat in category) db.getReference(_CATEGORIES).setValue(cat, 10)
+        for (cat in category) {
+            db.getReference(_CATEGORIES).child(cat.id.toString()).setValue(cat.name)
+        }
+
+        val z = db.getReference(_CATEGORIES)
+        z.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val TAG = "aadsdasd"
+                val vaz = snapshot.value
+                val z = vaz as List<*>
+//TODO добавить категории в локальную бд для экономии траффика
+
+                Log.d(TAG, "onDataChange: {${z[1]}}")
+            }
+        })
     }
 
 }
