@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "495749066016",
+    "firebase_url": "https://varuna-sport-diary-2.firebaseio.com",
+    "project_id": "varuna-sport-diary-2",
+    "storage_bucket": "varuna-sport-diary-2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495749066016:android:fc0ea38eabf918df64bb45",
+        "android_client_info": {
+          "package_name": "ru.jrd_prime.trainingdiary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "495749066016-livbiqc94qternrue32eo59h9kkk8sgh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.jrd_prime.trainingdiary",
+            "certificate_hash": "bcb7b764ec85eed867ed5354b850904bb02a24d8"
+          }
+        },
+        {
+          "client_id": "495749066016-uebsricev7u4e67h237jco8tmhgam500.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGhoLcPkD-ljib9abPx6ltui3PeOr82UU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "495749066016-uebsricev7u4e67h237jco8tmhgam500.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

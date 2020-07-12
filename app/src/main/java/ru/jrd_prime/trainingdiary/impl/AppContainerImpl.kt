@@ -4,6 +4,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.data.WorkoutsRepository
 import ru.jrd_prime.trainingdiary.data.db.WorkoutDao
@@ -20,6 +25,8 @@ interface AppContainer {
     val appConfig: AppConfig
     val appUtils: AppUtils
     val gAuth: GAuth
+    val fireDB: FirebaseDatabase
+    val fireAuth: FirebaseAuth
 }
 
 class AppContainerImpl(private val appContext: TrainingDiaryApp) : AppContainer {
@@ -37,6 +44,12 @@ class AppContainerImpl(private val appContext: TrainingDiaryApp) : AppContainer 
     }
     override val gAuth: GAuth by lazy {
         GAuth(appContext)
+    }
+    override val fireDB: FirebaseDatabase by lazy {
+        Firebase.database
+    }
+    override val fireAuth: FirebaseAuth by lazy {
+        Firebase.auth
     }
 
 

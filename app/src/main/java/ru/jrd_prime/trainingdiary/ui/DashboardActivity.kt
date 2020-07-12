@@ -19,12 +19,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
+import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.gauth.GAuth
 import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.utils.*
@@ -48,11 +56,28 @@ class DashboardActivity : AppCompatActivity() {
     private val cfg: AppConfig = AppConfig()
     private var utils: AppUtils? = null
     internal val activity: Activity = this
-
+    private var fireAuth: FirebaseAuth = Firebase.auth
+    lateinit var fireBaseCore: FireBaseCore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val appContainer = (application as TrainingDiaryApp).container
+
+
+
+
+
+        val database = appContainer.fireDB
+        val myRef = database.getReference("message")
+        myRef.setValue("Hello, World!")
+
+        fireBaseCore = FireBaseCore(appContainer)
+//fireBaseCore.addNewUserOnSignIn()
+
+        // Add Categories
+        fireBaseCore.pushCategories()
+
+
         utils = appContainer.appUtils
         val binding: ActivityDashboardBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
@@ -96,7 +121,27 @@ class DashboardActivity : AppCompatActivity() {
             Observer { list -> statisticAdapter.setNewData(viewmodel.setNewStatistic(list)) })
 
         statisticRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        // Read from the database
+
+        // Read from the database
+        myRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                val value: String? = dataSnapshot.getValue(String::class.java)
+                Log.d(TAG, "Value is: $value")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w(TAG, "Failed to read value.", error.toException())
+            }
+        })
+
+
     }
+
 
     override fun onStart() {
         super.onStart()
@@ -161,7 +206,6 @@ class DashboardActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.d(TAG, "onOptionsItemSelected: ${item.itemId}")
         when (item.itemId) {
-
             android.R.id.home -> {
                 navDrawerFragment!!.show(supportFragmentManager, navDrawerFragment!!.getTag())
                 return true
