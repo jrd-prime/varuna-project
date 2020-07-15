@@ -3,6 +3,7 @@ package ru.jrd_prime.trainingdiary.utils
 import androidx.room.TypeConverter
 import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
+import ru.jrd_prime.trainingdiary.fb_core.config.DATE_FORMAT_STRING
 import ru.jrd_prime.trainingdiary.ui.START_PAGE
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,6 +21,16 @@ fun getStartDateForPosition(fragmentPageNumber: Int): Long {
         else -> dateToTimestamp(thisWeekMonday)
     }
 }
+
+fun getDatesWeekList(startDate: Long): MutableList<String> {
+    val formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_STRING)
+    val dates = mutableListOf<String>()
+    for (i in 0..6) {
+        dates.add(fromTimestamp(startDate).plusDays(i.toLong()).format(formatter))
+    }
+    return dates
+}
+
 
 fun getWeekFromDate(startDate: Long): MutableList<Long> {
     val dates = mutableListOf<Long>()

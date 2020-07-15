@@ -1,5 +1,6 @@
 package ru.jrd_prime.trainingdiary.handlers
 
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RadioButton
@@ -8,7 +9,7 @@ import androidx.transition.TransitionManager
 import kotlinx.android.synthetic.main.pop.view.*
 import org.threeten.bp.LocalDateTime
 import ru.jrd_prime.trainingdiary.R
-import ru.jrd_prime.trainingdiary.model.WorkoutModel
+import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.utils.dateToTimestamp
 
 
@@ -33,11 +34,12 @@ fun setCategoryListeners(popupView: View) {
 
 }
 
-fun putDataToUI(wo: WorkoutModel, container: View) {
-    val cat = wo.workoutCategory
-    val grp = wo.muscleGroup
-    val time = wo.workoutTime
-    val desc = wo.desc
+fun putDataToUI(wo: Workout, container: View) {
+    Log.d("TAGGGGGG", "putDataToUI: $wo")
+    val cat = wo.category
+    val grp = wo.title
+    val time = wo.time
+    val desc = wo.description
     setCategory(container, cat)
     container.etGroups.setText(grp.toString())
     container.etDescription.setText(desc.toString())
@@ -47,8 +49,8 @@ fun putDataToUI(wo: WorkoutModel, container: View) {
 
 fun collectDataFromUI(
     container: View,
-    workoutID: Int
-): WorkoutModel {
+    workoutID: String
+): Workout {
     val category: Int = when {
         container.btnCardio.isChecked -> 1
         container.btnPower.isChecked -> 2
@@ -67,7 +69,7 @@ fun collectDataFromUI(
         grp = ""
     }
 
-    return WorkoutModel(
+    return Workout(
         workoutID,
         category,
         grp,

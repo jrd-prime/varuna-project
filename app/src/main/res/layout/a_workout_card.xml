@@ -11,7 +11,7 @@
 
         <variable
             name="workoutModel"
-            type="ru.jrd_prime.trainingdiary.model.WorkoutModel" />
+            type="ru.jrd_prime.trainingdiary.fb_core.models.Workout" />
 
         <variable
             name="handler"
@@ -75,13 +75,14 @@
                     android:scrollbars="none">
 
                     <TextView
+                        android:animateLayoutChanges="true"
                         android:id="@+id/tvMuscleGroup"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:fontFamily="@font/ubuntu_medium"
                         android:gravity="center_vertical"
                         android:paddingStart="16dp"
-                        android:text="@{String.valueOf(workoutModel.muscleGroup)}"
+                        android:text="@{workoutModel.title}"
                         android:textColor="@color/colorGreyDark"
                         android:textSize="16sp"
                         tools:ignore="RtlSymmetry" />
@@ -193,7 +194,7 @@
                             android:paddingTop="8dp"
                             android:paddingEnd="16dp"
                             android:paddingBottom="8dp"
-                            android:text="@{String.valueOf(workoutModel.desc)}"
+                            android:text="@{workoutModel.description}"
                             android:textColor="@color/colorGreyDark"
                             android:textSize="16sp"
                             app:layout_constraintTop_toBottomOf="@id/lineOverDesc" />
@@ -217,9 +218,9 @@
                             android:id="@+id/textTime"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
-                            android:layout_marginTop="8dp"
                             android:background="@drawable/shape_for_time"
                             android:padding="3dp"
                             android:paddingStart="8dp"
@@ -251,7 +252,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/btnContainerHeight"
                         android:layout_weight="1"
-                        android:onClick="@{(view) -> handler.workoutDelete(view, workoutModel.workoutID)}">
+                        android:onClick="@{(view) -> handler.workoutDelete(view, workoutModel.id)}">
 
 
                         <ImageView
@@ -276,7 +277,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/btnContainerHeight"
                         android:layout_weight="1"
-                        android:onClick="@{(view) -> handler.workoutEdit(view, workoutModel.workoutID)}">
+                        android:onClick="@{(view) -> handler.workoutEdit(view, workoutModel.id)}">
 
                         <ImageView
                             android:layout_width="16dp"
@@ -297,9 +298,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
-            android:onClick="@{(view) -> handler.workoutAdd(view, workoutModel.workoutID)}"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:onClick="@{(view) -> handler.workoutAdd(view, workoutModel.id)}">
 
             <RelativeLayout
                 android:id="@+id/cardLineFirst1"

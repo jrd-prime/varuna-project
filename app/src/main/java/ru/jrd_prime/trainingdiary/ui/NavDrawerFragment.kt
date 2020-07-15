@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat.finishAffinity
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -18,6 +19,8 @@ import kotlinx.android.synthetic.main.lay_frg_navdrawer_not_auth.view.*
 import kotlinx.android.synthetic.main.lay_frg_navdrawer_not_auth.view.ivUserAvatar
 import kotlinx.android.synthetic.main.lay_frg_navdrawer_with_auth.view.*
 import ru.jrd_prime.trainingdiary.R
+import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
+import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import kotlin.system.exitProcess
 
@@ -55,7 +58,8 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
             root.ivLogOut.setOnClickListener { /*SIGN OUT*/
                 gAuth.gSignOut()
                 dismiss()
-                show(requireActivity().supportFragmentManager, "asd")
+                updatePagerOnLogOut()
+//                show(requireActivity().supportFragmentManager, "asd")
             }
         } else {
             // NOT AUTH
@@ -64,7 +68,6 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
             // FIND VIEWS IN NOT AUTH NAV
             root.bSignIn.setOnClickListener {
                 Log.d("TAG", "SIGN IN")
-                /*SIGN IN*/
                 gAuth.gSignIn(activity)
                 dismiss()
             }
@@ -72,6 +75,15 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
         navigationView = root.findViewById(R.id.vNavigationView)
         // closeImage = root.findViewById(R.id.close_imageview);
         return root
+    }
+
+    private fun updatePagerOnLogOut() {
+        Log.d(ru.jrd_prime.trainingdiary.ui.TAG, "onResume: update on logout")
+
+        val workoutPager = activity?.findViewById<ViewPager>(R.id.viewPagerMainDashboard)
+        workoutPager?.adapter = activity?.supportFragmentManager?.let { WorkoutPageAdapter(it) }
+        workoutPager?.setCurrentItem(START_PAGE, false)
+        workoutPager?.addOnPageChangeListener(pageListener)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

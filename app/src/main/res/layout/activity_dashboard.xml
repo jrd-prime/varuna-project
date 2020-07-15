@@ -11,7 +11,7 @@
 
         <variable
             name="workoutModel"
-            type="ru.jrd_prime.trainingdiary.model.WorkoutModel" />
+            type="ru.jrd_prime.trainingdiary.fb_core.models.Workout" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout

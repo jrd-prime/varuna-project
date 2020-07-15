@@ -1,19 +1,20 @@
 package ru.jrd_prime.trainingdiary.handlers
 
 import android.content.Context
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.PopupWindow
 import android.widget.TextView
-import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.a_workout_card.view.*
 import kotlinx.android.synthetic.main.pop.view.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
-import ru.jrd_prime.trainingdiary.model.WorkoutModel
+import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
+import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.workers.AsyncRequests
 
 
@@ -22,7 +23,11 @@ class WorkoutCardHandler(root: View) {
     private val asyncReq: AsyncRequests = AsyncRequests(appContainer)
     private val ctx: Context = root.context
 
-    fun workoutDelete(view: View, workoutID: Int) {
+    companion object {
+        const val TAG = "Handler"
+    }
+
+    fun workoutDelete(view: View, workoutID: String) {
         asyncReq.clearWorkout(workoutID) /* Set workout empty = true */
         val snack = Snackbar.make(view, R.string.snack_record_deleted, 7000)
         val snackView = snack.view
@@ -37,7 +42,9 @@ class WorkoutCardHandler(root: View) {
     }
 
 
-    fun workoutAdd(view: View, workoutID: Int) {
+    fun workoutAdd(view: View, workoutID: String) {
+        Log.d(TAG, "workoutAdd: $workoutID")
+
         val popupView: View =
             LayoutInflater.from(view.context).inflate(R.layout.pop, null)
         popupView.textTitle.setText(R.string.add_dialog_title)
@@ -59,37 +66,33 @@ class WorkoutCardHandler(root: View) {
         popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0)
     }
 
-    fun workoutEdit(view: View, workoutID: Int) {
-        val popupView: View =
-            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
-        popupView.textTitle.setText(R.string.edit_dialog_title)
-        val popupWindow = PopupWindow(
-            popupView,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            true
-        )
-        val wo: WorkoutModel? = asyncReq.getWorkout(workoutID)
-
-
-        if (wo == null) {
-            Toast.makeText(view.context, "Error on get workout ID: $workoutID", Toast.LENGTH_SHORT)
-                .show()
-        } else {
-            // main container
-            putDataToUI(wo, popupView)
-            setCategoryListeners(popupView)
-            popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
-            popupView.btnSave.setOnClickListener { _ ->
-                val dataFromUI = collectDataFromUI(popupView, workoutID)
-                asyncReq.updateWorkout(workoutID, dataFromUI)
-                popupWindow.dismiss()
+    fun workoutEdit(view: View, workoutID: String) {
+        FireBaseCore(appContainer).getWorkout(object : GetWorkoutCallback {
+            override fun onCallBack(workout: Workout, workoutID: String) {
+                val wo: Workout = workout
+                Log.d(TAG, "onCallBack: $wo")
+                val popupView: View =
+                    LayoutInflater.from(view.context).inflate(R.layout.pop, null)
+                popupView.textTitle.setText(R.string.edit_dialog_title)
+                val popupWindow = PopupWindow(
+                    popupView,
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT,
+                    true
+                )
+                putDataToUI(wo, popupView)
+                setCategoryListeners(popupView)
+                popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
+                popupView.btnSave.setOnClickListener { _ ->
+                    val dataFromUI = collectDataFromUI(popupView, workoutID)
+                    asyncReq.updateWorkout(workoutID, dataFromUI)
+                    popupWindow.dismiss()
+                }
+                popupWindow.elevation = 20f
+                popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0)
             }
-            popupWindow.elevation = 20f
-            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0)
-        }
+        }, workoutID)
     }
-
 
     fun showAdditionalInfo(view: View?) {
         if (view == null) return

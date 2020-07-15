@@ -10,9 +10,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
-import ru.jrd_prime.trainingdiary.data.WorkoutsRepository
-import ru.jrd_prime.trainingdiary.data.db.WorkoutDao
-import ru.jrd_prime.trainingdiary.data.db.WorkoutDatabase
 import ru.jrd_prime.trainingdiary.gauth.GAuth
 import ru.jrd_prime.trainingdiary.utils.AppUtils
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
@@ -20,7 +17,6 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 interface AppContainer {
-    val workoutsRepository: WorkoutsRepository
     val sharedPreferences: SharedPreferences
     val appConfig: AppConfig
     val appUtils: AppUtils
@@ -30,9 +26,7 @@ interface AppContainer {
 }
 
 class AppContainerImpl(private val appContext: TrainingDiaryApp) : AppContainer {
-    override val workoutsRepository: WorkoutsRepository by lazy {
-        WorkoutsRepository(workoutDao)
-    }
+
     override val sharedPreferences: SharedPreferences by lazy {
         appContext.getSharedPreferences(AppConfig().getSharedPreferenceName(), Context.MODE_PRIVATE)
     }
@@ -53,12 +47,6 @@ class AppContainerImpl(private val appContext: TrainingDiaryApp) : AppContainer 
     }
 
 
-    private val db: WorkoutDatabase by lazy {
-        WorkoutDatabase.getInstance(appContext)
-    }
-    private val workoutDao: WorkoutDao by lazy {
-        db.workoutDao()
-    }
     private val executorService: ExecutorService by lazy {
         Executors.newFixedThreadPool(4)
     }

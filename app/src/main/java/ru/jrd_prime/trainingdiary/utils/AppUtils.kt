@@ -194,6 +194,10 @@ class AppUtils(
         )
     }
 
+    fun getUserAuth(): Boolean {
+        return shPref.getBoolean(cfg.getSpNameUserAuth(), false)
+    }
+
     // SHOW MENU
     fun setShowMenu(b: Boolean) {
         shPref.edit().putBoolean(SHOW_MENU, b).apply()

@@ -19,12 +19,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import ru.jrd_prime.trainingdiary.R
@@ -35,6 +31,7 @@ import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.gauth.GAuth
 import ru.jrd_prime.trainingdiary.handlers.pageListener
+import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.utils.*
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 import ru.jrd_prime.trainingdiary.viewmodels.DashboardViewModel
@@ -58,18 +55,14 @@ class DashboardActivity : AppCompatActivity() {
     internal val activity: Activity = this
     private var fireAuth: FirebaseAuth = Firebase.auth
     lateinit var fireBaseCore: FireBaseCore
+    lateinit var appContainer: AppContainer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val appContainer = (application as TrainingDiaryApp).container
-
-
-
-
+        appContainer = (application as TrainingDiaryApp).container
 
         val database = appContainer.fireDB
-        val myRef = database.getReference("message")
-        myRef.setValue("Hello, World!")
 
         fireBaseCore = FireBaseCore(appContainer)
 //fireBaseCore.addNewUserOnSignIn()
@@ -94,9 +87,16 @@ class DashboardActivity : AppCompatActivity() {
 /* END */
         binding.viewmodel = viewmodel
         setWindow()
+
+
+
+
         workoutPager.adapter = workoutPagerAdapter
-        workoutPager.setCurrentItem(START_PAGE, false)
+        workoutPager.setCurrentItem(START_PAGE + 1, false)
         workoutPager.addOnPageChangeListener(pageListener)
+
+
+
         statisticAdapter.notifyDataSetChanged()
         statisticRecyclerView.adapter = statisticAdapter
 
@@ -112,32 +112,15 @@ class DashboardActivity : AppCompatActivity() {
         val date: MutableList<Long> = getWeekFromDate(getStartDateForPosition(START_PAGE))
         val statEndDate = date[1]
         val statStartDate = fromTimestamp(statEndDate).minusMonths(1)
-        val workoutsForMonth = appContainer.workoutsRepository.getWorkoutsForWeek(
-            dateToTimestamp(statStartDate),
-            statEndDate
-        )
-        workoutsForMonth.observe(
-            this,
-            Observer { list -> statisticAdapter.setNewData(viewmodel.setNewStatistic(list)) })
+//        val workoutsForMonth = appContainer.workoutsRepository.getWorkoutsForWeek(
+//            dateToTimestamp(statStartDate),
+//            statEndDate
+//        )
+//        workoutsForMonth.observe(
+//            this,
+//            Observer { list -> statisticAdapter.setNewData(viewmodel.setNewStatistic(list)) })
 
         statisticRecyclerView.layoutManager = LinearLayoutManager(this)
-
-        // Read from the database
-
-        // Read from the database
-        myRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                val value: String? = dataSnapshot.getValue(String::class.java)
-                Log.d(TAG, "Value is: $value")
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException())
-            }
-        })
 
 
     }
@@ -146,8 +129,18 @@ class DashboardActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         Log.d(TAG, "onStart: ")
+
+
         // Check for existing Google Sign In account, if the user is already signed in
         // the GoogleSignInAccount will be non-null.
+
+        if (fireAuth.currentUser != null) {
+            Log.d(TAG, "onStart: USER NO NULL")
+            val u = fireAuth.currentUser
+//            if (u != null) {
+////                 fireBaseCore.pushRan()
+//            }
+        }
         gAuth!!.getLastSignedInAccount()
     }
 
@@ -175,12 +168,26 @@ class DashboardActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.d(TAG, "MainActivity: onResume()")
-        if (utils!!.getShowMenu()) {
-            Log.d(TAG, "onResume: show menu")
-            navDrawerFragment!!.show(supportFragmentManager, navDrawerFragment!!.tag)
+
+        /* Update Pager After Login */
+        if (utils!!.getUserAuth()) {
+            val workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
+            workoutPager.adapter = workoutPagerAdapter
+            workoutPager.setCurrentItem(START_PAGE, false)
+            workoutPager.addOnPageChangeListener(pageListener)
             utils?.setShowMenu(false)
         }
+
+//        if (utils!!.getShowMenu()) {
+//            Log.d(TAG, "onResume: show menu")
+//            navDrawerFragment!!.show(supportFragmentManager, navDrawerFragment!!.tag)
+//            utils?.setShowMenu(false)
+//        }
+
+
     }
+
+
 
     fun isAuthenticatedUser(mSettings: SharedPreferences): Boolean {
         return mSettings.getBoolean(cfg.getSpNameUserAuth(), false)

@@ -10,9 +10,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutCardBinding
-import ru.jrd_prime.trainingdiary.model.WorkoutModel
-import ru.jrd_prime.trainingdiary.utils.*
-import java.util.*
+import ru.jrd_prime.trainingdiary.fb_core.models.Workout
+import ru.jrd_prime.trainingdiary.utils.catColor
+import ru.jrd_prime.trainingdiary.utils.catIcons
+import ru.jrd_prime.trainingdiary.utils.lg
+import ru.jrd_prime.trainingdiary.utils.minutesToHoursAndMinutes
 
 /* Настраиваем КАРТОЧКУ*/
 class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
@@ -30,27 +32,30 @@ class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
     private val strNoTitle = res.getString(R.string.no_title)
     private val strNoDesc = res.getString(R.string.no_description)
 
-    fun bind(workout: WorkoutModel?, position: Int) {
+    fun bind(workout: Workout?, position: Int) {
         if (workout == null) {
             //TODO Что мы делаем если нету кейса
             Log.d("JP_TAG", "bind: WORKOUTCASE NULL!")
         } else {
+
+            Log.d(TAG, "bind: workout : $workout")
+
             /* DEF HIDE */
             hide(binding.frameForHide)
             hide(binding.cardOverLay)
 
-            steCategoryImage(workout.workoutCategory)
+            steCategoryImage(workout.category)
 
             val weekDays = res.getStringArray(R.array.weekDays)
             // Устанавливаем дату
             binding.ivWeekDay.text = weekDays[position]
             binding.ivWeekDay1.text = weekDays[position]
             // Устанавливаем день недели
-            binding.ivMonthDay.text = getMonthDayFromDate(Date(workout.workoutDate!!))
-            binding.ivMonthDay1.text = getMonthDayFromDate(Date(workout.workoutDate))
+            val date = workout.id.split("-")[2]
+            binding.ivMonthDay.text = date
+            binding.ivMonthDay1.text = date
 
-            Log.d(TAG, "empty?: ID ${workout.workoutID} ${workout.workoutEmpty}")
-            when (workout.workoutEmpty) {
+            when (workout.empty) {
                 true -> showEmptyView()
                 false -> showClassicView(workout)
             }
@@ -60,12 +65,12 @@ class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
     }
 
     private fun showClassicView(
-        workout: WorkoutModel
+        workout: Workout
     ) {
-        val cat = workout.workoutCategory
-        val title = workout.muscleGroup
-        val desc = workout.desc
-        val time = workout.workoutTime
+        val cat = workout.category
+        val title = workout.title
+        val desc = workout.description
+        val time = workout.time
 
         binding.tvMuscleGroup.setTextColor(clrDarkGrey)
         binding.textDescription.setTextColor(clrDarkGrey)
@@ -76,12 +81,12 @@ class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
 
         if (cat == 4) { // if REST
             if (desc.isEmpty()) { // desc empty
-                workout.muscleGroup = strNoDesc
+                workout.title = strNoDesc
                 binding.tvMuscleGroup.setTextColor(clrLightForText)
                 hide(binding.textDescription)
                 hide(binding.timeContainer)
             } else { // desc OK
-                workout.muscleGroup = desc
+                workout.title = desc
                 hide(binding.timeContainer)
                 hide(binding.textDescription)
             }
@@ -89,11 +94,11 @@ class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
             lg("showClassicView", "EMPTY")
         } else { // ELSE
             if (title.isEmpty()) {
-                workout.muscleGroup = strNoTitle
+                workout.title = strNoTitle
                 binding.tvMuscleGroup.setTextColor(clrLightForText)
             }
             if (desc.isEmpty()) {
-                workout.desc = strNoDesc
+                workout.description = strNoDesc
                 binding.textDescription.setTextColor(clrLightForText)
             }
             if (time == 0) {

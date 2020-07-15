@@ -3,8 +3,8 @@ package ru.jrd_prime.trainingdiary.viewmodels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import ru.jrd_prime.trainingdiary.R
+import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.model.PlaceStatisticModel
-import ru.jrd_prime.trainingdiary.model.WorkoutModel
 
 class DashboardViewModel : ViewModel() {
     var statTitle = "Statistics for the last month"
@@ -29,12 +29,12 @@ class DashboardViewModel : ViewModel() {
         3 to "stretch",
         4 to "rest" */
 
-    fun setNewStatistic(list: List<WorkoutModel>): List<PlaceStatisticModel> {
-        val data = list.filter { workoutModel -> !workoutModel.workoutEmpty }
-        val cardioSize = data.filter { workoutModel -> workoutModel.workoutCategory == 1 }.size
-        val powerSize = data.filter { workoutModel -> workoutModel.workoutCategory == 2 }.size
-        val stretchSize = data.filter { workoutModel -> workoutModel.workoutCategory == 3 }.size
-        val restSize = data.filter { workoutModel -> workoutModel.workoutCategory == 4 }.size
+    fun setNewStatistic(list: List<Workout>): List<PlaceStatisticModel> {
+        val data = list.filter { workoutModel -> !workoutModel.empty }
+        val cardioSize = data.filter { workoutModel -> workoutModel.category == 1 }.size
+        val powerSize = data.filter { workoutModel -> workoutModel.category == 2 }.size
+        val stretchSize = data.filter { workoutModel -> workoutModel.category == 3 }.size
+        val restSize = data.filter { workoutModel -> workoutModel.category == 4 }.size
 
         workoutsSum = cardioSize + powerSize + stretchSize + restSize
 
