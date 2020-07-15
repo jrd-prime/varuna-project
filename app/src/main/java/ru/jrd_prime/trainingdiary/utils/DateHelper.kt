@@ -1,5 +1,6 @@
 package ru.jrd_prime.trainingdiary.utils
 
+import android.widget.TextView
 import androidx.room.TypeConverter
 import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
@@ -31,6 +32,29 @@ fun getDatesWeekList(startDate: Long): MutableList<String> {
     return dates
 }
 
+fun setDateForHead(view: TextView?){
+    val start = LocalDateTime.now()
+    val day = Integer.parseInt(DateTimeFormatter.ofPattern("dd").format(start))
+    val month = Integer.parseInt(DateTimeFormatter.ofPattern("MM").format(start))
+    val year = Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(start))
+    //TODO переписать месяца для ялокализации
+    val textMonth = when (month) {
+        1 -> "January"
+        2 -> "February"
+        3 -> "March"
+        4 -> "April"
+        5 -> "May"
+        6 -> "June"
+        7 -> "July"
+        8 -> "August"
+        9 -> "September"
+        10 -> "October"
+        11 -> "November"
+        12 -> "December"
+        else -> ""
+    }
+    view?.text = "$day $textMonth $year"
+}
 
 fun getWeekFromDate(startDate: Long): MutableList<Long> {
     val dates = mutableListOf<Long>()

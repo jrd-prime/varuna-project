@@ -28,11 +28,13 @@ class WorkoutCardHandler(root: View) {
     }
 
     fun workoutDelete(view: View, workoutID: String) {
-        asyncReq.clearWorkout(workoutID) /* Set workout empty = true */
+//        asyncReq.clearWorkout(workoutID) /* Set workout empty = true */
+        FireBaseCore(appContainer).clearWorkout(workoutID)
         val snack = Snackbar.make(view, R.string.snack_record_deleted, 7000)
         val snackView = snack.view
         snack.setAction(R.string.snack_restore) {
-            asyncReq.restoreWorkout(workoutID) /* Set workout empty = false */
+//            asyncReq.restoreWorkout(workoutID) /* Set workout empty = false */
+            FireBaseCore(appContainer).restoreWorkout(workoutID)
         }
         snack.setActionTextColor(ctx.getColor(R.color.colorSnackbarButton))
         snackView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
@@ -67,31 +69,37 @@ class WorkoutCardHandler(root: View) {
     }
 
     fun workoutEdit(view: View, workoutID: String) {
+        val popupView: View =
+            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
+        popupView.textTitle.setText(R.string.edit_dialog_title)
+        val popupWindow = PopupWindow(
+            popupView,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            true
+        )
+
         FireBaseCore(appContainer).getWorkout(object : GetWorkoutCallback {
             override fun onCallBack(workout: Workout, workoutID: String) {
                 val wo: Workout = workout
                 Log.d(TAG, "onCallBack: $wo")
-                val popupView: View =
-                    LayoutInflater.from(view.context).inflate(R.layout.pop, null)
-                popupView.textTitle.setText(R.string.edit_dialog_title)
-                val popupWindow = PopupWindow(
-                    popupView,
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.MATCH_PARENT,
-                    true
-                )
+
                 putDataToUI(wo, popupView)
-                setCategoryListeners(popupView)
-                popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
-                popupView.btnSave.setOnClickListener { _ ->
-                    val dataFromUI = collectDataFromUI(popupView, workoutID)
-                    asyncReq.updateWorkout(workoutID, dataFromUI)
-                    popupWindow.dismiss()
-                }
-                popupWindow.elevation = 20f
-                popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0)
+
             }
         }, workoutID)
+
+        setCategoryListeners(popupView)
+        popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
+        popupView.btnSave.setOnClickListener { _ ->
+            val dataFromUI = collectDataFromUI(popupView, workoutID)
+            FireBaseCore(appContainer).updateWorkout(workoutID, dataFromUI)
+            popupWindow.dismiss()
+        }
+        popupWindow.elevation = 20f
+        view.post(Runnable {
+            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0)
+        })
     }
 
     fun showAdditionalInfo(view: View?) {

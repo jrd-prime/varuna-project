@@ -27,7 +27,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
     private val today = LocalDateTime.now()
     private val year = today.year.toString()
     private val month = today.monthValue.toString()
-    val woRef = workoutsRef.child(userId)
+    private val woRef = workoutsRef.child(userId)
 
     private fun workoutPathConstructor(workoutId: String): DatabaseReference {
         val splitDate = workoutId.split("-")
@@ -116,13 +116,11 @@ class FireBaseCore(private val appContainer: AppContainer) {
 
 
     fun listenNewData(myNewAdapter: WorkoutListAdapter) {
+        //TODO get current year and month for listen
         val t = woRef.child("2020").child("07")
         t.addChildEventListener(object : ChildEventListener {
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                Log.d(
-                    TAG,
-                    "onChildChanged: need update item! key: ${snapshot.key}, val: ${snapshot.value}"
-                )
+
                 val key = snapshot.key
                 val workout = snapshot.getValue<Workout>()
                 if (workout != null && key != null) myNewAdapter.updateItem(key, workout)
@@ -167,10 +165,27 @@ class FireBaseCore(private val appContainer: AppContainer) {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val wo = snapshot.getValue<Workout>()
                 if (wo != null) {
-                    getWorkoutCallback.onCallBack(workout = wo, workoutID =  snapshot.key.toString())
+                    getWorkoutCallback.onCallBack(workout = wo, workoutID = snapshot.key.toString())
                 }
             }
         })
+    }
+
+    fun clearWorkout(workoutID: String) {
+
+        val actualRef = workoutPathConstructor(workoutID)
+        val dateData = actualRef.child(workoutID)
+        dateData.child("empty").setValue(true)
+
+    }
+
+    fun restoreWorkout(workoutID: String) {
+
+
+        val actualRef = workoutPathConstructor(workoutID)
+        val dateData = actualRef.child(workoutID)
+        dateData.child("empty").setValue(false)
+
     }
 
 }
