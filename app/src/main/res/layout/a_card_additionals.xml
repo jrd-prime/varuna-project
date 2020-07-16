@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="4dp">
+
+    <FrameLayout
+        android:id="@+id/cardViewAdditionalLeft"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true">
+
+        <ImageView
+            android:layout_width="16dp"
+android:layout_gravity="center"
+            android:layout_height="16dp"
+            android:src="@drawable/jp_heartbeat"
+            android:text="@string/textDummyShort" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/cardViewAdditionalCenter"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:layout_toStartOf="@id/cardViewAdditionalRight"
+        android:layout_toEndOf="@id/cardViewAdditionalLeft"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
+
+        <TextView
+
+            android:textColor="@color/colorGreyDark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/textDummyShort" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/cardViewAdditionalRight"
+        android:layout_width="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_height="20dp">
+
+        <TextView
+            android:textColor="@color/colorGreyDark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/textDummyShort" />
+    </FrameLayout>
+</RelativeLayout>

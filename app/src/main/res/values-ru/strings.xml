@@ -24,6 +24,8 @@
     <string name="dialog_cancel_btn">Отмена</string>
     <string name="dialog_save_btn">Сохранить</string>
     <string name="nav_menu_exit">Закрыть приложение</string>
+    <string name="dialog_additional_info">Подсказка: после создания основной тренировки дня, вы можете также добавить несколько дополнительных, для этого в карточке дня выберите "Добавить еще"</string>
+
     <!-- DIALOG -->
     <string-array name="weekDays">
         <item>Пн</item>

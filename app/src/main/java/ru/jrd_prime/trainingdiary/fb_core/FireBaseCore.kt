@@ -33,14 +33,12 @@ class FireBaseCore(private val appContainer: AppContainer) {
         val splitDate = workoutId.split("-")
         val year = splitDate[0]
         val month = splitDate[1]
-        Log.d(TAG, "workoutPathConstructor: ${year} + ${month}")
         return woRef.child(year).child(month)
     }
 
     private fun addWorkoutWithId(workoutId: String, workout: Workout) {
         val actualRef = workoutPathConstructor(workoutId)
         actualRef.child(workoutId).setValue(workout)
-        Log.d(TAG, "addWorkoutWithId: id: $workoutId, workout: $workout")
     }
 
 
@@ -90,7 +88,6 @@ class FireBaseCore(private val appContainer: AppContainer) {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var workout = snapshot.getValue<Workout>()
-                    Log.d(TAG, "onDataChange: $workout")
                     if (workout != null) {
                         weekData.add(workout) // Если воркаут не пуст, то добавляем в даталист
                     } else {
@@ -172,20 +169,14 @@ class FireBaseCore(private val appContainer: AppContainer) {
     }
 
     fun clearWorkout(workoutID: String) {
-
         val actualRef = workoutPathConstructor(workoutID)
         val dateData = actualRef.child(workoutID)
         dateData.child("empty").setValue(true)
-
     }
 
     fun restoreWorkout(workoutID: String) {
-
-
         val actualRef = workoutPathConstructor(workoutID)
         val dateData = actualRef.child(workoutID)
         dateData.child("empty").setValue(false)
-
     }
-
 }

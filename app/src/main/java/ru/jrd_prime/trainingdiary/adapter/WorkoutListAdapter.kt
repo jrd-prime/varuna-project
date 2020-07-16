@@ -32,11 +32,9 @@ class WorkoutListAdapter :
     }
 
     fun setNewData(newData: MutableList<Workout>) {
-
         items.clear()
         items.addAll(newData)
         notifyDataSetChanged()
-
     }
 
     override fun getItemCount(): Int {
@@ -55,6 +53,5 @@ class WorkoutListAdapter :
             Log.d(TAG, "updateItem: FINDED. key = $key, $index, REPLACED")
             notifyDataSetChanged()
         }
-
     }
 }
