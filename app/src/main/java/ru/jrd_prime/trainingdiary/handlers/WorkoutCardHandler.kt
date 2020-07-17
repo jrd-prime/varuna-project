@@ -9,7 +9,7 @@ import android.view.WindowManager
 import android.widget.PopupWindow
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.a_workout_card.view.*
+import kotlinx.android.synthetic.main.a_new_card_view.view.*
 import kotlinx.android.synthetic.main.pop.view.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
@@ -104,11 +104,27 @@ class WorkoutCardHandler(root: View) {
 
     fun showAdditionalInfo(view: View?) {
         if (view == null) return
-        val contView = view.frameForHide
+//        val contView = view.frameForHide
 
-        when (contView.visibility) {
-            View.GONE -> setVisible(contView)
-            View.VISIBLE -> setGone(contView)
+//        when (contView.visibility) {
+//            View.GONE -> setVisible(contView)
+//            View.VISIBLE -> setGone(contView)
+//        }
+    }
+
+    fun showAdditionalInfoNew(view: View?) {
+        if (view == null) return else {
+            val cardView = view.parent.parent.parent.parent as View
+            val contView = cardView.hideThis
+            when (contView.visibility) {
+                View.GONE -> {
+                    contView.visibility = View.VISIBLE
+                }
+                View.VISIBLE -> {
+                    contView.visibility = View.GONE
+
+                }
+            }
         }
     }
 }

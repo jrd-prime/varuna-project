@@ -9,7 +9,7 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import ru.jrd_prime.trainingdiary.R
-import ru.jrd_prime.trainingdiary.databinding.AWorkoutCardBinding
+import ru.jrd_prime.trainingdiary.databinding.ANewCardViewBinding
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.utils.catColor
 import ru.jrd_prime.trainingdiary.utils.catIcons
@@ -17,9 +17,9 @@ import ru.jrd_prime.trainingdiary.utils.lg
 import ru.jrd_prime.trainingdiary.utils.minutesToHoursAndMinutes
 
 /* Настраиваем КАРТОЧКУ*/
-class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
+class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
     RecyclerView.ViewHolder(_binding.root) {
-    private val binding: AWorkoutCardBinding = _binding
+    private val binding: ANewCardViewBinding = _binding
     private val root: View = binding.root
     private val ctx: Context = root.context
     private val res: Resources = ctx.resources
@@ -41,19 +41,17 @@ class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
             Log.d(TAG, "bind: workout : $workout")
 
             /* DEF HIDE */
-            hide(binding.frameForHide)
-            hide(binding.cardOverLay)
+//            hide(binding.frameForHide)
+//            hide(binding.cardOverLay)
 
             steCategoryImage(workout.category)
 
             val weekDays = res.getStringArray(R.array.weekDays)
             // Устанавливаем дату
             binding.ivWeekDay.text = weekDays[position]
-            binding.ivWeekDay1.text = weekDays[position]
             // Устанавливаем день недели
             val date = workout.id.split("-")[2]
             binding.ivMonthDay.text = date
-            binding.ivMonthDay1.text = date
 
             when (workout.empty) {
                 true -> showEmptyView()
@@ -111,7 +109,7 @@ class WorkoutListViewHolder(_binding: AWorkoutCardBinding) :
     }
 
     private fun showEmptyView() {
-        show(binding.cardOverLay)
+//        show(binding.cardOverLay)
     }
 
     private fun hide(view: View) {

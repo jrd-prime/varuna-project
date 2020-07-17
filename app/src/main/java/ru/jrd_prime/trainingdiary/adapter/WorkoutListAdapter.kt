@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.jrd_prime.trainingdiary.R
-import ru.jrd_prime.trainingdiary.databinding.AWorkoutCardBinding
+import ru.jrd_prime.trainingdiary.databinding.ANewCardViewBinding
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.handlers.WorkoutCardHandler
 import ru.jrd_prime.trainingdiary.ui.WorkoutListViewHolder
@@ -21,8 +21,8 @@ class WorkoutListAdapter :
     private var items: MutableList<Workout> = mutableListOf<Workout>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding: AWorkoutCardBinding =
-            DataBindingUtil.inflate(inflater, R.layout.a_workout_card, parent, false)
+        val binding: ANewCardViewBinding =
+            DataBindingUtil.inflate(inflater, R.layout.a_new_card_view, parent, false)
         binding.handler = WorkoutCardHandler(binding.root)
         return WorkoutListViewHolder(binding)
     }

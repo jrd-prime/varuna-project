@@ -1,119 +1,336 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="workoutModel"
+            type="ru.jrd_prime.trainingdiary.fb_core.models.Workout" />
+
+        <variable
+            name="handler"
+            type="ru.jrd_prime.trainingdiary.handlers.WorkoutCardHandler" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:minHeight="100dp"
-        android:orientation="vertical"
-        app:cardBackgroundColor="@color/colorWhite"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:animateLayoutChanges="true">
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewMain"
+            android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="50dp"
+            android:layout_margin="12dp"
+            android:orientation="vertical"
             app:cardBackgroundColor="@color/colorWhite"
             app:cardCornerRadius="8dp"
-            app:cardElevation="2dp"
+            app:cardElevation="4dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <include
-                layout="@layout/a_card_head"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </androidx.cardview.widget.CardView>
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="54dp"
-            android:layout_marginRight="8dp"
-            android:orientation="vertical">
-
-            <include
-                android:id="@+id/addition1"
-                layout="@layout/a_card_additionals"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-
-                android:background="@color/colorForLightBorder" />
-
-            <include
-                android:id="@+id/addition2"
-                layout="@layout/a_card_additionals"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-
-                android:background="@color/colorForLightBorder" />
-
-            <include
-                android:id="@+id/addition3"
-                layout="@layout/a_card_additionals"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-
-                android:background="@color/colorForLightBorder" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <Button
-                    style="@style/Widget.AppCompat.Button.Borderless"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardViewIn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/colorWhite"
-                    android:text="more details"
-                    android:textColor="@color/colorGreyDark"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewEmpty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:minHeight="50dp"
-        android:visibility="gone"
-        app:cardBackgroundColor="@color/colorGreyDark"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-    </androidx.cardview.widget.CardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                        <FrameLayout
+                            android:id="@+id/cardDateFrame"
+                            android:layout_width="60dp"
+                            android:layout_height="@dimen/cardLineHeight"
+                            android:layout_alignParentStart="true"
+                            android:background="@color/colorWhite">
+
+                            <RelativeLayout
+                                android:id="@+id/weekDayContainer"
+                                android:layout_alignParentEnd="true"
+                                android:layout_height="match_parent"
+                                android:layout_width="@dimen/mCardButtonsCompactWidth">
+
+                                <LinearLayout
+                                    android:layout_centerInParent="true"
+                                    android:layout_height="wrap_content"
+                                    android:layout_width="match_parent"
+                                    android:orientation="vertical"
+                                    android:paddingBottom="6dp"
+                                    android:paddingTop="6dp">
+
+
+                                    <TextView
+                                        android:fontFamily="@font/montserrat_semibold"
+                                        android:id="@+id/ivMonthDay"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="2"
+                                        android:layout_width="match_parent"
+                                        android:text="@string/numDummyShort"
+                                        android:textAlignment="center"
+                                        android:textAllCaps="true"
+                                        android:textSize="14sp"
+                                        tools:ignore="SmallSp" />
+
+                                    <TextView
+                                        android:fontFamily="@font/montserrat_semibold"
+                                        android:id="@+id/ivWeekDay"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:layout_width="match_parent"
+                                        android:text="@string/textDummyShort"
+                                        android:textAlignment="center"
+                                        android:textAllCaps="true"
+                                        android:textSize="10sp"
+                                        tools:ignore="SmallSp" />
+
+                                </LinearLayout>
+
+                                <FrameLayout
+                                    android:background="@drawable/shapez"
+                                    android:elevation="2dp"
+                                    android:id="@+id/dot"
+                                    android:layout_alignParentStart="true"
+                                    android:layout_alignParentTop="true"
+                                    android:layout_height="13dp"
+                                    android:layout_margin="4dp"
+                                    android:layout_width="13dp"
+                                    android:padding="0dp">
+
+                                    <FrameLayout
+                                        android:background="@drawable/grad1"
+                                        android:layout_height="match_parent"
+                                        android:layout_width="match_parent" />
+                                </FrameLayout>
+                            </RelativeLayout>
+                        </FrameLayout>
+
+                        <View
+                            android:id="@+id/cutView1"
+                            android:layout_width="1dp"
+                            android:layout_height="@dimen/cardLineHeight"
+                            android:layout_toEndOf="@id/cardDateFrame"
+                            android:background="@color/colorForLightBorder" />
+
+                        <LinearLayout
+                            android:id="@+id/cardImageListLayout"
+                            android:layout_width="60dp"
+                            android:layout_height="@dimen/cardLineHeight"
+                            android:layout_toStartOf="@+id/cardOpenerFrame"
+                            android:layout_toEndOf="@+id/cutView1"
+                            android:background="@color/colorWhite"
+                            android:orientation="horizontal">
+
+                            <RelativeLayout
+                                android:id="@+id/categoryIconContainer"
+                                android:layout_width="48dp"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:id="@+id/ivCategory"
+                                    android:layout_width="@dimen/iconCardSize"
+                                    android:layout_height="@dimen/iconCardSize"
+                                    android:layout_centerInParent="true"
+                                    android:contentDescription="@string/descIVCategory"
+                                    android:src="@drawable/jp_heartbeat" />
+
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+
+                        <FrameLayout
+                            android:id="@+id/cardOpenerFrame"
+                            android:layout_width="60dp"
+                            android:layout_height="@dimen/cardLineHeight"
+                            android:layout_alignParentEnd="true"
+                            android:background="@color/colorWhite"
+                            android:onClick="@{(view) -> handler.showAdditionalInfoNew(view)}">
+
+                            <ImageView
+                                android:id="@+id/ivOpener"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="@string/descIVCategory"
+                                android:src="@drawable/jp_chevron_down" />
+
+                        </FrameLayout>
+
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!--                <View-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="1dp"-->
+                <!--                    android:background="@color/colorForLightBorder" />-->
+                <LinearLayout
+                    android:id="@+id/hideThis"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/descContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/tvMuscleGroup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:fontFamily="@font/ubuntu_medium"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="16dp"
+                            android:paddingTop="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingBottom="8dp"
+                            android:paddingStart="16dp"
+                            android:text="@{workoutModel.title}"
+                            android:textColor="@color/colorGreyDark"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true"
+                            android:fontFamily="@font/ubuntu_reg"
+                            android:paddingStart="16dp"
+                            android:paddingTop="0dp"
+                            android:paddingEnd="16dp"
+                            android:paddingBottom="0dp"
+                            android:text="@{workoutModel.description}"
+                            android:textColor="@color/colorGreyDark"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="@+id/tvMuscleGroup"
+                            app:layout_constraintStart_toStartOf="@+id/tvMuscleGroup"
+                            app:layout_constraintTop_toBottomOf="@+id/tvMuscleGroup" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <LinearLayout
+                        android:id="@+id/timeContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/textTime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:background="@drawable/shape_for_time"
+                                android:padding="3dp"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
+                                android:text="@string/textDummy"
+                                android:textColor="@color/colorGreyDark"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/shadow" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/card_bg_buttons"
+                        android:orientation="vertical">
+
+                        <FrameLayout
+                            android:id="@+id/mCardButtonsDeleteLayout"
+                            android:layout_width="@dimen/mCardButtonsCompactWidth"
+                            android:layout_height="32dp"
+                            android:layout_alignParentStart="true"
+                            android:onClick="@{(view) -> handler.workoutDelete(view, workoutModel.id)}"
+                            >
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/jp_trash" />
+                        </FrameLayout>
+
+                        <View
+                            android:id="@+id/view1"
+                            android:layout_width="1dp"
+                            android:layout_height="32dp"
+                            android:layout_toEndOf="@id/mCardButtonsDeleteLayout"
+                            android:background="@color/colorForLightBorder" />
+
+                        <FrameLayout
+                            android:id="@+id/mCardButtonsMoreLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:layout_toStartOf="@+id/view2"
+                            android:layout_toEndOf="@+id/view1">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="more details"
+                                android:textAllCaps="true"
+                                android:textColor="@color/colorGreyDark" />
+                        </FrameLayout>
+
+                        <View
+                            android:id="@+id/view2"
+                            android:layout_width="1dp"
+                            android:layout_height="32dp"
+                            android:layout_toStartOf="@id/mCardButtonsEditLayout"
+                            android:background="@color/colorForLightBorder" />
+
+                        <FrameLayout
+                            android:id="@+id/mCardButtonsEditLayout"
+                            android:layout_width="@dimen/mCardButtonsCompactWidth"
+                            android:layout_height="32dp"
+                            android:layout_alignParentEnd="true"
+                            android:onClick="@{(view) -> handler.workoutEdit(view, workoutModel.id)}">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/jp_edit" />
+                        </FrameLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

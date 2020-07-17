@@ -16,4 +16,7 @@
     <dimen name="imageSizeInAddCaseWindow">40dp</dimen>
     <dimen name="statPlaceContainerHeight">32dp</dimen>
     <dimen name="stat_pb_height">10dp</dimen>
+    <dimen name="mCardButtonsCompactSideSize">40dp</dimen>
+    <dimen name="mCardButtonsCompactWidth">60dp</dimen>
+    <dimen name="cardLineHeight">50dp</dimen>
 </resources>

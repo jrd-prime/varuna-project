@@ -1,16 +1,76 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout>
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="cardHandler"
+            type="ru.jrd_prime.trainingdiary.handlers.WorkoutCardHandler" />
+    </data>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="card head"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/cardDateFrame"
+        android:layout_width="60dp"
+        android:layout_height="@dimen/cardLineHeight"
+        android:layout_alignParentStart="true"
+        android:background="@color/colorWhite">
+
+<!--        <include layout="@layout/a_card_day" />-->
+    </FrameLayout>
+
+    <View
+        android:id="@+id/cutView1"
+        android:layout_width="1dp"
+        android:layout_height="@dimen/cardLineHeight"
+        android:layout_toEndOf="@id/cardDateFrame"
+        android:background="@color/colorForLightBorder" />
+
+    <LinearLayout
+        android:id="@+id/cardImageListLayout"
+        android:layout_width="60dp"
+        android:layout_height="@dimen/cardLineHeight"
+        android:layout_toStartOf="@+id/cardOpenerFrame"
+        android:layout_toEndOf="@+id/cutView1"
+        android:background="@color/colorWhite"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/categoryIconContainer"
+            android:layout_width="48dp"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ivCategory"
+                android:layout_width="@dimen/iconCardSize"
+                android:layout_height="@dimen/iconCardSize"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/descIVCategory"
+                android:src="@drawable/jp_heartbeat" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/cardOpenerFrame"
+        android:layout_width="60dp"
+        android:layout_height="@dimen/cardLineHeight"
+        android:layout_alignParentEnd="true"
+        android:background="@color/colorWhite"
+        android:onClick="@{(view) -> cardHandler.showAdditionalInfoNew(view)}">
+
+        <ImageView
+            android:id="@+id/ivOpener"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/descIVCategory"
+            android:src="@drawable/jp_chevron_down" />
+
+    </FrameLayout>
+
+</RelativeLayout>
+</layout>
