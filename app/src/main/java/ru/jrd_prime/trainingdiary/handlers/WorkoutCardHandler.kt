@@ -25,6 +25,7 @@ class WorkoutCardHandler(root: View) {
 
     companion object {
         const val TAG = "Handler"
+        var rotationAngle = 0f
     }
 
     fun workoutDelete(view: View, workoutID: String) {
@@ -113,7 +114,12 @@ class WorkoutCardHandler(root: View) {
     }
 
     fun showAdditionalInfoNew(view: View?) {
+
+        rotationAngle = if (rotationAngle == 0f) 180f else 0f //toggle
+
+
         if (view == null) return else {
+            view.ivOpener.animate().rotation(rotationAngle).setDuration(500).start()
             val cardView = view.parent.parent.parent.parent as View
             val contView = cardView.hideThis
             when (contView.visibility) {

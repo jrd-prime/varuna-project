@@ -38,9 +38,11 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             Log.d("JP_TAG", "bind: WORKOUTCASE NULL!")
         } else {
 
+            /* DEF HIDE */
+            binding.hideThis.visibility = View.GONE
+
             Log.d(TAG, "bind: workout : $workout")
 
-            /* DEF HIDE */
 //            hide(binding.frameForHide)
 //            hide(binding.cardOverLay)
 

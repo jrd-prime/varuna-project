@@ -20,18 +20,20 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true">
+        android:layout_height="wrap_content">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="12dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="8dp"
             android:orientation="vertical"
             app:cardBackgroundColor="@color/colorWhite"
             app:cardCornerRadius="8dp"
-            app:cardElevation="4dp"
+            app:cardElevation="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -44,6 +46,7 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewIn"
+                    android:animateLayoutChanges="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="8dp"
@@ -62,25 +65,25 @@
 
                             <RelativeLayout
                                 android:id="@+id/weekDayContainer"
-                                android:layout_alignParentEnd="true"
+                                android:layout_width="@dimen/mCardButtonsCompactWidth"
                                 android:layout_height="match_parent"
-                                android:layout_width="@dimen/mCardButtonsCompactWidth">
+                                android:layout_alignParentEnd="true">
 
                                 <LinearLayout
-                                    android:layout_centerInParent="true"
-                                    android:layout_height="wrap_content"
                                     android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerInParent="true"
                                     android:orientation="vertical"
-                                    android:paddingBottom="6dp"
-                                    android:paddingTop="6dp">
+                                    android:paddingTop="6dp"
+                                    android:paddingBottom="6dp">
 
 
                                     <TextView
-                                        android:fontFamily="@font/montserrat_semibold"
                                         android:id="@+id/ivMonthDay"
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="2"
-                                        android:layout_width="match_parent"
+                                        android:fontFamily="@font/montserrat_semibold"
                                         android:text="@string/numDummyShort"
                                         android:textAlignment="center"
                                         android:textAllCaps="true"
@@ -88,11 +91,11 @@
                                         tools:ignore="SmallSp" />
 
                                     <TextView
-                                        android:fontFamily="@font/montserrat_semibold"
                                         android:id="@+id/ivWeekDay"
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
-                                        android:layout_width="match_parent"
+                                        android:fontFamily="@font/montserrat_semibold"
                                         android:text="@string/textDummyShort"
                                         android:textAlignment="center"
                                         android:textAllCaps="true"
@@ -102,20 +105,20 @@
                                 </LinearLayout>
 
                                 <FrameLayout
-                                    android:background="@drawable/shapez"
-                                    android:elevation="2dp"
                                     android:id="@+id/dot"
+                                    android:layout_width="13dp"
+                                    android:layout_height="13dp"
                                     android:layout_alignParentStart="true"
                                     android:layout_alignParentTop="true"
-                                    android:layout_height="13dp"
                                     android:layout_margin="4dp"
-                                    android:layout_width="13dp"
+                                    android:background="@drawable/shapez"
+                                    android:elevation="2dp"
                                     android:padding="0dp">
 
                                     <FrameLayout
-                                        android:background="@drawable/grad1"
+                                        android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        android:layout_width="match_parent" />
+                                        android:background="@drawable/grad1" />
                                 </FrameLayout>
                             </RelativeLayout>
                         </FrameLayout>
@@ -181,6 +184,7 @@
                 <!--                    android:background="@color/colorForLightBorder" />-->
                 <LinearLayout
                     android:id="@+id/hideThis"
+                    android:animateLayoutChanges="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -189,7 +193,9 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/descContainer"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true">
+
                         <TextView
                             android:id="@+id/tvMuscleGroup"
                             android:layout_width="match_parent"
@@ -197,11 +203,11 @@
                             android:animateLayoutChanges="true"
                             android:fontFamily="@font/ubuntu_medium"
                             android:gravity="center_vertical"
+                            android:paddingStart="16dp"
                             android:paddingLeft="16dp"
                             android:paddingTop="16dp"
                             android:paddingRight="16dp"
                             android:paddingBottom="8dp"
-                            android:paddingStart="16dp"
                             android:text="@{workoutModel.title}"
                             android:textColor="@color/colorGreyDark"
                             android:textSize="16sp"
@@ -275,8 +281,7 @@
                             android:layout_width="@dimen/mCardButtonsCompactWidth"
                             android:layout_height="32dp"
                             android:layout_alignParentStart="true"
-                            android:onClick="@{(view) -> handler.workoutDelete(view, workoutModel.id)}"
-                            >
+                            android:onClick="@{(view) -> handler.workoutDelete(view, workoutModel.id)}">
 
                             <ImageView
                                 android:layout_width="16dp"
