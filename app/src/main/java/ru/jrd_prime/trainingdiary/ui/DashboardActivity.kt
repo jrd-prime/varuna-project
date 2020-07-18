@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,6 +28,7 @@ import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
+import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.gauth.GAuth
 import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.impl.AppContainer
@@ -70,7 +70,9 @@ class DashboardActivity : AppCompatActivity() {
         // Add Categories
         fireBaseCore.pushCategories()
 
-
+        fireBaseCore.addMoreWorkout(1, "2020-07-18", Workout())
+        fireBaseCore.addMoreWorkout(2, "2020-07-18", Workout())
+        fireBaseCore.addMoreWorkout(3, "2020-07-18", Workout())
         utils = appContainer.appUtils
         val binding: ActivityDashboardBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
@@ -186,7 +188,6 @@ class DashboardActivity : AppCompatActivity() {
 
 
     }
-
 
 
     fun isAuthenticatedUser(mSettings: SharedPreferences): Boolean {

@@ -18,7 +18,8 @@ class WorkoutListAdapter :
         const val TAG = "Workout List Adapter"
     }
 
-    private var items: MutableList<Workout> = mutableListOf<Workout>()
+    private var workoutsList: MutableList<Workout> = mutableListOf<Workout>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WorkoutListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding: ANewCardViewBinding =
@@ -28,28 +29,28 @@ class WorkoutListAdapter :
     }
 
     override fun onBindViewHolder(holder: WorkoutListViewHolder, position: Int) {
-        holder.bind(items[position], position)
+        holder.bind(workoutsList[position], position)
     }
 
     fun setNewData(newData: MutableList<Workout>) {
-        items.clear()
-        items.addAll(newData)
+        workoutsList.clear()
+        workoutsList.addAll(newData)
         notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return workoutsList.size
     }
 
     fun addItem(weekData: Workout) {
-        items.add(weekData)
+        workoutsList.add(weekData)
         notifyDataSetChanged()
     }
 
     fun updateItem(key: String, workout: Workout) {
-        val index = items.indexOfFirst { it.id == key }
+        val index = workoutsList.indexOfFirst { it.id == key }
         if (index >= 0) {
-            items[index] = workout
+            workoutsList[index] = workout
             Log.d(TAG, "updateItem: FINDED. key = $key, $index, REPLACED")
             notifyDataSetChanged()
         }

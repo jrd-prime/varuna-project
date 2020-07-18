@@ -96,8 +96,13 @@ class WorkoutPageFragment : Fragment() {
             val date = getWeekFromDate(getStartDateForPosition(pageNumber))
             val dates = getDatesWeekList(startDate = date[0])
             Log.d(TAG, "onCreateView: $dates")
+
+
             val d = fireBaseCore.getWeekData(dates, workoutsListAdapter)
             FireBaseCore(appContainerz).listenNewData(workoutsListAdapter)
+
+
+
             rootView.recView.layoutManager = LinearLayoutManager(context)
             val scrollView = rootView.cont_layz as NestedScrollView
             scrollView.isFillViewport = true

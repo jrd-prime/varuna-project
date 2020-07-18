@@ -1,16 +1,19 @@
 package ru.jrd_prime.trainingdiary.fb_core
 
+import android.net.wifi.WpsInfo
 import android.util.Log
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import org.threeten.bp.LocalDateTime
 import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
+import ru.jrd_prime.trainingdiary.fb_core.config._ADDITIONAL
 import ru.jrd_prime.trainingdiary.fb_core.config._CATEGORIES
 import ru.jrd_prime.trainingdiary.fb_core.config._USERS
 import ru.jrd_prime.trainingdiary.fb_core.config._WORKOUTS
 import ru.jrd_prime.trainingdiary.fb_core.models.Category
 import ru.jrd_prime.trainingdiary.fb_core.models.User
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
+import ru.jrd_prime.trainingdiary.handlers.GetAdditionalCallback
 import ru.jrd_prime.trainingdiary.handlers.GetWorkoutCallback
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 
@@ -41,6 +44,14 @@ class FireBaseCore(private val appContainer: AppContainer) {
         actualRef.child(workoutId).setValue(workout)
     }
 
+    fun addMoreWorkout(id: Int, workoutDate: String, workout: Workout) {
+        val splitDate = workoutDate.split("-")
+        val year = splitDate[0]
+        val month = splitDate[1]
+        val day = splitDate[2]
+        woRef.child(_ADDITIONAL).child(year).child(month).child(day).child(id.toString())
+            .setValue(workout)
+    }
 
     fun pushCategories() {
         val category = listOf<Category>(
@@ -88,6 +99,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var workout = snapshot.getValue<Workout>()
+
                     if (workout != null) {
                         weekData.add(workout) // Если воркаут не пуст, то добавляем в даталист
                     } else {
@@ -150,6 +162,8 @@ class FireBaseCore(private val appContainer: AppContainer) {
         val dateData = actualRef.child(workoutID)
         dateData.setValue(newWorkout)
     }
+
+
 
     fun getWorkout(getWorkoutCallback: GetWorkoutCallback, workoutID: String) {
         val actualRef = workoutPathConstructor(workoutID)

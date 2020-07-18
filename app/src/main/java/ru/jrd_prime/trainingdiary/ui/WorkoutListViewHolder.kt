@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.ANewCardViewBinding
+import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.utils.catColor
 import ru.jrd_prime.trainingdiary.utils.catIcons
@@ -39,9 +40,15 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         } else {
 
             /* DEF HIDE */
-            binding.hideThis.visibility = View.GONE
+//            binding.hideThis.visibility = View.GONE //TODO uncomment on release
 
-            Log.d(TAG, "bind: workout : $workout")
+//            Log.d(TAG, "bind: workout : $workout")
+
+
+
+            FireBaseCore
+
+
 
 //            hide(binding.frameForHide)
 //            hide(binding.cardOverLay)

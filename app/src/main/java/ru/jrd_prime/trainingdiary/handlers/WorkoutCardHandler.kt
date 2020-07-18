@@ -116,7 +116,7 @@ class WorkoutCardHandler(root: View) {
     fun showAdditionalInfoNew(view: View?) {
 
         rotationAngle = if (rotationAngle == 0f) 180f else 0f //toggle
-
+//todo починить поворот
 
         if (view == null) return else {
             view.ivOpener.animate().rotation(rotationAngle).setDuration(500).start()
