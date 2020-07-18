@@ -10,5 +10,6 @@ data class Workout(
     var description: String = "",
     var time: Int = 0,
     val date: Long? = 0,
+    val additional: MutableList<Workout>? = null,
     var empty: Boolean = true
 ) {}

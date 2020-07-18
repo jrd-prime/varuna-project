@@ -3,14 +3,16 @@ package ru.jrd_prime.trainingdiary.ui
 import android.content.Context
 import android.content.res.Resources
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.jrd_prime.trainingdiary.R
+import ru.jrd_prime.trainingdiary.databinding.AAdditionalItemCardBinding
 import ru.jrd_prime.trainingdiary.databinding.ANewCardViewBinding
-import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.utils.catColor
 import ru.jrd_prime.trainingdiary.utils.catIcons
@@ -24,6 +26,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
     private val root: View = binding.root
     private val ctx: Context = root.context
     private val res: Resources = ctx.resources
+    private val li = LayoutInflater.from(ctx)
 
     // clr
     private val clrLightForText = ContextCompat.getColor(ctx, R.color.colorForLightText)
@@ -38,29 +41,50 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             //TODO Что мы делаем если нету кейса
             Log.d("JP_TAG", "bind: WORKOUTCASE NULL!")
         } else {
+//            Log.d(TAG, "bind: moreWork: $moreWorkouts")
+            val adds = workout.additional
 
             /* DEF HIDE */
 //            binding.hideThis.visibility = View.GONE //TODO uncomment on release
 
-//            Log.d(TAG, "bind: workout : $workout")
+
+            var notEmpty = 0
+
+            if (!adds.isNullOrEmpty()) {
+                /* ADDITIONAL NOT EMPTY */
+                Log.d(TAG, "workouts: ${adds}")
+                adds.removeAt(0) // remove "null" record
+                val fullSize = adds.size
+
+                Log.d(TAG, "fullsize: ${fullSize}")
+
+                for (ad in adds) if (!ad.empty) notEmpty += 1
 
 
+                Log.d(TAG, "workouts: ${adds}")
+                if (notEmpty != 0) {
+                    for (i in 0 until notEmpty) inflateCard(adds[i])
+                }
 
-            FireBaseCore
+
+                Log.d(TAG, "not empty size: $notEmpty")
+
+            } else {
+//                inflateAddCard()
+            }
 
 
+            if (notEmpty <= 2) inflateAddCard()
 
-//            hide(binding.frameForHide)
-//            hide(binding.cardOverLay)
+
 
             steCategoryImage(workout.category)
 
             val weekDays = res.getStringArray(R.array.weekDays)
-            // Устанавливаем дату
-            binding.ivWeekDay.text = weekDays[position]
-            // Устанавливаем день недели
+            binding.ivWeekDay.text = weekDays[position]// Устанавливаем дату
+
             val date = workout.id.split("-")[2]
-            binding.ivMonthDay.text = date
+            binding.ivMonthDay.text = date// Устанавливаем день недели
 
             when (workout.empty) {
                 true -> showEmptyView()
@@ -69,6 +93,32 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             binding.workoutModel = workout // Отправляем кейс в карточку
         }
         binding.executePendingBindings()
+    }
+
+    private fun inflateAddCard() {
+        val vi = li.inflate(R.layout.a_additional_add_card, null)
+        binding.additionalCardsHolder.removeView(vi)
+        binding.additionalCardsHolder.addView(vi)
+    }
+
+    private fun inflateCard(workout: Workout) {
+        val additionalCardItemBinding: AAdditionalItemCardBinding = DataBindingUtil.inflate(
+            li,
+            R.layout.a_additional_item_card,
+            binding.additionalCardsHolder,
+            true
+        )
+        additionalCardItemBinding.wo = workout
+    }
+
+    private fun showEmptyAdditionalPanelForId(panelId: Int) {
+
+        Log.d(TAG, "showEmptyAdditionalPanelForId(panelId = $panelId)")
+    }
+
+    private fun showAdditionalPanels(panelsCount: Int) {
+        Log.d(TAG, "showAdditionalPanels(panelsCount = $panelsCount)")
+
     }
 
     private fun showClassicView(

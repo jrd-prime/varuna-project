@@ -76,7 +76,7 @@ fun collectDataFromUI(
         container.etDescription.text.toString(),
         mins,
         dateToTimestamp(LocalDateTime.now()),
-        false
+        empty = false
     )
 }
 

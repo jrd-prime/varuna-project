@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.a_need_auth_page.view.*
 import kotlinx.android.synthetic.main.a_workout_list_pager.view.*
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.format.DateTimeFormatter
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
@@ -100,7 +98,6 @@ class WorkoutPageFragment : Fragment() {
 
             val d = fireBaseCore.getWeekData(dates, workoutsListAdapter)
             FireBaseCore(appContainerz).listenNewData(workoutsListAdapter)
-
 
 
             rootView.recView.layoutManager = LinearLayoutManager(context)

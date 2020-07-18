@@ -38,14 +38,12 @@ class WorkoutListAdapter :
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int {
-        return workoutsList.size
-    }
 
     fun addItem(weekData: Workout) {
         workoutsList.add(weekData)
         notifyDataSetChanged()
     }
+
 
     fun updateItem(key: String, workout: Workout) {
         val index = workoutsList.indexOfFirst { it.id == key }
@@ -54,5 +52,9 @@ class WorkoutListAdapter :
             Log.d(TAG, "updateItem: FINDED. key = $key, $index, REPLACED")
             notifyDataSetChanged()
         }
+    }
+
+    override fun getItemCount(): Int {
+        return workoutsList.size
     }
 }

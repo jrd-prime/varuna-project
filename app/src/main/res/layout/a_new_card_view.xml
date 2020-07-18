@@ -46,9 +46,9 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardViewIn"
-                    android:animateLayoutChanges="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
                     app:cardCornerRadius="8dp"
                     app:cardElevation="2dp">
 
@@ -184,9 +184,9 @@
                 <!--                    android:background="@color/colorForLightBorder" />-->
                 <LinearLayout
                     android:id="@+id/hideThis"
-                    android:animateLayoutChanges="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
                     android:orientation="vertical"
                     android:visibility="visible">
 
@@ -262,6 +262,14 @@
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
                         </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/additionalCardsHolder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
                     </LinearLayout>
 
                     <View
