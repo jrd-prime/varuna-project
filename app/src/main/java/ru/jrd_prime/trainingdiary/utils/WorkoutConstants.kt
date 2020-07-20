@@ -29,5 +29,13 @@ val catColor =
         3 to R.drawable.card_bg_pink,
         4 to R.drawable.card_bg_yellow
     )
+val catColorBGNoCorners =
+    mutableMapOf<Int, Int>(
+        0 to R.color.colorWhite,
+        1 to R.drawable.card_bg_red_no_corners,
+        2 to R.drawable.card_bg_blue_no_corners,
+        3 to R.drawable.card_bg_pink_no_corners,
+        4 to R.drawable.card_bg_yellow_no_corners
+    )
 val lightGrey = R.color.jpLight
 

@@ -22,13 +22,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:orientation="vertical"
             app:cardBackgroundColor="@color/colorWhite"
@@ -42,6 +43,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
                 android:orientation="vertical">
 
                 <androidx.cardview.widget.CardView
@@ -104,22 +106,22 @@
 
                                 </LinearLayout>
 
-                                <FrameLayout
-                                    android:id="@+id/dot"
-                                    android:layout_width="13dp"
-                                    android:layout_height="13dp"
-                                    android:layout_alignParentStart="true"
-                                    android:layout_alignParentTop="true"
-                                    android:layout_margin="4dp"
-                                    android:background="@drawable/shapez"
-                                    android:elevation="2dp"
-                                    android:padding="0dp">
+<!--                                <FrameLayout-->
+<!--                                    android:id="@+id/dot"-->
+<!--                                    android:layout_width="13dp"-->
+<!--                                    android:layout_height="13dp"-->
+<!--                                    android:layout_alignParentStart="true"-->
+<!--                                    android:layout_alignParentTop="true"-->
+<!--                                    android:layout_margin="4dp"-->
+<!--                                    android:background="@drawable/shapez"-->
+<!--                                    android:elevation="2dp"-->
+<!--                                    android:padding="0dp">-->
 
-                                    <FrameLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/grad1" />
-                                </FrameLayout>
+<!--                                    <FrameLayout-->
+<!--                                        android:layout_width="match_parent"-->
+<!--                                        android:layout_height="match_parent"-->
+<!--                                        android:background="@drawable/grad1" />-->
+<!--                                </FrameLayout>-->
                             </RelativeLayout>
                         </FrameLayout>
 
@@ -174,14 +176,31 @@
                                 android:src="@drawable/jp_chevron_down" />
 
                         </FrameLayout>
+                            <LinearLayout
+                                android:id="@+id/todayMarker"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentTop="true"
+                                android:layout_centerHorizontal="true"
+                                android:background="@drawable/shape_today_day"
+                                android:elevation="4dp"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp"
+                                android:paddingTop="4dp"
+                                android:paddingBottom="4dp"
+                                >
 
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/ubuntu_light"
+                                    android:text="TODAY"
+                                    android:textColor="@color/colorWhite"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
                     </RelativeLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!--                <View-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="1dp"-->
-                <!--                    android:background="@color/colorForLightBorder" />-->
                 <LinearLayout
                     android:id="@+id/hideThis"
                     android:layout_width="match_parent"
@@ -291,7 +310,7 @@
                             android:layout_width="@dimen/mCardButtonsCompactWidth"
                             android:layout_height="32dp"
                             android:layout_alignParentStart="true"
-                            android:onClick="@{(view) -> handler.workoutDelete(view, workoutModel.id)}">
+                            android:onClick="@{(view) -> handler.clearWorkout(view, workoutModel.id)}">
 
                             <ImageView
                                 android:layout_width="16dp"
@@ -312,13 +331,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="32dp"
                             android:layout_toStartOf="@+id/view2"
-                            android:layout_toEndOf="@+id/view1">
+                            android:layout_toEndOf="@+id/view1"
+                            android:onClick="@{(view) -> handler.showAll(view, workoutModel.id)}">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="more details"
+                                android:text="show all"
                                 android:textAllCaps="true"
                                 android:textColor="@color/colorGreyDark" />
                         </FrameLayout>

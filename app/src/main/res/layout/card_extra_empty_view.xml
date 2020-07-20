@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:animateLayoutChanges="true"
-            android:onClick="@{(view) -> handler.addAddsWorkout(view)}">
+            android:onClick="@{(view) -> handler.addExtraWorkout(view)}">
 
             <ImageView
                 android:id="@+id/tvMuscleGroup"

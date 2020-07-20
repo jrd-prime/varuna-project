@@ -54,7 +54,15 @@ class FireBaseCore(private val appContainer: AppContainer) {
         woRef.child(year).child(month).child(workoutDate).child("additional").child(key)
             .setValue(workout)
     }
+    fun updateExtraWorkout(workoutDate: String, workout: Workout, key: String) {
+        val splitDate = workoutDate.split("-")
+        val year = splitDate[0]
+        val month = splitDate[1]
+        val day = splitDate[2]
 
+        woRef.child(year).child(month).child(workoutDate).child("additional").child(key)
+            .setValue(workout)
+    }
     fun pushCategories() {
         val category = listOf<Category>(
             Category(1, "cardio"),
@@ -156,11 +164,24 @@ class FireBaseCore(private val appContainer: AppContainer) {
         t.setValue(Workout(id = date))
         return Workout()
     }
-
+//    val id: String = "",
+//    val category: Int = 0,
+//    var title: String = "",
+//    var description: String = "",
+//    var time: Int = 0,
+//    val date: Long? = 0,
+//    val additional: HashMap<String, Workout>? = null,
+//    val calories: String = "",
+//    var empty: Boolean = true
     fun updateWorkout(workoutID: String, newWorkout: Workout) {
         val actualRef = workoutPathConstructor(workoutID)
         val dateData = actualRef.child(workoutID)
-        dateData.setValue(newWorkout)
+        dateData.child("category").setValue(newWorkout.category)
+        dateData.child("title").setValue(newWorkout.title)
+        dateData.child("description").setValue(newWorkout.description)
+        dateData.child("time").setValue(newWorkout.time)
+//        dateData.child("calories").setValue(newWorkout.calories) //todo inser calories support
+
     }
 
 
@@ -180,6 +201,25 @@ class FireBaseCore(private val appContainer: AppContainer) {
             }
         })
     }
+
+    fun getExtraWorkout(getWorkoutCallback: GetWorkoutCallback, workoutID: String, key: String) {
+        val actualRef = workoutPathConstructor(workoutID)
+        val dateData = actualRef.child(workoutID).child("additional").child(key)
+
+        dateData.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val wo = snapshot.getValue<Workout>()
+                if (wo != null) {
+                    getWorkoutCallback.onCallBack(workout = wo, workoutID = snapshot.key.toString())
+                }
+            }
+        })
+    }
+
+
 
     fun clearWorkout(workoutID: String) {
         val actualRef = workoutPathConstructor(workoutID)

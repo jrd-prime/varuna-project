@@ -9,11 +9,16 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.format.DateTimeFormatter
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.ANewCardViewBinding
+import ru.jrd_prime.trainingdiary.databinding.CardExtraViewBinding
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.utils.catColor
+import ru.jrd_prime.trainingdiary.utils.catColorBGNoCorners
 import ru.jrd_prime.trainingdiary.utils.catIcons
+import ru.jrd_prime.trainingdiary.utils.minutesToHoursAndMinutes
 
 /* Настраиваем КАРТОЧКУ*/
 class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
@@ -44,6 +49,18 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
     private var incLine3Empty = binding.incAddsCardEmpty3
 
     fun bind(workout: Workout?, position: Int) {
+
+        binding.hideThis.visibility = View.GONE
+
+
+        binding.todayMarker.visibility = View.GONE
+        val da = DateTimeFormatter.ofPattern("dd")
+        val t = LocalDateTime.now()
+        val z = da.format(t)
+        if (workout?.id?.split("-")?.get(2).equals(z)) {
+            binding.todayMarker.visibility = View.VISIBLE
+        }
+
         setDefaultVisibilityToViews() // Скрываем вьювы по дефаулту
         setNumOfDayToView(workout?.id) // Пишем дату во вьюв
         setWeekDayToView(position) // Пишем день недели во вьюв
@@ -125,27 +142,55 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
     ) {
         when (inLine) {
             0 -> {
+                fillLine(view = incLine1Filled, key = key, data = extraWorkout)
+                setImageFromConstants(extraWorkout.category, incLine1Filled.iv)
                 addsLine1.visibility = View.VISIBLE
-                incLine1Filled.addsCardCont.visibility = View.VISIBLE
-                incLine1Filled.cardHiddenTextWithAddKey.text = key
-                incLine1Filled.cardHiddenTextWithID.text = extraWorkout.id
-                incLine1Filled.tvMuscleGroup.text = extraWorkout.title
             }
             1 -> {
+                fillLine(view = incLine2Filled, key = key, data = extraWorkout)
+                setImageFromConstants(extraWorkout.category, incLine2Filled.iv)
                 addsLine2.visibility = View.VISIBLE
-                incLine2Filled.addsCardCont.visibility = View.VISIBLE
-                incLine2Filled.cardHiddenTextWithAddKey.text = key
-                incLine2Filled.cardHiddenTextWithID.text = extraWorkout.id
-                incLine2Filled.tvMuscleGroup.text = extraWorkout.title
             }
             2 -> {
+                fillLine(view = incLine3Filled, key = key, data = extraWorkout)
+                setImageFromConstants(extraWorkout.category, incLine3Filled.iv)
                 addsLine3.visibility = View.VISIBLE
-                incLine3Filled.addsCardCont.visibility = View.VISIBLE
-                incLine3Filled.cardHiddenTextWithAddKey.text = key
-                incLine3Filled.cardHiddenTextWithID.text = extraWorkout.id
-                incLine3Filled.tvMuscleGroup.text = extraWorkout.title
             }
         }
+    }
+
+    private fun fillLine(view: CardExtraViewBinding, key: String, data: Workout) {
+        // containers
+        val container = view.addsCardCont
+        val categoryIconView = view.iv
+        // data holders
+        val title = view.tvTitle
+        val time = view.textTime
+        // hidden
+        val keyHolder = view.cardHiddenTextWithAddKey
+        val idHolder = view.cardHiddenTextWithID
+
+        /* FILL START */
+        keyHolder.text = key
+        idHolder.text = data.id
+
+        // TITLE
+        if (data.category == 4) {
+            if (!data.description.isNullOrEmpty()) title.text = data.description else title.text =
+                strNoDesc
+        } else {
+            if (!data.title.isNullOrEmpty()) title.text = data.title else title.text = strNoTitle
+        }
+// TIME
+        if (data.time == 0) {
+            time.visibility = View.GONE
+        } else {
+            time.visibility = View.VISIBLE
+            time.text = minutesToHoursAndMinutes(data.time, res)
+        }
+        /* END FILL */
+        setImageFromConstantsWOCorners(data.category, categoryIconView, view.dotView)
+        container.visibility = View.VISIBLE
     }
 
 
@@ -174,12 +219,24 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         Log.d(TAG, "showMainView: ")
         binding.incCardFilled.mainCardFilled.visibility = View.VISIBLE
         binding.incCardEmpty.mainCardEmpty.visibility = View.GONE
+        binding.incCardFilled.workout = workoutData
+        val time = binding.incCardFilled.textTime
+        val title = binding.incCardFilled.tvMuscleGroup
+        val desc = binding.incCardFilled.textDescription
+
+        title.text = workoutData.title
+        desc.text = workoutData.description
+        if (workoutData.time == 0) {
+            time.visibility = View.GONE
+        } else {
+            time.visibility = View.VISIBLE
+            time.text = minutesToHoursAndMinutes(workoutData.time, res)
+        }
     }
 
     private fun showEmptyMainView(workoutData: Workout) { // show empty main view with add button
         binding.incCardFilled.mainCardFilled.visibility = View.GONE
         binding.incCardEmpty.mainCardEmpty.visibility = View.VISIBLE
-        binding.incCardEmpty.asdasd.text = workoutData.id
     }
 
     private fun showEmptyAdditionalPanelForId(panelId: Int) {
@@ -280,15 +337,25 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
     private fun steCategoryImage(catId: Int) {
         if (catId != 0) {
             /* Категория есть */
-            setImageFromConstants(catId, binding.ivCategory, binding.dot)
+//            setImageFromConstants(catId, binding.ivCategory, binding.dot)
         } else {
             /* Категории нету */
-            setImageFromConstants(0, binding.ivCategory, binding.dot)
+//            setImageFromConstants(0, binding.ivCategory, binding.dot)
         }
     }
 
     private fun setImageFromConstants(catId: Int, catIv: ImageView, dot: FrameLayout) {
         catIv.setImageResource(catIcons[catId] as Int)
         dot.setBackgroundResource(catColor[catId] as Int)
+    }
+
+    private fun setImageFromConstantsWOCorners(catId: Int, catIv: ImageView, dot: FrameLayout) {
+        catIv.setImageResource(catIcons[catId] as Int)
+        dot.setBackgroundResource(catColorBGNoCorners[catId] as Int)
+    }
+
+    private fun setImageFromConstants(catId: Int, catIv: ImageView) {
+        catIv.setImageResource(catIcons[catId] as Int)
+//        dot.setBackgroundResource(catColor[catId] as Int)
     }
 }
