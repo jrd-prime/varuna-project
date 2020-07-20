@@ -18,6 +18,7 @@ import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.utils.catColor
 import ru.jrd_prime.trainingdiary.utils.catColorBGNoCorners
 import ru.jrd_prime.trainingdiary.utils.catIcons
+import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 import ru.jrd_prime.trainingdiary.utils.minutesToHoursAndMinutes
 
 /* Настраиваем КАРТОЧКУ*/
@@ -28,6 +29,12 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
     private val ctx: Context = root.context
     private val res: Resources = ctx.resources
     private val li = LayoutInflater.from(ctx)
+    private val shPref =
+        ctx.getSharedPreferences(AppConfig.SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE)
+
+
+    private var filledExtraWorkoutsSize = 0
+
 
     // clr
     private val clrLightForText = ContextCompat.getColor(ctx, R.color.colorForLightText)
@@ -50,7 +57,12 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
     fun bind(workout: Workout?, position: Int) {
 
-        binding.hideThis.visibility = View.GONE
+
+        val hideView = binding.hideThis
+
+        // set visible card
+        if (shPref.getBoolean(workout?.id, false)) hideView.visibility =
+            View.VISIBLE else hideView.visibility = View.GONE
 
 
         binding.todayMarker.visibility = View.GONE
@@ -66,6 +78,8 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         setWeekDayToView(position) // Пишем день недели во вьюв
 
         if (workout != null) {
+
+
             val wo = workout
             val adds = workout.additional //todo if adds null - need write empty data to db
 
@@ -96,7 +110,6 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         if (addsData == null) return
 
         val allExtraWorkoutSize = addsData.size
-        var filledExtraWorkoutsSize = 0
         val sortedAddsData = addsData.toSortedMap()
 
         for (add in sortedAddsData) {
@@ -220,18 +233,49 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         binding.incCardFilled.mainCardFilled.visibility = View.VISIBLE
         binding.incCardEmpty.mainCardEmpty.visibility = View.GONE
         binding.incCardFilled.workout = workoutData
+        binding.cardId.text = workoutData.id
         val time = binding.incCardFilled.textTime
         val title = binding.incCardFilled.tvMuscleGroup
-        val desc = binding.incCardFilled.textDescription
 
-        title.text = workoutData.title
-        desc.text = workoutData.description
+        var extraCount = 0
+
+        val adds = workoutData.additional
+
+        if (adds != null) {
+            for (add in adds) {
+                if (!add.value.empty) extraCount += 1
+            }
+        }
+
+        if (extraCount == 0) {
+            binding.extraCount.visibility = View.GONE
+        } else {
+            binding.extraCount.visibility = View.VISIBLE
+            binding.extraCount.text = "+ $extraCount"
+        }
+
+
+        if (workoutData.category == 4) {
+            if (!workoutData.description.isNullOrEmpty()) title.text =
+                workoutData.description else title.text =
+                strNoDesc
+        } else {
+            if (!workoutData.title.isNullOrEmpty()) title.text = workoutData.title else title.text =
+                strNoTitle
+        }
         if (workoutData.time == 0) {
             time.visibility = View.GONE
         } else {
             time.visibility = View.VISIBLE
             time.text = minutesToHoursAndMinutes(workoutData.time, res)
         }
+        setImageFromConstantsWOCorners(
+            workoutData.category,
+            binding.incCardFilled.iv,
+            binding.incCardFilled.dotView
+        )
+        setImageFromConstants(workoutData.category, binding.incCardFilled.iv)
+        setImageFromConstants(workoutData.category, binding.ivCategory)
     }
 
     private fun showEmptyMainView(workoutData: Workout) { // show empty main view with add button

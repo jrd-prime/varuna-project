@@ -75,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:animateLayoutChanges="true"
-                    android:fontFamily="@font/ubuntu_light"
+                    android:fontFamily="@font/ubuntu_reg"
                     android:gravity="center_vertical"
                     android:padding="12dp"
                     android:text="@string/textDummy"

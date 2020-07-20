@@ -11,6 +11,7 @@ class AppConfig {
         const val SP_NAME_USER_REMOTE_PHOTO_URI = "userRemotePhotoURI"
         const val SP_NAME_USER_PHOTO_ON_DEVICE = "userPhotoOnDevice"
         const val GLOBAL_TAG = "--- TAG ---"
+
     }
 
     fun getSharedPreferenceName(): String? {

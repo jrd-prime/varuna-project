@@ -242,20 +242,28 @@ class WorkoutCardHandler(root: View) {
     }
 
     fun showAdditionalInfoNew(view: View?) {
+        val shPref = appContainer.sharedPreferences
+
+
 
         rotationAngle = if (rotationAngle == 0f) 180f else 0f //toggle
 //todo починить поворот
 
         if (view == null) return else {
+            val cardID = view.cardId.text.toString()
+
+
             view.ivOpener.animate().rotation(rotationAngle).setDuration(500).start()
             val cardView = view.parent.parent.parent.parent as View
             val contView = cardView.hideThis
             when (contView.visibility) {
                 View.GONE -> {
                     contView.visibility = View.VISIBLE
+                    shPref.edit().putBoolean(cardID, true).apply()
                 }
                 View.VISIBLE -> {
                     contView.visibility = View.GONE
+                    shPref.edit().putBoolean(cardID, false)
 
                 }
             }

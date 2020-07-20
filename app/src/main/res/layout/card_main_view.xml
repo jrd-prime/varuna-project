@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -14,85 +15,114 @@
             type="ru.jrd_prime.trainingdiary.fb_core.models.Workout" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:id="@+id/mainCardFilled"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorForLightBorder" />
+
+        <RelativeLayout
             android:id="@+id/descContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true">
-
-            <TextView
-                android:id="@+id/tvMuscleGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:fontFamily="@font/ubuntu_medium"
-                android:gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:text="@{workout.title}"
-                android:textColor="@color/colorGreyDark"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <TextView
-                android:id="@+id/textDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:fontFamily="@font/ubuntu_reg"
-                android:paddingStart="16dp"
-                android:paddingTop="0dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="0dp"
-                android:text="@{workout.description}"
-                android:textColor="@color/colorGreyDark"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="@+id/tvMuscleGroup"
-                app:layout_constraintStart_toStartOf="@+id/tvMuscleGroup"
-                app:layout_constraintTop_toBottomOf="@+id/tvMuscleGroup" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <LinearLayout
-            android:id="@+id/timeContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:animateLayoutChanges="true"
+            android:onClick="@{(view) -> handler.showExtraWorkout(view)}">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:id="@+id/cevImage"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentStart="true">
+
+                <ImageView
+                    android:id="@+id/iv"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/jp_question"
+                    app:layout_constraintBottom_toBottomOf="@+id/dotView"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/dotView"
+                    app:layout_constraintTop_toTopOf="@+id/dotView" />
+
+                <FrameLayout
+                    android:id="@+id/dotView"
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@drawable/card_bg_red_no_corners"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <FrameLayout
+                android:id="@+id/cevTitle"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_toStartOf="@id/cevAdditionalInfoContainer"
+                android:layout_toEndOf="@id/cevImage">
 
                 <TextView
+                    android:id="@+id/tvMuscleGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:animateLayoutChanges="true"
+                    android:fontFamily="@font/ubuntu_reg"
+                    android:gravity="center_vertical"
+                    android:padding="12dp"
+                    android:text="@string/textDummy"
+                    android:textColor="@color/colorGreyDark"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/cardHiddenTextWithID"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/tvTitle" />
+
+                <TextView
+                    android:id="@+id/cardHiddenTextWithAddKey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|right"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/cevAdditionalInfoContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true">
+
+                <TextView
+                    android:layout_gravity="center"
                     android:id="@+id/textTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
                     android:background="@drawable/shape_for_time"
-                    android:padding="3dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
+                    android:padding="4dp"
+                    android:layout_marginEnd="8dp"
                     android:text="@string/textDummy"
-                    android:textColor="@color/colorGreyDark"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
+                    android:textColor="@color/colorGreyDark"/>
+            </FrameLayout>
+        </RelativeLayout>
     </LinearLayout>
 </layout>
