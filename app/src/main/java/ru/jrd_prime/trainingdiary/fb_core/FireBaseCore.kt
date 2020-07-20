@@ -1,10 +1,10 @@
 package ru.jrd_prime.trainingdiary.fb_core
 
+import android.util.Log
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.getValue
 import org.threeten.bp.LocalDateTime
 import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
-import ru.jrd_prime.trainingdiary.fb_core.config._ADDITIONAL
 import ru.jrd_prime.trainingdiary.fb_core.config._CATEGORIES
 import ru.jrd_prime.trainingdiary.fb_core.config._USERS
 import ru.jrd_prime.trainingdiary.fb_core.config._WORKOUTS
@@ -41,12 +41,17 @@ class FireBaseCore(private val appContainer: AppContainer) {
         actualRef.child(workoutId).setValue(workout)
     }
 
-    fun addMoreWorkout(additionalWorkoutID: Int, workoutDate: String, workout: Workout) {
+    fun addMoreWorkout(workoutDate: String, workout: Workout) {
         val splitDate = workoutDate.split("-")
         val year = splitDate[0]
         val month = splitDate[1]
         val day = splitDate[2]
-        woRef.child(year).child(month).child(workoutDate).child("additional").child(additionalWorkoutID.toString())
+        val key = woRef.child(year).child(month).child(workoutDate).child("additional").push().key
+        if (key == null) {
+            Log.w(TAG, "Couldn't get push key for posts")
+            return
+        }
+        woRef.child(year).child(month).child(workoutDate).child("additional").child(key)
             .setValue(workout)
     }
 
@@ -96,7 +101,6 @@ class FireBaseCore(private val appContainer: AppContainer) {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var workout = snapshot.getValue<Workout>()
-
                     if (workout != null) {
                         weekData.add(workout) // Если воркаут не пуст, то добавляем в даталист
                     } else {
@@ -126,7 +130,6 @@ class FireBaseCore(private val appContainer: AppContainer) {
         val t = woRef.child("2020").child("07")
         t.addChildEventListener(object : ChildEventListener {
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-
                 val key = snapshot.key
                 val workout = snapshot.getValue<Workout>()
                 if (workout != null && key != null) myNewAdapter.updateItem(key, workout)

@@ -10,6 +10,7 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.a_new_card_view.view.*
+import kotlinx.android.synthetic.main.card_extra_empty_view.view.*
 import kotlinx.android.synthetic.main.pop.view.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
@@ -22,11 +23,63 @@ class WorkoutCardHandler(root: View) {
     private val appContainer = (root.context.applicationContext as TrainingDiaryApp).container
     private val asyncReq: AsyncRequests = AsyncRequests(appContainer)
     private val ctx: Context = root.context
+    private val fireBaseCore: FireBaseCore = FireBaseCore(appContainer)
 
     companion object {
         const val TAG = "Handler"
         var rotationAngle = 0f
     }
+
+    fun addMainWorkout(view: View, workoutDate: String) {
+        Log.d(CardHandler.TAG, "workoutAdd: $workoutDate")
+
+        val popupView: View =
+            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
+        popupView.textTitle.setText(R.string.add_dialog_title)
+        val popupWindow = PopupWindow(
+            popupView,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            true
+        )
+        setCategoryListeners(popupView)
+        popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
+        popupView.btnSave.setOnClickListener { _ ->
+            val dataFromUI = collectDataFromUI(popupView, workoutDate)
+            asyncReq.updateWorkout(workoutDate, dataFromUI)
+
+            popupWindow.dismiss()
+        }
+        popupWindow.elevation = 20f
+        popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0)
+    }
+
+    fun addAddsWorkout(view: View) {
+        val workoutDate = view.cardHiddenTextWithID.text.toString()
+        Log.d(CardHandler.TAG, "addAddsWorkout to the day : $workoutDate")
+
+        val popupView: View =
+            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
+        popupView.textTitle.setText(R.string.add_dialog_title)
+        val popupWindow = PopupWindow(
+            popupView,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            true
+        )
+        setCategoryListeners(popupView)
+        popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
+        popupView.btnSave.setOnClickListener { _ ->
+            val dataFromUI = collectDataFromUI(popupView, workoutDate)
+//            asyncReq.updateWorkout(workoutDate, dataFromUI)
+            fireBaseCore.addMoreWorkout(workoutDate, dataFromUI)
+
+            popupWindow.dismiss()
+        }
+        popupWindow.elevation = 20f
+        popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0)
+    }
+
 
     fun workoutDelete(view: View, workoutID: String) {
 //        asyncReq.clearWorkout(workoutID) /* Set workout empty = true */

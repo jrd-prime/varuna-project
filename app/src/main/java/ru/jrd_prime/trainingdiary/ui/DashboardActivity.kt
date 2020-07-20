@@ -69,10 +69,10 @@ class DashboardActivity : AppCompatActivity() {
 
         // Add Categories
         fireBaseCore.pushCategories()
-
-        fireBaseCore.addMoreWorkout(1, "2020-07-13", Workout())
-        fireBaseCore.addMoreWorkout(2, "2020-07-13", Workout())
-        fireBaseCore.addMoreWorkout(3, "2020-07-13", Workout())
+//
+//        fireBaseCore.addMoreWorkout( "2020-07-20", Workout(id = "2020-07-20"))
+//        fireBaseCore.addMoreWorkout( "2020-07-20", Workout(id = "2020-07-20"))
+//        fireBaseCore.addMoreWorkout( "2020-07-20", Workout(id = "2020-07-20"))
         utils = appContainer.appUtils
         val binding: ActivityDashboardBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_dashboard)

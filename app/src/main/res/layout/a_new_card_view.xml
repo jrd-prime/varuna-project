@@ -190,86 +190,89 @@
                     android:orientation="vertical"
                     android:visibility="visible">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/descContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true">
-
-                        <TextView
-                            android:id="@+id/tvMuscleGroup"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:animateLayoutChanges="true"
-                            android:fontFamily="@font/ubuntu_medium"
-                            android:gravity="center_vertical"
-                            android:paddingStart="16dp"
-                            android:paddingLeft="16dp"
-                            android:paddingTop="16dp"
-                            android:paddingRight="16dp"
-                            android:paddingBottom="8dp"
-                            android:text="@{workoutModel.title}"
-                            android:textColor="@color/colorGreyDark"
-                            android:textSize="16sp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/textDescription"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:fontFamily="@font/ubuntu_reg"
-                            android:paddingStart="16dp"
-                            android:paddingTop="0dp"
-                            android:paddingEnd="16dp"
-                            android:paddingBottom="0dp"
-                            android:text="@{workoutModel.description}"
-                            android:textColor="@color/colorGreyDark"
-                            android:textSize="16sp"
-                            app:layout_constraintEnd_toEndOf="@+id/tvMuscleGroup"
-                            app:layout_constraintStart_toStartOf="@+id/tvMuscleGroup"
-                            app:layout_constraintTop_toBottomOf="@+id/tvMuscleGroup" />
-
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
                     <LinearLayout
-                        android:id="@+id/timeContainer"
+                        android:id="@+id/mainCardHolder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                        <include
+                            android:id="@+id/incCardFilled"
+                            layout="@layout/card_main_view"
+                            app:handler="@{handler}"
+                            app:workout="@{workoutModel}" />
 
-                            <TextView
-                                android:id="@+id/textTime"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:layout_marginEnd="8dp"
-                                android:layout_marginBottom="8dp"
-                                android:background="@drawable/shape_for_time"
-                                android:padding="3dp"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:text="@string/textDummy"
-                                android:textColor="@color/colorGreyDark"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <include
+                            android:id="@+id/incCardEmpty"
+                            layout="@layout/card_main_empty_view"
+                            app:handler="@{handler}"
+                            app:workout="@{workoutModel}" />
                     </LinearLayout>
+
 
                     <LinearLayout
                         android:id="@+id/additionalCardsHolder"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical" >
+                        android:orientation="vertical">
 
+                        <LinearLayout
+                            android:id="@+id/addsCardLine1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <include
+                                android:id="@+id/incAddsCardFilled1"
+                                layout="@layout/card_extra_view"
+                                app:handler="@{handler}"
+                                app:workout="@{workoutModel}" />
+
+                            <include
+                                android:id="@+id/incAddsCardEmpty1"
+                                layout="@layout/card_extra_empty_view"
+                                app:handler="@{handler}"
+                                app:workout="@{workoutModel}" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/addsCardLine2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <include
+                                android:id="@+id/incAddsCardFilled2"
+                                layout="@layout/card_extra_view"
+                                app:handler="@{handler}"
+                                app:workout="@{workoutModel}" />
+
+                            <include
+                                android:id="@+id/incAddsCardEmpty2"
+                                layout="@layout/card_extra_empty_view"
+                                app:handler="@{handler}"
+                                app:workout="@{workoutModel}" />
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/addsCardLine3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <include
+                                android:id="@+id/incAddsCardFilled3"
+                                layout="@layout/card_extra_view"
+                                app:handler="@{handler}"
+                                app:workout="@{workoutModel}" />
+
+                            <include
+                                android:id="@+id/incAddsCardEmpty3"
+                                layout="@layout/card_extra_empty_view"
+                                app:handler="@{handler}"
+                                app:workout="@{workoutModel}" />
+                        </LinearLayout>
                     </LinearLayout>
 
                     <View
