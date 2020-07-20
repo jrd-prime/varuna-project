@@ -9,7 +9,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.card_extra_empty_view.view.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.ANewCardViewBinding
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
@@ -81,9 +80,9 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
         val allExtraWorkoutSize = addsData.size
         var filledExtraWorkoutsSize = 0
+        val sortedAddsData = addsData.toSortedMap()
 
-
-        for (add in addsData) {
+        for (add in sortedAddsData) {
             if (!add.value.empty) filledExtraWorkoutsSize += 1
         }
 
@@ -95,7 +94,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
             }
             1 -> {
-                for (add in addsData) {
+                for (add in sortedAddsData) {
                     if (!add.value.empty) showAddsView(0, add.key, add.value)
                 }
 
@@ -103,7 +102,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             }
             2 -> {
                 var i = 0
-                for (add in addsData) {
+                for (add in sortedAddsData) {
                     if (!add.value.empty) showAddsView(i, add.key, add.value)
                     i++
                 }
@@ -111,7 +110,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             }
             3 -> {
                 var i = 0
-                for (add in addsData) {
+                for (add in sortedAddsData) {
                     if (!add.value.empty) showAddsView(i, add.key, add.value)
                     i++
                 }
@@ -129,18 +128,21 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
                 addsLine1.visibility = View.VISIBLE
                 incLine1Filled.addsCardCont.visibility = View.VISIBLE
                 incLine1Filled.cardHiddenTextWithAddKey.text = key
+                incLine1Filled.cardHiddenTextWithID.text = extraWorkout.id
                 incLine1Filled.tvMuscleGroup.text = extraWorkout.title
             }
             1 -> {
                 addsLine2.visibility = View.VISIBLE
                 incLine2Filled.addsCardCont.visibility = View.VISIBLE
                 incLine2Filled.cardHiddenTextWithAddKey.text = key
+                incLine2Filled.cardHiddenTextWithID.text = extraWorkout.id
                 incLine2Filled.tvMuscleGroup.text = extraWorkout.title
             }
             2 -> {
                 addsLine3.visibility = View.VISIBLE
                 incLine3Filled.addsCardCont.visibility = View.VISIBLE
                 incLine3Filled.cardHiddenTextWithAddKey.text = key
+                incLine3Filled.cardHiddenTextWithID.text = extraWorkout.id
                 incLine3Filled.tvMuscleGroup.text = extraWorkout.title
             }
         }
