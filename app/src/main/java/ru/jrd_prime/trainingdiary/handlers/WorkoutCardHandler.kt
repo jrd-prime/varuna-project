@@ -17,6 +17,7 @@ import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
+import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 import ru.jrd_prime.trainingdiary.workers.AsyncRequests
 
 
@@ -28,7 +29,6 @@ class WorkoutCardHandler(root: View) {
 
     companion object {
         const val TAG = "Handler"
-        var rotationAngle = 0f
     }
 
 
@@ -89,6 +89,7 @@ class WorkoutCardHandler(root: View) {
         popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
         popupView.btnSave.setOnClickListener { _ ->
             val dataFromUI = collectDataFromUI(popupView, workoutID)
+            Log.d(TAG, "workoutEdit: collected data : ${dataFromUI.toString()}")
             FireBaseCore(appContainer).updateWorkout(workoutID, dataFromUI)
             popupWindow.dismiss()
         }
@@ -242,10 +243,12 @@ class WorkoutCardHandler(root: View) {
     }
 
     fun showAdditionalInfoNew(view: View?) {
-        val shPref = appContainer.sharedPreferences
+        val shPref = ctx.getSharedPreferences(
+            AppConfig.SHARED_PREFERENCE_NAME_FOR_CARD,
+            Context.MODE_PRIVATE
+        )
 
-
-
+        var rotationAngle = 0f
         rotationAngle = if (rotationAngle == 0f) 180f else 0f //toggle
 //todo починить поворот
 
@@ -263,7 +266,7 @@ class WorkoutCardHandler(root: View) {
                 }
                 View.VISIBLE -> {
                     contView.visibility = View.GONE
-                    shPref.edit().putBoolean(cardID, false)
+                    shPref.edit().putBoolean(cardID, false).apply()
 
                 }
             }

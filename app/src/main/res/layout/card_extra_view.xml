@@ -129,5 +129,20 @@
             </FrameLayout>
         </RelativeLayout>
 
+        <FrameLayout
+            android:id="@+id/extraDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:id="@+id/tvExtraDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/jpPrimary4"
+                android:textSize="14sp" />
+        </FrameLayout>
     </LinearLayout>
 </layout>

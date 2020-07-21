@@ -3,6 +3,7 @@ package ru.jrd_prime.trainingdiary.utils.cfg
 class AppConfig {
     companion object {
         const val SHARED_PREFERENCE_NAME = "settings.jp"
+        const val SHARED_PREFERENCE_NAME_FOR_CARD = "opened_cards.jp"
         const val SP_NAME_FIRST_RUN = "appFirstRun"
         const val SP_NAME_USER_AUTH = "isUserAuthenticated"
         const val SP_NAME_USER_NAME = "userName"

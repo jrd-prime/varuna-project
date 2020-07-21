@@ -28,10 +28,10 @@ import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
-import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.gauth.GAuth
 import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.impl.AppContainer
+import ru.jrd_prime.trainingdiary.ui.dialog.ExitDialog
 import ru.jrd_prime.trainingdiary.utils.*
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 import ru.jrd_prime.trainingdiary.viewmodels.DashboardViewModel
@@ -57,6 +57,7 @@ class DashboardActivity : AppCompatActivity() {
     lateinit var fireBaseCore: FireBaseCore
     lateinit var appContainer: AppContainer
 
+    val DIALOG_EXIT = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -223,6 +224,12 @@ class DashboardActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val dl = ExitDialog()
+        dl.show(supportFragmentManager, "exitDialog")
+        Log.d(TAG, "onBackPressed: ")
+    }
 
     override fun onPause() {
         super.onPause()
@@ -231,6 +238,15 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        val clearCardVisibility = {
+            val sh = applicationContext.getSharedPreferences(
+                AppConfig.SHARED_PREFERENCE_NAME_FOR_CARD,
+                Context.MODE_PRIVATE
+            ).edit().clear().apply()
+            Log.d(TAG, "ClearCardVisibility")
+        }
+
+        clearCardVisibility.invoke()
         Log.d(TAG, "MainActivity: onStop()")
     }
 

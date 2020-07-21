@@ -1,6 +1,8 @@
 package ru.jrd_prime.trainingdiary.ui
 
 import android.app.Dialog
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat.finishAffinity
+import androidx.transition.Transition
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -22,6 +25,8 @@ import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.impl.AppContainer
+import ru.jrd_prime.trainingdiary.utils.AppSettingsCore
+import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 import kotlin.system.exitProcess
 
 
@@ -92,9 +97,32 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
         navigationView!!.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navCloseApp -> {
-                    Log.d(TAG, "onOptionsItemSelected: close")
-                    finishAffinity(DashboardActivity())
-                    exitProcess(0)
+
+                }
+                R.id.changeSet -> {
+                    val pref = context?.getSharedPreferences(
+                        AppConfig.SHARED_PREFERENCE_NAME,
+                        Context.MODE_PRIVATE
+                    )
+
+                    if (pref != null) {
+                        if (!pref.getBoolean(
+                                "show_work",
+                                false
+                            )
+                        ) context?.let { AppSettingsCore(it).setTru() } else context?.let {
+                            AppSettingsCore(
+                                it
+                            ).setFalse()
+                        }
+                    }
+
+
+                    val int = Intent(context, DashboardActivity::class.java)
+                    startActivity(int)
+                    activity?.finish()
+
+
                 }
             }
             true

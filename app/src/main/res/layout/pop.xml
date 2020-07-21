@@ -39,18 +39,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:padding="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="textStart"
-                android:text="@string/dialog_additional_info"
-                android:textColor="@color/colorGreyDark"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textTitle" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <FrameLayout
@@ -149,7 +137,7 @@
                 android:background="@drawable/input_ield"
                 android:hint="@string/edit_text_groups_hint"
                 android:importantForAutofill="no"
-                android:inputType="textAutoCorrect"
+                android:inputType="textAutoCorrect|textAutoComplete"
                 android:maxLength="512"
                 android:padding="8dp" />
 
@@ -189,7 +177,7 @@
                 android:importantForAutofill="no"
                 android:maxLength="512"
                 android:padding="8dp"
-                android:inputType="textAutoCorrect" />
+                android:inputType="textMultiLine" />
         </FrameLayout>
 
         <FrameLayout

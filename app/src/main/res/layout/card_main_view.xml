@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:onClick="@{(view) -> handler.showExtraWorkout(view)}">
+            android:onClick="@{(view) -> handler.workoutEdit(view, workout.id)}">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cevImage"
@@ -65,7 +65,7 @@
 
             <FrameLayout
                 android:id="@+id/cevTitle"
-                android:layout_width="50dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_toStartOf="@id/cevAdditionalInfoContainer"
                 android:layout_toEndOf="@id/cevImage">
@@ -106,23 +106,43 @@
                     app:layout_constraintTop_toTopOf="parent" />
             </FrameLayout>
 
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/cevAdditionalInfoContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                android:layout_alignParentEnd="true">
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="8dp"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_gravity="center"
                     android:id="@+id/textTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:background="@drawable/shape_for_time"
-                    android:padding="4dp"
-                    android:layout_marginEnd="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="4dp"
                     android:text="@string/textDummy"
-                    android:textColor="@color/colorGreyDark"/>
-            </FrameLayout>
+                    android:textColor="@color/colorGreyDark" />
+            </LinearLayout>
         </RelativeLayout>
+
+        <FrameLayout
+            android:id="@+id/mainDesc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="4dp">
+
+            <TextView
+                android:id="@+id/tvMainDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/jpPrimary4"
+                android:textSize="14sp" />
+        </FrameLayout>
     </LinearLayout>
 </layout>

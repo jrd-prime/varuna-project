@@ -9,17 +9,15 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.card_extra_view.view.*
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.ANewCardViewBinding
 import ru.jrd_prime.trainingdiary.databinding.CardExtraViewBinding
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
-import ru.jrd_prime.trainingdiary.utils.catColor
-import ru.jrd_prime.trainingdiary.utils.catColorBGNoCorners
-import ru.jrd_prime.trainingdiary.utils.catIcons
+import ru.jrd_prime.trainingdiary.utils.*
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
-import ru.jrd_prime.trainingdiary.utils.minutesToHoursAndMinutes
 
 /* Настраиваем КАРТОЧКУ*/
 class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
@@ -30,11 +28,8 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
     private val res: Resources = ctx.resources
     private val li = LayoutInflater.from(ctx)
     private val shPref =
-        ctx.getSharedPreferences(AppConfig.SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE)
-
-
-    private var filledExtraWorkoutsSize = 0
-
+        ctx.getSharedPreferences(AppConfig.SHARED_PREFERENCE_NAME_FOR_CARD, Context.MODE_PRIVATE)
+    private val settings = AppSettingsCore(ctx)
 
     // clr
     private val clrLightForText = ContextCompat.getColor(ctx, R.color.colorForLightText)
@@ -106,9 +101,10 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
     private fun showAddsViews(addsData: HashMap<String, Workout>?, mainWorkoutDate: String) {
 //        addsData.removeAt(0) // remove null value
-        Log.d(TAG, "showAddsViews/addsData: $addsData")
+//        Log.d(TAG, "showAddsViews/addsData: $addsData")
         if (addsData == null) return
 
+        var filledExtraWorkoutsSize = 0
         val allExtraWorkoutSize = addsData.size
         val sortedAddsData = addsData.toSortedMap()
 
@@ -116,7 +112,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             if (!add.value.empty) filledExtraWorkoutsSize += 1
         }
 
-        Log.d(TAG, "showAddsViews/filledExtraWorkoutsSize: $filledExtraWorkoutsSize")
+//        Log.d(TAG, "showAddsViews/filledExtraWorkoutsSize: $filledExtraWorkoutsSize")
 
         when (filledExtraWorkoutsSize) {
             0 -> {
@@ -183,6 +179,8 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         val keyHolder = view.cardHiddenTextWithAddKey
         val idHolder = view.cardHiddenTextWithID
 
+        if (!settings.getShowWorkoutDescription()) container.extraDesc.visibility = View.GONE
+
         /* FILL START */
         keyHolder.text = key
         idHolder.text = data.id
@@ -201,6 +199,13 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             time.visibility = View.VISIBLE
             time.text = minutesToHoursAndMinutes(data.time, res)
         }
+
+
+        if (!data.description.isNullOrEmpty()) {
+            container.tvExtraDesc.text = data.description
+            if (settings.getShowWorkoutDescription()) container.extraDesc.visibility = View.VISIBLE
+        }
+
         /* END FILL */
         setImageFromConstantsWOCorners(data.category, categoryIconView, view.dotView)
         container.visibility = View.VISIBLE
@@ -232,6 +237,10 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         Log.d(TAG, "showMainView: ")
         binding.incCardFilled.mainCardFilled.visibility = View.VISIBLE
         binding.incCardEmpty.mainCardEmpty.visibility = View.GONE
+
+
+        if (!settings.getShowWorkoutDescription()) binding.incCardFilled.mainDesc.visibility = View.GONE
+
         binding.incCardFilled.workout = workoutData
         binding.cardId.text = workoutData.id
         val time = binding.incCardFilled.textTime
@@ -247,9 +256,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             }
         }
 
-        if (extraCount == 0) {
-            binding.extraCount.visibility = View.GONE
-        } else {
+        if (extraCount != 0) {
             binding.extraCount.visibility = View.VISIBLE
             binding.extraCount.text = "+ $extraCount"
         }
@@ -269,6 +276,13 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             time.visibility = View.VISIBLE
             time.text = minutesToHoursAndMinutes(workoutData.time, res)
         }
+
+        if (!workoutData.description.isNullOrEmpty()) {
+            binding.incCardFilled.tvMainDesc.text = workoutData.description
+            if (settings.getShowWorkoutDescription()) binding.incCardFilled.mainDesc.visibility =
+                View.VISIBLE
+        }
+
         setImageFromConstantsWOCorners(
             workoutData.category,
             binding.incCardFilled.iv,
@@ -319,6 +333,8 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         incLine1Empty.addsCardCont.visibility = View.GONE
         incLine2Empty.addsCardCont.visibility = View.GONE
         incLine3Empty.addsCardCont.visibility = View.GONE
+        binding.extraCount.visibility = View.GONE
+
     }
 //    private fun showClassicView(
 //        workout: Workout

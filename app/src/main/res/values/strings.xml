@@ -52,6 +52,10 @@
     <string name="dialog_save_btn">Save</string>
     <string name="nav_menu_exit">Close application</string>
     <string name="dialog_additional_info">Tip: after creating the main workout of the day, you can also add several additional ones, for this in the day card select \"Add more\"</string>
+    <string name="message_text">msg</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="maybe">maybe</string>
     <string-array name="weekDays">
         <item>Mon</item>
         <item>Tue</item>
