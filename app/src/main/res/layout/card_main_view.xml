@@ -68,7 +68,7 @@
                 android:id="@+id/cevTitle"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_toStartOf="@id/cevAdditionalInfoContainer"
+                android:layout_toStartOf="@id/textTimeContainer"
                 android:layout_toEndOf="@id/cevImage">
 
                 <TextView
@@ -108,7 +108,7 @@
             </FrameLayout>
 
             <LinearLayout
-                android:id="@+id/cevAdditionalInfoContainer"
+                android:id="@+id/textTimeContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_alignParentEnd="true"

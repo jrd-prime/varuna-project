@@ -18,7 +18,10 @@ import ru.jrd_prime.trainingdiary.databinding.CardExtraViewBinding
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.handlers.setGone
 import ru.jrd_prime.trainingdiary.handlers.setVisible
-import ru.jrd_prime.trainingdiary.utils.*
+import ru.jrd_prime.trainingdiary.utils.AppSettingsCore
+import ru.jrd_prime.trainingdiary.utils.catColor
+import ru.jrd_prime.trainingdiary.utils.catColorBGNoCorners
+import ru.jrd_prime.trainingdiary.utils.catIcons
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 
 /* Настраиваем КАРТОЧКУ*/
@@ -85,7 +88,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             val adds = workout.additional //todo if adds null - need write empty data to db
 
             if (!wo.empty) { /* wo NOT EMPTY */
-                showMainView(workoutData = wo) // show main view with info
+                showMainView(wo = wo) // show main view with info
 
                 totalTime += wo.time
                 totalCalories += wo.kcal
@@ -230,10 +233,10 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         }
 // TIME
         if (data.time == 0) {
-            setGone(view.textTimeContainer)
+            view.textTime.visibility = View.GONE
         } else {
 
-            setVisible(view.textTimeContainer)
+            view.textTime.visibility = View.VISIBLE
             time.text = data.convertMinsToHM(res)
         }
 
@@ -273,7 +276,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         }
     }
 
-    private fun showMainView(workoutData: Workout) { // show main card with workout info
+    private fun showMainView(wo: Workout) { // show main card with workout info
         Log.d(TAG, "showMainView: ")
         val cardF = binding.incCardFilled
         val cardE = binding.incCardEmpty
@@ -282,14 +285,14 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
         if (!settings.getShowWorkoutDescription()) setGone(cardF.mainDesc)
 
-        cardF.workout = workoutData
-        binding.cardId.text = workoutData.id
+        cardF.workout = wo
+        binding.cardId.text = wo.id
         val time = cardF.textTime
         val title = cardF.tvMuscleGroup
 
         var extraCount = 0
 
-        val adds = workoutData.additional
+        val adds = wo.additional
 
         if (adds != null) {
             for (add in adds) {
@@ -298,64 +301,50 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         }
 
         if (extraCount != 0) {
-            binding.extraCount.visibility = View.VISIBLE
             binding.extraCount.text = "+$extraCount"
+            setVisible(binding.extraCountContainer)
         }
 
 
-        if (workoutData.category == 4) {
-            if (workoutData.title.isNotEmpty()) title.text =
-                workoutData.title else title.text =
+        if (wo.category == 4) {
+            if (wo.title.isNotEmpty()) title.text =
+                wo.title else title.text =
                 strNoTitle
         } else {
-            if (workoutData.title.isNotEmpty()) title.text = workoutData.title else title.text =
+            if (wo.title.isNotEmpty()) title.text = wo.title else title.text =
                 strNoTitle
         }
-        if (workoutData.time == 0) {
-            time.visibility = View.GONE
+        if (wo.time == 0) {
+            setGone(cardF.textTimeContainer)
         } else {
-            time.visibility = View.VISIBLE
-            time.text = minutesToHoursAndMinutes(workoutData.time, res)
+            setVisible(cardF.textTimeContainer)
+            time.text = wo.convertMinsToHM(res)
         }
 
-        if (workoutData.description.isNotEmpty()) {
-            Log.d(TAG, "showMainView: ${workoutData.description}")
-            cardF.tvMainDesc.text = workoutData.description
-            if (settings.getShowWorkoutDescription()) cardF.mainDesc.visibility =
-                View.VISIBLE
+        if (wo.description.isNotEmpty()) {
+            if (settings.getShowWorkoutDescription()) setVisible(cardF.mainDesc)
         } else {
-            Log.d(TAG, "showMainView: desc null or empty")
-            cardF.tvMainDesc.text = ""
-            cardF.mainDesc.visibility = View.GONE
+            setGone(cardF.mainDesc)
         }
-
+        cardF.tvMainDesc.text = wo.getCheckedDescription(res)
         setImageFromConstantsWOCorners(
-            workoutData.category,
+            wo.category,
             cardF.iv,
             cardF.dotView
         )
-        setImageFromConstants(workoutData.category, cardF.iv)
-        setImageFromConstants(workoutData.category, binding.ivCategory)
+        setImageFromConstants(wo.category, cardF.iv)
+        setImageFromConstants(wo.category, binding.ivCategory)
     }
 
-    private fun showEmptyMainView(workoutData: Workout) { // show empty main view with add button
-        binding.incCardFilled.mainCardFilled.visibility = View.GONE
-        binding.incCardEmpty.mainCardEmpty.visibility = View.VISIBLE
+    private fun showEmptyMainView(wo: Workout) { // show empty main view with add button
+        setGone(binding.incCardFilled.mainCardFilled)
+        setVisible(binding.incCardEmpty.mainCardEmpty)
     }
 
-    private fun showEmptyAdditionalPanelForId(panelId: Int) {
-        Log.d(TAG, "showEmptyAdditionalPanelForId(panelId = $panelId)")
-    }
-
-    private fun showAdditionalPanels(panelsCount: Int) {
-        Log.d(TAG, "showAdditionalPanels(panelsCount = $panelsCount)")
-
-    }
-
-    private fun setNumOfDayToView(workoutDate: String?) {
+    private fun setNumOfDayToView(wo: String?) {
         var dateDay = "Err"
-        if (!workoutDate.isNullOrEmpty()) {
-            dateDay = workoutDate.split("-")[2].toString()
+        if (!wo.isNullOrEmpty()) {
+            dateDay = wo.split("-")[2].toString()
         } else {
             Log.d(TAG, "bind: ERROR: NULL DATE OR WORKOUT") //todo что делать?
         }
@@ -382,73 +371,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         binding.extraCount.visibility = View.GONE
 
     }
-//    private fun showClassicView(
-//        workout: Workout
-//    ) {
-//        val cat = workout.category
-//        val title = workout.title
-//        val desc = workout.description
-//        val time = workout.time
-//
-//        binding.tvMuscleGroup.setTextColor(clrDarkGrey)
-//        binding.textDescription.setTextColor(clrDarkGrey)
-//        binding.textTime.setTextColor(clrDarkGrey)
-//        show(binding.textDescription)
-//        show(binding.timeContainer)
-//        show(binding.textTime)
-//
-//        if (cat == 4) { // if REST
-//            if (desc.isEmpty()) { // desc empty
-//                workout.title = strNoDesc
-//                binding.tvMuscleGroup.setTextColor(clrLightForText)
-//                hide(binding.textDescription)
-//                hide(binding.timeContainer)
-//            } else { // desc OK
-//                workout.title = desc
-//                hide(binding.timeContainer)
-//                hide(binding.textDescription)
-//            }
-//        } else if (cat == 0) { // if EMPTY
-//            lg("showClassicView", "EMPTY")
-//        } else { // ELSE
-//            if (title.isEmpty()) {
-//                workout.title = strNoTitle
-//                binding.tvMuscleGroup.setTextColor(clrLightForText)
-//            }
-//            if (desc.isEmpty()) {
-//                workout.description = strNoDesc
-//                binding.textDescription.setTextColor(clrLightForText)
-//            }
-//            if (time == 0) {
-//                hide(binding.textTime)
-//            } else {
-//                binding.textTime.text = minutesToHoursAndMinutes(time, res)
-//                show(binding.timeContainer)
-//            }
-//        }
-//    }
 
-    private fun showEmptyView() {
-//        show(binding.cardOverLay)
-    }
-
-    private fun hide(view: View) {
-        view.visibility = View.GONE
-    }
-
-    private fun show(view: View) {
-        view.visibility = View.VISIBLE
-    }
-
-    private fun steCategoryImage(catId: Int) {
-        if (catId != 0) {
-            /* Категория есть */
-//            setImageFromConstants(catId, binding.ivCategory, binding.dot)
-        } else {
-            /* Категории нету */
-//            setImageFromConstants(0, binding.ivCategory, binding.dot)
-        }
-    }
 
     private fun setImageFromConstants(catId: Int, catIv: ImageView, dot: FrameLayout) {
         catIv.setImageResource(catIcons[catId] as Int)
