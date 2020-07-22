@@ -32,13 +32,12 @@ fun setCategoryListeners(popupView: View) {
     btnPower.setOnClickListener(rbListener)
     btnStretch.setOnClickListener(rbListener)
     btnRest.setOnClickListener(rbListener)
-
 }
 
 fun putDataToUI(wo: Workout, view: View) {
     setCategory(view, wo.category)
-    view.etGroups.setText(wo.title.toString())
-    view.etDescription.setText(wo.description.toString())
+    view.etGroups.setText(wo.title)
+    view.etDescription.setText(wo.description)
     view.etMinutes.setText(wo.time.toString())
     view.etCalories.setText(wo.kcal.toString())
     view.etDistance.setText(wo.distance.toString())
@@ -73,9 +72,9 @@ fun collectDataFromUI(
     var minutes =
         if (container.etMinutes.text.isNotEmpty()) Integer.parseInt(container.etMinutes.text.toString()) else 0
     var calories =
-        if (container.etMinutes.text.isNotEmpty()) Integer.parseInt(container.etCalories.text.toString()) else 0
+        if (container.etCalories.text.isNotEmpty()) Integer.parseInt(container.etCalories.text.toString()) else 0
     var distance: Float =
-        if (container.etMinutes.text.isNotEmpty()) container.etDistance.text.toString()
+        if (container.etDistance.text.isNotEmpty()) container.etDistance.text.toString()
             .toFloat() else 0f
 
     if (category == 4) {
@@ -104,22 +103,22 @@ fun setCategory(container: View, cat: Int) {
         1 -> {
             container.btnCardio.isChecked = true
             container.btnCardio.setColoredBg()
-            container.hideme.visibility = View.VISIBLE
+            setVisible(container.hideme)
         }
         2 -> {
             container.btnPower.isChecked = true
             container.btnPower.setColoredBg()
-            container.hideme.visibility = View.VISIBLE
+            setVisible(container.hideme)
         }
         3 -> {
             container.btnStretch.isChecked = true
             container.btnStretch.setColoredBg()
-            container.hideme.visibility = View.VISIBLE
+            setVisible(container.hideme)
         }
         4 -> {
             container.btnRest.isChecked = true
             container.btnRest.setColoredBg()
-            container.hideme.visibility = View.GONE
+            setGone(container.hideme)
         }
     }
 }
@@ -133,7 +132,7 @@ fun setRestChecked(container: View) {
     container.btnCardio.setTransBg()
     container.btnPower.setTransBg()
     container.btnStretch.setTransBg()
-    container.hideme.visibility = View.GONE
+    setGone(container.hideme)
 }
 
 fun setStretchChecked(container: View) {
@@ -145,7 +144,7 @@ fun setStretchChecked(container: View) {
     container.btnCardio.setTransBg()
     container.btnPower.setTransBg()
     container.btnRest.setTransBg()
-    container.hideme.visibility = View.VISIBLE
+    setVisible(container.hideme)
 }
 
 fun setPowerChecked(container: View) {
@@ -157,7 +156,7 @@ fun setPowerChecked(container: View) {
     container.btnCardio.setTransBg()
     container.btnStretch.setTransBg()
     container.btnRest.setTransBg()
-    container.hideme.visibility = View.VISIBLE
+    setVisible(container.hideme)
 }
 
 fun setCardioChecked(container: View) {
@@ -169,7 +168,7 @@ fun setCardioChecked(container: View) {
     container.btnPower.setTransBg()
     container.btnStretch.setTransBg()
     container.btnRest.setTransBg()
-    container.hideme.visibility = View.VISIBLE
+    setVisible(container.hideme)
 }
 
 fun setAllBtnToFalse(container: View) {
@@ -181,7 +180,7 @@ fun setAllBtnToFalse(container: View) {
     container.btnPower.setTransBg()
     container.btnStretch.setTransBg()
     container.btnRest.setTransBg()
-    container.hideme.visibility = View.VISIBLE
+    setVisible(container.hideme)
 
 }
 
@@ -195,12 +194,12 @@ private fun RadioButton.setColoredBg() {
 }
 
 
-fun setGone(contView: ViewGroup) {
-    TransitionManager.beginDelayedTransition(contView, AutoTransition())
-    contView.visibility = View.GONE
+fun setGone(viewGroup: ViewGroup) {
+    TransitionManager.beginDelayedTransition(viewGroup, AutoTransition())
+    viewGroup.visibility = View.GONE
 }
 
-fun setVisible(contView: ViewGroup) {
-    TransitionManager.beginDelayedTransition(contView, AutoTransition())
-    contView.visibility = View.VISIBLE
+fun setVisible(viewGroup: ViewGroup) {
+    TransitionManager.beginDelayedTransition(viewGroup, AutoTransition())
+    viewGroup.visibility = View.VISIBLE
 }

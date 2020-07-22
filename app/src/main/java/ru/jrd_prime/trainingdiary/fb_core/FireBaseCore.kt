@@ -226,6 +226,12 @@ class FireBaseCore(private val appContainer: AppContainer) {
         })
     }
 
+    fun deleteExtraWorkout(workoutID: String, key: String) {
+        val actualRef = workoutPathConstructor(workoutID)
+        val dateData = actualRef.child(workoutID).child("additional").child(key)
+        Log.d(TAG, "deleteExtraWorkout: day:$workoutID, key:$key, uri: ${dateData} ")
+    dateData.removeValue()
+    }
 
     fun clearWorkout(workoutID: String) {
         val actualRef = workoutPathConstructor(workoutID)

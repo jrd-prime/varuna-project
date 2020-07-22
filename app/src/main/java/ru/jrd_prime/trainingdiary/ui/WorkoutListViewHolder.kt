@@ -3,7 +3,6 @@ package ru.jrd_prime.trainingdiary.ui
 import android.content.Context
 import android.content.res.Resources
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -31,7 +30,6 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
     private val root: View = binding.root
     private val ctx: Context = root.context
     private val res: Resources = ctx.resources
-    private val li = LayoutInflater.from(ctx)
     private val shPref =
         ctx.getSharedPreferences(AppConfig.SHARED_PREFERENCE_NAME_FOR_CARD, Context.MODE_PRIVATE)
     private val settings = AppSettingsCore(ctx)
@@ -120,8 +118,6 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
                         res.getString(R.string.distance_val),
                         totalDistance.toString()
                     )
-
-
                 }
             } else { /* wo EMPTY*/
                 showEmptyMainView(wo)
@@ -130,10 +126,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         } else {
             Log.d(TAG, "workout = null")
         }
-//            steCategoryImage(workout.category)
-
         binding.workoutModel = workout // Отправляем кейс в карточку
-//        }
         binding.executePendingBindings()
     }
 
@@ -355,7 +348,6 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         binding.ivWeekDay.text = res.getStringArray(R.array.weekDays)[dayNum] // Устанавливаем дату
     }
 
-
     private fun setDefaultVisibilityToViews() {
         binding.incCardFilled.mainCardFilled.visibility = View.GONE
         binding.incCardEmpty.mainCardEmpty.visibility = View.GONE
@@ -369,9 +361,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         incLine2Empty.addsCardCont.visibility = View.GONE
         incLine3Empty.addsCardCont.visibility = View.GONE
         binding.extraCount.visibility = View.GONE
-
     }
-
 
     private fun setImageFromConstants(catId: Int, catIv: ImageView, dot: FrameLayout) {
         catIv.setImageResource(catIcons[catId] as Int)
@@ -385,6 +375,5 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
     private fun setImageFromConstants(catId: Int, catIv: ImageView) {
         catIv.setImageResource(catIcons[catId] as Int)
-//        dot.setBackgroundResource(catColor[catId] as Int)
     }
 }

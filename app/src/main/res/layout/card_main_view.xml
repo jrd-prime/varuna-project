@@ -32,7 +32,6 @@
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
             android:onClick="@{(view) -> handler.showMainWorkoutInfo(view, workout.id)}">
-<!--            android:onClick="@{(view) -> handler.workoutEdit(view, workout.id)}">-->
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cevImage"

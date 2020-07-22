@@ -86,7 +86,7 @@ class WorkoutCardHandler(root: View) {
         }, workoutID)
         popupView.btnDelete.setOnClickListener { _ ->
             Log.d(TAG, "DELETE MAIN $workoutID")
-           }
+        }
 //        popupView.puiHolder.setOnClickListener { _ -> popupWindow.dismiss() }
         popupView.btnClose.setOnClickListener { _ -> popupWindow.dismiss() }
         popupView.btnEdit.setOnClickListener { _ ->
@@ -246,7 +246,10 @@ class WorkoutCardHandler(root: View) {
         }, workoutID, key)
         popupView.btnDelete.setOnClickListener { _ ->
             Log.d(TAG, "DELETE EXTRA $key")
-             }
+            //todo мб сделать диалог подтверждения удаления
+            FireBaseCore(appContainer).deleteExtraWorkout(workoutID, key)
+            popupWindow.dismiss()
+        }
 //        popupView.puiHolder.setOnClickListener { _ -> popupWindow.dismiss() }
         popupView.btnClose.setOnClickListener { _ -> popupWindow.dismiss() }
         popupView.btnEdit.setOnClickListener { _ ->
@@ -353,11 +356,11 @@ class WorkoutCardHandler(root: View) {
             val contView = cardView.hideThis
             when (contView.visibility) {
                 View.GONE -> {
-                    contView.visibility = View.VISIBLE
+                    setVisible(contView)
                     shPref.edit().putBoolean(cardID, true).apply()
                 }
                 View.VISIBLE -> {
-                    contView.visibility = View.GONE
+                    setGone(contView)
                     shPref.edit().putBoolean(cardID, false).apply()
 
                 }
