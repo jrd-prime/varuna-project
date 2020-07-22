@@ -109,7 +109,7 @@
             </FrameLayout>
 
             <FrameLayout
-                android:id="@+id/cevAdditionalInfoContainer"
+                android:id="@+id/textTimeContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_alignParentEnd="true">

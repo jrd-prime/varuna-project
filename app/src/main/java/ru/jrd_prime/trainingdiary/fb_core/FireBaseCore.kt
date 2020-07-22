@@ -185,6 +185,8 @@ class FireBaseCore(private val appContainer: AppContainer) {
         dateData.child("title").setValue(newWorkout.title)
         dateData.child("description").setValue(newWorkout.description)
         dateData.child("time").setValue(newWorkout.time)
+        dateData.child("kcal").setValue(newWorkout.kcal)
+        dateData.child("distance").setValue(newWorkout.distance)
         dateData.child("empty").setValue(false)
 //        dateData.child("calories").setValue(newWorkout.calories) //todo inser calories support
     }

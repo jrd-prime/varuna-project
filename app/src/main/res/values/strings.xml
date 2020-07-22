@@ -35,8 +35,8 @@
 
     <string name="snack_restore">Restore</string>
     <string name="snack_record_deleted">Record deleted</string>
-    <string name="no_description">No description specified</string>
-    <string name="no_title">No groups specified</string>
+    <string name="no_description">Description not specified</string>
+    <string name="no_title">Title not specified</string>
     <string name="no_time">No time specified</string>
 
     <string name="abbr_minute">m</string>

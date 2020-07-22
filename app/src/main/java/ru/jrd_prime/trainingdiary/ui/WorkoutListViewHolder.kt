@@ -16,6 +16,8 @@ import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.ANewCardViewBinding
 import ru.jrd_prime.trainingdiary.databinding.CardExtraViewBinding
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
+import ru.jrd_prime.trainingdiary.handlers.setGone
+import ru.jrd_prime.trainingdiary.handlers.setVisible
 import ru.jrd_prime.trainingdiary.utils.*
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 
@@ -74,16 +76,50 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
         if (workout != null) {
 
+            var totalTime = 0
+            var totalCalories = 0
+            var totalDistance = 0f
+
 
             val wo = workout
             val adds = workout.additional //todo if adds null - need write empty data to db
 
             if (!wo.empty) { /* wo NOT EMPTY */
                 showMainView(workoutData = wo) // show main view with info
+
+                totalTime += wo.time
+                totalCalories += wo.kcal
+                totalDistance += wo.distance
+
                 if (adds.isNullOrEmpty()) showAddsEmptyView(
                     0,
                     wo.id
-                ) else showAddsViews(adds, wo.id)
+                ) else {
+                    showAddsViews(adds, wo.id)
+
+                    for (add in adds) {
+                        if (!add.value.empty) {
+                            totalTime += add.value.time
+                            totalCalories += add.value.kcal
+                            totalDistance += add.value.distance
+                        }
+                    }
+
+                    binding.tvTotalMinutes.text =
+                        String.format(res.getString(R.string.minutes_val), totalTime.toString())
+
+                    binding.tvTotalCalories.text = String.format(
+                        res.getString(R.string.calories_val),
+                        totalCalories.toString()
+                    )
+
+                    binding.tvTotalDistance.text = String.format(
+                        res.getString(R.string.distance_val),
+                        totalDistance.toString()
+                    )
+
+
+                }
             } else { /* wo EMPTY*/
                 showEmptyMainView(wo)
             }
@@ -153,17 +189,17 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             0 -> {
                 fillLine(view = incLine1Filled, key = key, data = extraWorkout)
                 setImageFromConstants(extraWorkout.category, incLine1Filled.iv)
-                addsLine1.visibility = View.VISIBLE
+                setVisible(addsLine1)
             }
             1 -> {
                 fillLine(view = incLine2Filled, key = key, data = extraWorkout)
                 setImageFromConstants(extraWorkout.category, incLine2Filled.iv)
-                addsLine2.visibility = View.VISIBLE
+                setVisible(addsLine2)
             }
             2 -> {
                 fillLine(view = incLine3Filled, key = key, data = extraWorkout)
                 setImageFromConstants(extraWorkout.category, incLine3Filled.iv)
-                addsLine3.visibility = View.VISIBLE
+                setVisible(addsLine3)
             }
         }
     }
@@ -179,7 +215,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         val keyHolder = view.cardHiddenTextWithAddKey
         val idHolder = view.cardHiddenTextWithID
 
-        if (!settings.getShowWorkoutDescription()) container.extraDesc.visibility = View.GONE
+        if (!settings.getShowWorkoutDescription()) setGone(container.extraDesc)
 
         /* FILL START */
         keyHolder.text = key
@@ -187,38 +223,32 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
         // TITLE
         if (data.category == 4) {
-            if (!data.description.isNullOrEmpty()) title.text = data.description else title.text =
-                strNoDesc
+            if (data.title.isNotEmpty()) title.text = data.title else title.text =
+                strNoTitle
         } else {
-            if (!data.title.isNullOrEmpty()) title.text = data.title else title.text = strNoTitle
+            if (data.title.isNotEmpty()) title.text = data.title else title.text = strNoTitle
         }
 // TIME
         if (data.time == 0) {
-            time.visibility = View.GONE
+            setGone(view.textTimeContainer)
         } else {
-            time.visibility = View.VISIBLE
-            time.text = minutesToHoursAndMinutes(data.time, res)
+
+            setVisible(view.textTimeContainer)
+            time.text = data.convertMinsToHM(res)
         }
 
 
-        if (!data.description.isNullOrEmpty()) {
-            container.tvExtraDesc.text = data.description
-            if (settings.getShowWorkoutDescription()) container.extraDesc.visibility = View.VISIBLE
+        if (data.description.isNotEmpty()) {
+            if (settings.getShowWorkoutDescription()) setVisible(container.extraDesc)
+        } else {
+            setGone(container.extraDesc)
         }
 
-//        container.descContainer.setOnLongClickListener(object : View.OnLongClickListener {
-//            override fun onLongClick(p0: View?): Boolean {
-//                if (p0 != null) {
-//                    Log.d(TAG, "onLongClick: ${p0.cardHiddenTextWithAddKey}")
-//                }
-//
-//                return true
-//            }
-//        })
+        container.tvExtraDesc.text = data.getCheckedDescription(res)
 
         /* END FILL */
         setImageFromConstantsWOCorners(data.category, categoryIconView, view.dotView)
-        container.visibility = View.VISIBLE
+        setVisible(container)
     }
 
 
@@ -226,18 +256,18 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 //        binding.additionalCardsHolder.removeViewAt(atPosition) /* remove all views to fix dublicates */
         when (inLine) {
             0 -> {
-                addsLine1.visibility = View.VISIBLE
-                incLine1Empty.addsCardCont.visibility = View.VISIBLE
+                setVisible(addsLine1)
+                setVisible(incLine1Empty.addsCardCont)
                 incLine1Empty.cardHiddenTextWithID.text = mainWorkoutDate
             }
             1 -> {
-                addsLine2.visibility = View.VISIBLE
-                incLine2Empty.addsCardCont.visibility = View.VISIBLE
+                setVisible(addsLine2)
+                setVisible(incLine2Empty.addsCardCont)
                 incLine2Empty.cardHiddenTextWithID.text = mainWorkoutDate
             }
             2 -> {
-                addsLine3.visibility = View.VISIBLE
-                incLine3Empty.addsCardCont.visibility = View.VISIBLE
+                setVisible(addsLine3)
+                setVisible(incLine3Empty.addsCardCont)
                 incLine3Empty.cardHiddenTextWithID.text = mainWorkoutDate
             }
         }
@@ -245,17 +275,17 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
     private fun showMainView(workoutData: Workout) { // show main card with workout info
         Log.d(TAG, "showMainView: ")
-        binding.incCardFilled.mainCardFilled.visibility = View.VISIBLE
-        binding.incCardEmpty.mainCardEmpty.visibility = View.GONE
+        val cardF = binding.incCardFilled
+        val cardE = binding.incCardEmpty
+        setVisible(cardF.mainCardFilled)
+        setGone(cardE.mainCardEmpty)
 
+        if (!settings.getShowWorkoutDescription()) setGone(cardF.mainDesc)
 
-        if (!settings.getShowWorkoutDescription()) binding.incCardFilled.mainDesc.visibility =
-            View.GONE
-
-        binding.incCardFilled.workout = workoutData
+        cardF.workout = workoutData
         binding.cardId.text = workoutData.id
-        val time = binding.incCardFilled.textTime
-        val title = binding.incCardFilled.tvMuscleGroup
+        val time = cardF.textTime
+        val title = cardF.tvMuscleGroup
 
         var extraCount = 0
 
@@ -269,16 +299,16 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
         if (extraCount != 0) {
             binding.extraCount.visibility = View.VISIBLE
-            binding.extraCount.text = "+ $extraCount"
+            binding.extraCount.text = "+$extraCount"
         }
 
 
         if (workoutData.category == 4) {
-            if (!workoutData.description.isNullOrEmpty()) title.text =
-                workoutData.description else title.text =
-                strNoDesc
+            if (workoutData.title.isNotEmpty()) title.text =
+                workoutData.title else title.text =
+                strNoTitle
         } else {
-            if (!workoutData.title.isNullOrEmpty()) title.text = workoutData.title else title.text =
+            if (workoutData.title.isNotEmpty()) title.text = workoutData.title else title.text =
                 strNoTitle
         }
         if (workoutData.time == 0) {
@@ -288,18 +318,23 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             time.text = minutesToHoursAndMinutes(workoutData.time, res)
         }
 
-        if (!workoutData.description.isNullOrEmpty()) {
-            binding.incCardFilled.tvMainDesc.text = workoutData.description
-            if (settings.getShowWorkoutDescription()) binding.incCardFilled.mainDesc.visibility =
+        if (workoutData.description.isNotEmpty()) {
+            Log.d(TAG, "showMainView: ${workoutData.description}")
+            cardF.tvMainDesc.text = workoutData.description
+            if (settings.getShowWorkoutDescription()) cardF.mainDesc.visibility =
                 View.VISIBLE
+        } else {
+            Log.d(TAG, "showMainView: desc null or empty")
+            cardF.tvMainDesc.text = ""
+            cardF.mainDesc.visibility = View.GONE
         }
 
         setImageFromConstantsWOCorners(
             workoutData.category,
-            binding.incCardFilled.iv,
-            binding.incCardFilled.dotView
+            cardF.iv,
+            cardF.dotView
         )
-        setImageFromConstants(workoutData.category, binding.incCardFilled.iv)
+        setImageFromConstants(workoutData.category, cardF.iv)
         setImageFromConstants(workoutData.category, binding.ivCategory)
     }
 

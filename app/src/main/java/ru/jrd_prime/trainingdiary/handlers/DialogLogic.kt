@@ -1,8 +1,7 @@
 package ru.jrd_prime.trainingdiary.handlers
 
-import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
+import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
@@ -36,30 +35,24 @@ fun setCategoryListeners(popupView: View) {
 
 }
 
-fun putDataToUI(wo: Workout, container: View) {
-    Log.d("TAGGGGGG", "putDataToUI: $wo")
-
-    setCategory(container, wo.category)
-    container.etGroups.setText(wo.title.toString())
-    container.etDescription.setText(wo.description.toString())
-    container.etMinutes.setText(wo.time.toString())
-    container.etCalories.setText(wo.kcal.toString())
-    container.etDistance.setText(wo.distance.toString())
+fun putDataToUI(wo: Workout, view: View) {
+    setCategory(view, wo.category)
+    view.etGroups.setText(wo.title.toString())
+    view.etDescription.setText(wo.description.toString())
+    view.etMinutes.setText(wo.time.toString())
+    view.etCalories.setText(wo.kcal.toString())
+    view.etDistance.setText(wo.distance.toString())
 }
 
-fun putDataToInfoUI(wo: Workout, container: View) {
-    val ctx = container.context
-    Log.d("TAGGGGGG", "putDataToInfoUI: $wo")
-    container.ivIcon.setImageResource(catIcons[wo.category] as Int)
-    container.tvTitle.text = wo.title.toString()
-    container.tvDesc.text = wo.description.toString()
-    container.tvMinutes.text =
-        String.format(ctx.getString(R.string.minutes_val), wo.time.toString())
-
-    container.tvCalories.text =
-        String.format(ctx.getString(R.string.calories_val), wo.kcal.toString())
-    container.tvDistance.text =
-        String.format(ctx.getString(R.string.distance_val), wo.distance.toString())
+fun putDataToInfoUI(wo: Workout, view: View) {
+    val ctx = view.context
+    val res = ctx.resources
+    view.ivIcon.setImageResource(catIcons[wo.category] as Int)
+    view.tvTitle.text = wo.getCheckedTitle(res)
+    view.tvDesc.text = wo.getCheckedDescription(res)
+    view.tvMinutes.text = wo.getFormattedMinutes(res)
+    view.tvCalories.text = wo.getFormattedCalories(res)
+    view.tvDistance.text = wo.getFormattedDistance(res)
 }
 
 fun collectDataFromUI(
@@ -74,7 +67,8 @@ fun collectDataFromUI(
         else -> 0
     }
 
-    var title = container.etGroups.text.toString()
+    val title = container.etGroups.text.toString()
+    var desc = container.etDescription.text.toString()
 
     var minutes =
         if (container.etMinutes.text.isNotEmpty()) Integer.parseInt(container.etMinutes.text.toString()) else 0
@@ -88,14 +82,14 @@ fun collectDataFromUI(
         minutes = 0
         calories = 0
         distance = 0f
-        title = ""
+        desc = ""
     }
 
     return Workout(
         id = workoutID,
         category = category,
         title = title,
-        description = container.etDescription.text.toString(),
+        description = desc,
         time = minutes,
         kcal = calories,
         distance = distance,
@@ -201,12 +195,12 @@ private fun RadioButton.setColoredBg() {
 }
 
 
-fun setGone(contView: LinearLayout) {
+fun setGone(contView: ViewGroup) {
     TransitionManager.beginDelayedTransition(contView, AutoTransition())
     contView.visibility = View.GONE
 }
 
-fun setVisible(contView: LinearLayout) {
+fun setVisible(contView: ViewGroup) {
     TransitionManager.beginDelayedTransition(contView, AutoTransition())
     contView.visibility = View.VISIBLE
 }

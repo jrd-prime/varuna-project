@@ -154,7 +154,7 @@
                                     android:layout_alignParentStart="true"
 
                                     android:layout_centerInParent="true"
-                                  android:layout_marginStart="12dp"
+                                    android:layout_marginStart="12dp"
                                     android:contentDescription="@string/descIVCategory"
                                     android:src="@drawable/jp_heartbeat" />
 
@@ -324,71 +324,48 @@
                         android:layout_height="3dp"
                         android:background="@drawable/shadow" />
 
-                    <RelativeLayout
+                    <LinearLayout
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
                         android:background="@drawable/card_bg_buttons"
-                        android:orientation="vertical">
+                        android:orientation="horizontal"
+                        android:visibility="visible">
 
-                        <FrameLayout
-                            android:id="@+id/mCardButtonsDeleteLayout"
-                            android:layout_width="@dimen/mCardButtonsCompactWidth"
-                            android:layout_height="32dp"
-                            android:layout_alignParentStart="true"
-                            android:onClick="@{(view) -> handler.clearWorkout(view, workoutModel.id)}">
 
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/jp_trash" />
-                        </FrameLayout>
-
-                        <View
-                            android:id="@+id/view1"
-                            android:layout_width="1dp"
-                            android:layout_height="32dp"
-                            android:layout_toEndOf="@id/mCardButtonsDeleteLayout"
-                            android:background="@color/colorForLightBorder" />
-
-                        <FrameLayout
-                            android:id="@+id/mCardButtonsMoreLayout"
+                        <TextView
+                            android:id="@+id/tvTotalMinutes"
+                            style="@style/tvMoreContainer"
                             android:layout_width="wrap_content"
                             android:layout_height="32dp"
-                            android:layout_toStartOf="@+id/view2"
-                            android:layout_toEndOf="@+id/view1"
-                            android:onClick="@{(view) -> handler.showAll(view, workoutModel.id)}">
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
+                            android:textSize="12sp"
+                            android:text="3h 30m" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="show all"
-                                android:textAllCaps="true"
-                                android:textColor="@color/colorGreyDark" />
-                        </FrameLayout>
-
-                        <View
-                            android:id="@+id/view2"
-                            android:layout_width="1dp"
+                        <TextView
+                            android:id="@+id/tvTotalCalories"
+                            style="@style/tvMoreContainer"
+                            android:textSize="12sp"
+                            android:layout_width="wrap_content"
                             android:layout_height="32dp"
-                            android:layout_toStartOf="@id/mCardButtonsEditLayout"
-                            android:background="@color/colorForLightBorder" />
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
+                            android:text="1313kcal" />
 
-                        <FrameLayout
-                            android:id="@+id/mCardButtonsEditLayout"
-                            android:layout_width="@dimen/mCardButtonsCompactWidth"
+                        <TextView
+                            android:id="@+id/tvTotalDistance"
+                            style="@style/tvMoreContainer"
+                            android:textSize="12sp"
+                            android:layout_width="wrap_content"
                             android:layout_height="32dp"
-                            android:layout_alignParentEnd="true"
-                            android:onClick="@{(view) -> handler.workoutEdit(view, workoutModel.id)}">
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="1"
+                            android:text="100mi" />
 
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/jp_edit" />
-                        </FrameLayout>
-                    </RelativeLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
