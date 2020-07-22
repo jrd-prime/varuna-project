@@ -6,10 +6,12 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
-import kotlinx.android.synthetic.main.pop.view.*
+import kotlinx.android.synthetic.main.pop_up_edit.view.*
+import kotlinx.android.synthetic.main.pop_up_info.view.*
 import org.threeten.bp.LocalDateTime
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
+import ru.jrd_prime.trainingdiary.utils.catIcons
 import ru.jrd_prime.trainingdiary.utils.dateToTimestamp
 
 
@@ -36,16 +38,29 @@ fun setCategoryListeners(popupView: View) {
 
 fun putDataToUI(wo: Workout, container: View) {
     Log.d("TAGGGGGG", "putDataToUI: $wo")
-    val cat = wo.category
-    val grp = wo.title
-    val time = wo.time
-    val desc = wo.description
-    setCategory(container, cat)
-    container.etGroups.setText(grp.toString())
-    container.etDescription.setText(desc.toString())
-    container.etMins.setText(time.toString())
+
+    setCategory(container, wo.category)
+    container.etGroups.setText(wo.title.toString())
+    container.etDescription.setText(wo.description.toString())
+    container.etMinutes.setText(wo.time.toString())
+    container.etCalories.setText(wo.kcal.toString())
+    container.etDistance.setText(wo.distance.toString())
 }
 
+fun putDataToInfoUI(wo: Workout, container: View) {
+    val ctx = container.context
+    Log.d("TAGGGGGG", "putDataToInfoUI: $wo")
+    container.ivIcon.setImageResource(catIcons[wo.category] as Int)
+    container.tvTitle.text = wo.title.toString()
+    container.tvDesc.text = wo.description.toString()
+    container.tvMinutes.text =
+        String.format(ctx.getString(R.string.minutes_val), wo.time.toString())
+
+    container.tvCalories.text =
+        String.format(ctx.getString(R.string.calories_val), wo.kcal.toString())
+    container.tvDistance.text =
+        String.format(ctx.getString(R.string.distance_val), wo.distance.toString())
+}
 
 fun collectDataFromUI(
     container: View,
@@ -59,23 +74,32 @@ fun collectDataFromUI(
         else -> 0
     }
 
-    var grp = container.etGroups.text.toString()
+    var title = container.etGroups.text.toString()
 
-    var mins =
-        if (container.etMins.text.isNotEmpty()) Integer.parseInt(container.etMins.text.toString()) else 0
+    var minutes =
+        if (container.etMinutes.text.isNotEmpty()) Integer.parseInt(container.etMinutes.text.toString()) else 0
+    var calories =
+        if (container.etMinutes.text.isNotEmpty()) Integer.parseInt(container.etCalories.text.toString()) else 0
+    var distance: Float =
+        if (container.etMinutes.text.isNotEmpty()) container.etDistance.text.toString()
+            .toFloat() else 0f
 
     if (category == 4) {
-        mins = 0
-        grp = ""
+        minutes = 0
+        calories = 0
+        distance = 0f
+        title = ""
     }
 
     return Workout(
-        workoutID,
-        category,
-        grp,
-        container.etDescription.text.toString(),
-        mins,
-        dateToTimestamp(LocalDateTime.now()),
+        id = workoutID,
+        category = category,
+        title = title,
+        description = container.etDescription.text.toString(),
+        time = minutes,
+        kcal = calories,
+        distance = distance,
+        date = dateToTimestamp(LocalDateTime.now()),
         empty = false
     )
 }
@@ -86,22 +110,22 @@ fun setCategory(container: View, cat: Int) {
         1 -> {
             container.btnCardio.isChecked = true
             container.btnCardio.setColoredBg()
-            container.layoutGroupsAndTime.visibility = View.VISIBLE
+            container.hideme.visibility = View.VISIBLE
         }
         2 -> {
             container.btnPower.isChecked = true
             container.btnPower.setColoredBg()
-            container.layoutGroupsAndTime.visibility = View.VISIBLE
+            container.hideme.visibility = View.VISIBLE
         }
         3 -> {
             container.btnStretch.isChecked = true
             container.btnStretch.setColoredBg()
-            container.layoutGroupsAndTime.visibility = View.VISIBLE
+            container.hideme.visibility = View.VISIBLE
         }
         4 -> {
             container.btnRest.isChecked = true
             container.btnRest.setColoredBg()
-            container.layoutGroupsAndTime.visibility = View.GONE
+            container.hideme.visibility = View.GONE
         }
     }
 }
@@ -115,7 +139,7 @@ fun setRestChecked(container: View) {
     container.btnCardio.setTransBg()
     container.btnPower.setTransBg()
     container.btnStretch.setTransBg()
-    container.layoutGroupsAndTime.visibility = View.GONE
+    container.hideme.visibility = View.GONE
 }
 
 fun setStretchChecked(container: View) {
@@ -127,7 +151,7 @@ fun setStretchChecked(container: View) {
     container.btnCardio.setTransBg()
     container.btnPower.setTransBg()
     container.btnRest.setTransBg()
-    container.layoutGroupsAndTime.visibility = View.VISIBLE
+    container.hideme.visibility = View.VISIBLE
 }
 
 fun setPowerChecked(container: View) {
@@ -139,7 +163,7 @@ fun setPowerChecked(container: View) {
     container.btnCardio.setTransBg()
     container.btnStretch.setTransBg()
     container.btnRest.setTransBg()
-    container.layoutGroupsAndTime.visibility = View.VISIBLE
+    container.hideme.visibility = View.VISIBLE
 }
 
 fun setCardioChecked(container: View) {
@@ -151,7 +175,7 @@ fun setCardioChecked(container: View) {
     container.btnPower.setTransBg()
     container.btnStretch.setTransBg()
     container.btnRest.setTransBg()
-    container.layoutGroupsAndTime.visibility = View.VISIBLE
+    container.hideme.visibility = View.VISIBLE
 }
 
 fun setAllBtnToFalse(container: View) {
@@ -163,7 +187,7 @@ fun setAllBtnToFalse(container: View) {
     container.btnPower.setTransBg()
     container.btnStretch.setTransBg()
     container.btnRest.setTransBg()
-    container.layoutGroupsAndTime.visibility = View.VISIBLE
+    container.hideme.visibility = View.VISIBLE
 
 }
 
@@ -177,7 +201,7 @@ private fun RadioButton.setColoredBg() {
 }
 
 
- fun setGone(contView: LinearLayout) {
+fun setGone(contView: LinearLayout) {
     TransitionManager.beginDelayedTransition(contView, AutoTransition())
     contView.visibility = View.GONE
 }

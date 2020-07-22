@@ -56,6 +56,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
     }
 
     fun updateExtraWorkout(workoutDate: String, workout: Workout, key: String) {
+        Log.d(TAG, "updateExtraWorkout: UPDATE. NEW DATA")
         val splitDate = workoutDate.split("-")
         val year = splitDate[0]
         val month = splitDate[1]

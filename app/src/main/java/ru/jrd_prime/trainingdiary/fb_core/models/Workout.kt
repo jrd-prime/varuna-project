@@ -11,6 +11,7 @@ data class Workout(
     var time: Int = 0,
     val date: Long? = 0,
     val additional: HashMap<String, Workout>? = null,
-    val calories: String = "",
+    val kcal: Int = 0,
+    val distance: Float = 0f,
     var empty: Boolean = true
 ) {}

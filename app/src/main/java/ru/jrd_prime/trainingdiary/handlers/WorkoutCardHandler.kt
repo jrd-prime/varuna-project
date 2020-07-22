@@ -12,7 +12,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.a_new_card_view.view.*
 import kotlinx.android.synthetic.main.card_extra_empty_view.view.cardHiddenTextWithID
 import kotlinx.android.synthetic.main.card_extra_view.view.*
-import kotlinx.android.synthetic.main.pop.view.*
+import kotlinx.android.synthetic.main.pop_up_edit.view.*
+import kotlinx.android.synthetic.main.pop_up_info.view.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
@@ -37,7 +38,7 @@ class WorkoutCardHandler(root: View) {
         Log.d(CardHandler.TAG, "add main workout: $workoutDate")
 
         val popupView: View =
-            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
+            LayoutInflater.from(view.context).inflate(R.layout.pop_up_edit, null)
         popupView.textTitle.setText(R.string.add_dialog_title)
         val popupWindow = PopupWindow(
             popupView,
@@ -66,7 +67,7 @@ class WorkoutCardHandler(root: View) {
     fun workoutEdit(view: View, workoutID: String) {
         Log.d(TAG, "workoutEdit: $workoutID")
         val popupView: View =
-            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
+            LayoutInflater.from(view.context).inflate(R.layout.pop_up_edit, null)
         popupView.textTitle.setText(R.string.edit_dialog_title)
         val popupWindow = PopupWindow(
             popupView,
@@ -110,7 +111,7 @@ class WorkoutCardHandler(root: View) {
         Log.d(CardHandler.TAG, "addAddsWorkout : $workoutDate")
 
         val popupView: View =
-            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
+            LayoutInflater.from(view.context).inflate(R.layout.pop_up_edit, null)
         popupView.textTitle.setText(R.string.add_dialog_title)
         val popupWindow = PopupWindow(
             popupView,
@@ -141,7 +142,7 @@ class WorkoutCardHandler(root: View) {
         val workoutID = view.cardHiddenTextWithID.text.toString()
         val key = view.cardHiddenTextWithAddKey.text.toString()
         val popupView: View =
-            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
+            LayoutInflater.from(view.context).inflate(R.layout.pop_up_edit, null)
         popupView.textTitle.setText(R.string.edit_dialog_title)
         val popupWindow = PopupWindow(
             popupView,
@@ -165,6 +166,51 @@ class WorkoutCardHandler(root: View) {
         popupView.btnSave.setOnClickListener { _ ->
             val dataFromUI = collectDataFromUI(popupView, workoutID)
             FireBaseCore(appContainer).updateExtraWorkout(workoutID, dataFromUI, key)
+            popupWindow.dismiss()
+        }
+        popupWindow.elevation = 20f
+        view.post(Runnable {
+            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0)
+        })
+    }
+
+    fun showExtraWorkoutInfo(view: View) {
+        Log.d(
+            TAG,
+            "showExtraWorkout: key: ${view.cardHiddenTextWithAddKey.text} / date: ${view.cardHiddenTextWithID.text}"
+        )
+        val workoutID = view.cardHiddenTextWithID.text.toString()
+        val key = view.cardHiddenTextWithAddKey.text.toString()
+        val popupView: View =
+            LayoutInflater.from(view.context).inflate(R.layout.pop_up_info, null)
+//        popupView.textTitle.setText(R.string.edit_dialog_title)
+        val popupWindow = PopupWindow(
+            popupView,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT,
+            true
+        )
+
+        FireBaseCore(appContainer).getExtraWorkout(object : GetWorkoutCallback {
+            override fun onCallBack(workout: Workout, workoutID: String) {
+                val wo: Workout = workout
+                Log.d(TAG, "onCallBack: $wo")
+
+                putDataToInfoUI(wo, popupView)
+
+            }
+        }, workoutID, key)
+
+        popupView.puiHolder.setOnClickListener { _ -> popupWindow.dismiss() }
+        popupView.btnClose.setOnClickListener { _ -> popupWindow.dismiss() }
+        popupView.btnEdit.setOnClickListener { _ ->
+            showExtraWorkout(view)
+            popupWindow.dismiss()
+        }
+        popupView.btnDelete.setOnClickListener { _ ->
+//            val dataFromUI = collectDataFromUI(popupView, workoutID)
+//            FireBaseCore(appContainer).updateExtraWorkout(workoutID, dataFromUI, key)
+
             popupWindow.dismiss()
         }
         popupWindow.elevation = 20f
@@ -211,7 +257,7 @@ class WorkoutCardHandler(root: View) {
         Log.d(TAG, "workoutAdd: $workoutID")
 
         val popupView: View =
-            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
+            LayoutInflater.from(view.context).inflate(R.layout.pop_up_edit, null)
         popupView.textTitle.setText(R.string.add_dialog_title)
         val popupWindow = PopupWindow(
             popupView,

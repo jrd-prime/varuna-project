@@ -206,6 +206,16 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             if (settings.getShowWorkoutDescription()) container.extraDesc.visibility = View.VISIBLE
         }
 
+//        container.descContainer.setOnLongClickListener(object : View.OnLongClickListener {
+//            override fun onLongClick(p0: View?): Boolean {
+//                if (p0 != null) {
+//                    Log.d(TAG, "onLongClick: ${p0.cardHiddenTextWithAddKey}")
+//                }
+//
+//                return true
+//            }
+//        })
+
         /* END FILL */
         setImageFromConstantsWOCorners(data.category, categoryIconView, view.dotView)
         container.visibility = View.VISIBLE
@@ -239,7 +249,8 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         binding.incCardEmpty.mainCardEmpty.visibility = View.GONE
 
 
-        if (!settings.getShowWorkoutDescription()) binding.incCardFilled.mainDesc.visibility = View.GONE
+        if (!settings.getShowWorkoutDescription()) binding.incCardFilled.mainDesc.visibility =
+            View.GONE
 
         binding.incCardFilled.workout = workoutData
         binding.cardId.text = workoutData.id

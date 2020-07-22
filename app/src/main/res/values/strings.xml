@@ -46,7 +46,7 @@
     <string name="edit_dialog_title">EDIT</string>
     <string name="add_dialog_title">ADD</string>
     <string name="edit_text_groups_hint">Title (muscle groups, etc)</string>
-    <string name="edit_text_minutes_hint">Min</string>
+    <string name="edit_text_minutes_hint">Minutes</string>
     <string name="edit_text_description_hint">Description</string>
     <string name="dialog_cancel_btn">Cancel</string>
     <string name="dialog_save_btn">Save</string>
@@ -56,6 +56,16 @@
     <string name="yes">yes</string>
     <string name="no">no</string>
     <string name="maybe">maybe</string>
+    <string name="dialog_edit_btn">edit</string>
+    <string name="dialog_close_btn">Close</string>
+    <string name="edit_text_calories_hint">Calories</string>
+    <string name="edit_text_distance_hint">Distance</string>
+    <string name="space">" "</string>
+    <string name="distance_val">%1$s mi</string>
+    <string name="calories_val">%1$s kcal</string>
+    <string name="abbr_calorie">kcal</string>
+    <string name="abbr_distance">mi</string>
+    <string name="minutes_val">%1$s min</string>
     <string-array name="weekDays">
         <item>Mon</item>
         <item>Tue</item>

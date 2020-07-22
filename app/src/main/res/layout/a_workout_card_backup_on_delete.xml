@@ -232,7 +232,7 @@
                                     android:layout_marginTop="8dp"
                                     android:layout_marginEnd="8dp"
                                     android:layout_marginBottom="8dp"
-                                    android:background="@drawable/shape_for_time"
+                                    android:background="@drawable/shape_for_more"
                                     android:padding="3dp"
                                     android:paddingStart="8dp"
                                     android:paddingEnd="8dp"

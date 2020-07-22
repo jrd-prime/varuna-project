@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.PopupWindow
-import kotlinx.android.synthetic.main.pop.view.*
+import kotlinx.android.synthetic.main.pop_up_edit.view.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.workers.AsyncRequests
@@ -26,7 +26,7 @@ class CardHandler(root: View) {
         Log.d(TAG, "workoutAdd: $workoutDate")
 
         val popupView: View =
-            LayoutInflater.from(view.context).inflate(R.layout.pop, null)
+            LayoutInflater.from(view.context).inflate(R.layout.pop_up_edit, null)
         popupView.textTitle.setText(R.string.add_dialog_title)
         val popupWindow = PopupWindow(
             popupView,
