@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.databinding.ANewCardViewBinding
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
-import ru.jrd_prime.trainingdiary.handlers.CardHandler
 import ru.jrd_prime.trainingdiary.handlers.WorkoutCardHandler
 import ru.jrd_prime.trainingdiary.ui.WorkoutListViewHolder
 
@@ -48,6 +47,9 @@ class WorkoutListAdapter :
 
 
     fun updateItem(key: String, workout: Workout) {
+
+        Log.d(TAG, "updateItem: $key ${workout}")
+
         val index = workoutsList.indexOfFirst { it.id == key }
         if (index >= 0) {
             workoutsList[index] = workout

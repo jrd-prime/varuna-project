@@ -5,7 +5,7 @@ import com.google.firebase.database.IgnoreExtraProperties
 @IgnoreExtraProperties
 data class Workout(
     val id: String = "",
-    val category: Int = 0,
+    val category: Int = 4,
     var title: String = "",
     var description: String = "",
     var time: Int = 0,

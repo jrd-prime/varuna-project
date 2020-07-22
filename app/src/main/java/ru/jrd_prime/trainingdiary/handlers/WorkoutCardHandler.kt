@@ -49,7 +49,7 @@ class WorkoutCardHandler(root: View) {
         popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
         popupView.btnSave.setOnClickListener { _ ->
             val dataFromUI = collectDataFromUI(popupView, workoutDate)
-            asyncReq.updateWorkout(workoutDate, dataFromUI)
+            FireBaseCore(appContainer).updateWorkout(workoutDate, dataFromUI)
 
             popupWindow.dismiss()
         }

@@ -225,7 +225,6 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         val dl = ExitDialog()
         dl.show(supportFragmentManager, "exitDialog")
         Log.d(TAG, "onBackPressed: ")

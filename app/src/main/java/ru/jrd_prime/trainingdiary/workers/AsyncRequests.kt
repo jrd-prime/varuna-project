@@ -12,7 +12,6 @@ class AsyncRequests(private val appContainer: AppContainer) {
         workoutID: String,
         newWorkout: Workout
     ) {
-        FireBaseCore(appContainer).updateWorkout(workoutID, newWorkout)
 
         runBlocking {
             launch(Dispatchers.IO) {
