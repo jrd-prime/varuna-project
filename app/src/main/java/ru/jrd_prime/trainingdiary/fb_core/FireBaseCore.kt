@@ -138,6 +138,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
 
     fun listenNewData(myNewAdapter: WorkoutListAdapter) {
         //TODO get current year and month for listen
+        //todo проверить обновление данных при смене года
 
         val listener = object : ChildEventListener {
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -158,10 +159,14 @@ class FireBaseCore(private val appContainer: AppContainer) {
             override fun onChildRemoved(snapshot: DataSnapshot) {
             }
         }
+        val monthList = appContainer.appUtils.getMonth()
 
-        val pastMonth = woRef.child("2020").child("06").addChildEventListener(listener)
-        val thisMonth = woRef.child("2020").child("07").addChildEventListener(listener)
-        val nextMonth = woRef.child("2020").child("08").addChildEventListener(listener)
+        // past
+        woRef.child("2020").child(monthList[0]).addChildEventListener(listener)
+        // this
+        woRef.child("2020").child(monthList[1]).addChildEventListener(listener)
+        // next
+        woRef.child("2020").child(monthList[2]).addChildEventListener(listener)
     }
 
     private fun addEmptyWorkout(
@@ -172,19 +177,9 @@ class FireBaseCore(private val appContainer: AppContainer) {
         return Workout()
     }
 
-    //    val id: String = "",
-//    val category: Int = 0,
-//    var title: String = "",
-//    var description: String = "",
-//    var time: Int = 0,
-//    val date: Long? = 0,
-//    val additional: HashMap<String, Workout>? = null,
-//    val calories: String = "",
-//    var empty: Boolean = true
     fun updateWorkout(workoutID: String, newWorkout: Workout) {
         val actualRef = workoutPathConstructor(workoutID)
         val dateData = actualRef.child(workoutID)
-        Log.d(TAG, "updateWorkout: $dateData")
         dateData.child("category").setValue(newWorkout.category)
         dateData.child("title").setValue(newWorkout.title)
         dateData.child("description").setValue(newWorkout.description)

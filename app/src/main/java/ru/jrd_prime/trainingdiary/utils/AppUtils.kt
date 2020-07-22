@@ -13,6 +13,8 @@ import androidx.annotation.AnyRes
 import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.format.DateTimeFormatter
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
@@ -21,7 +23,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
-import java.lang.String
 import java.util.concurrent.ExecutionException
 
 class AppUtils(
@@ -33,8 +34,20 @@ class AppUtils(
     private val context = appContext.applicationContext
 
     companion object {
+
         const val SHOW_MENU = "ShowMenu"
     }
+
+    fun getMonth(): MutableList<String> {
+        val now = LocalDateTime.now()
+        val fmt = DateTimeFormatter.ofPattern("MM")
+        return mutableListOf<String>(
+            fmt.format(now.minusMonths(1)),
+            fmt.format(now),
+            fmt.format(now.plusMonths(1))
+        )
+    }
+
 
     fun setDefaultConfig(mSettings: SharedPreferences, cfg: AppConfig) {
         mSettings.edit().putBoolean(cfg.getSpNameFirstRun(), false).apply()
@@ -66,7 +79,7 @@ class AppUtils(
             //img2.setCornerRadius(120);
             RoundedBitmapDrawableFactory.create(
                 context.resources,
-                String.valueOf(R.drawable.user)
+                (R.drawable.user).toString()
             )
         } else {
             // HAS PHOTO ON DEV
