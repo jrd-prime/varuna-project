@@ -66,6 +66,7 @@
     <string name="abbr_calorie">kcal</string>
     <string name="abbr_distance">mi</string>
     <string name="minutes_val">%1$s min</string>
+    <string name="dialog_delete_btn">Delete</string>
     <string-array name="weekDays">
         <item>Mon</item>
         <item>Tue</item>

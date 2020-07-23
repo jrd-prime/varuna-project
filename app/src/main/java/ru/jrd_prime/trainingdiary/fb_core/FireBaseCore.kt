@@ -158,6 +158,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
+                myNewAdapter.changed()
             }
         }
         val monthList = appContainer.appUtils.getMonth()

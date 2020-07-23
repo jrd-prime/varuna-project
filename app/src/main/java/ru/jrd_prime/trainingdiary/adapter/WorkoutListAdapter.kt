@@ -12,8 +12,7 @@ import ru.jrd_prime.trainingdiary.handlers.WorkoutCardHandler
 import ru.jrd_prime.trainingdiary.ui.WorkoutListViewHolder
 
 
-class WorkoutListAdapter :
-    RecyclerView.Adapter<WorkoutListViewHolder>() {
+class WorkoutListAdapter : RecyclerView.Adapter<WorkoutListViewHolder>() {
     companion object {
         const val TAG = "Workout List Adapter"
     }
@@ -24,7 +23,6 @@ class WorkoutListAdapter :
         val inflater = LayoutInflater.from(parent.context)
         val binding: ANewCardViewBinding =
             DataBindingUtil.inflate(inflater, R.layout.a_new_card_view, parent, false)
-//        binding.handler = WorkoutCardHandler(binding.root)
         binding.handler = WorkoutCardHandler(binding.root)
         return WorkoutListViewHolder(binding)
     }
@@ -38,18 +36,13 @@ class WorkoutListAdapter :
         workoutsList.addAll(newData)
         notifyDataSetChanged()
     }
-
-
     fun addItem(weekData: Workout) {
         workoutsList.add(weekData)
         notifyDataSetChanged()
     }
 
-
     fun updateItem(key: String, workout: Workout) {
-
         Log.d(TAG, "updateItem: $key ${workout}")
-
         val index = workoutsList.indexOfFirst { it.id == key }
         if (index >= 0) {
             workoutsList[index] = workout
@@ -60,5 +53,9 @@ class WorkoutListAdapter :
 
     override fun getItemCount(): Int {
         return workoutsList.size
+    }
+
+    fun changed() {
+        notifyDataSetChanged()
     }
 }

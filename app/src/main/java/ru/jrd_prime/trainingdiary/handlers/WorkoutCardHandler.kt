@@ -8,17 +8,22 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.a_new_card_view.view.*
 import kotlinx.android.synthetic.main.card_extra_empty_view.view.cardHiddenTextWithID
 import kotlinx.android.synthetic.main.card_extra_view.view.*
+import kotlinx.android.synthetic.main.pop_up_delete_dialog.view.*
 import kotlinx.android.synthetic.main.pop_up_edit.view.*
+import kotlinx.android.synthetic.main.pop_up_edit.view.textTitle
 import kotlinx.android.synthetic.main.pop_up_info.view.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
+import ru.jrd_prime.trainingdiary.utils.getPopUpView
+import ru.jrd_prime.trainingdiary.utils.getPopUpWindow
 import ru.jrd_prime.trainingdiary.workers.AsyncRequests
 
 
@@ -26,12 +31,59 @@ class WorkoutCardHandler(root: View) {
     private val appContainer = (root.context.applicationContext as TrainingDiaryApp).container
     private val asyncReq: AsyncRequests = AsyncRequests(appContainer)
     private val ctx: Context = root.context
-    private val fireBaseCore: FireBaseCore = FireBaseCore(appContainer)
+    private val fbc: FireBaseCore = FireBaseCore(appContainer)
 
     companion object {
         const val TAG = "Handler"
     }
 
+    /* SHOW MAIN */
+    fun showMainWorkoutInfo(root: View, workoutID: String) {
+        val view: View = getPopUpView(root.context, R.layout.pop_up_info)
+        val window = getPopUpWindow(view)
+        val act = appContainer.activity
+        val a = act as FragmentActivity
+
+        fbc.getWorkout(object : GetWorkoutCallback {
+            override fun onCallBack(workout: Workout, workoutID: String) {
+                putDataToInfoUI(workout, view)
+            }
+        }, workoutID)
+
+        view.btnDelete.setOnClickListener { _ ->
+            Log.d(TAG, "DELETE MAIN $workoutID")
+            showMainDeleteWindow(root, workoutID)
+            window.dismiss()
+            //todo мб сделать диалог подтверждения удаления
+        }
+        view.btnClose.setOnClickListener { _ -> window.dismiss() }
+        view.btnEdit.setOnClickListener { _ ->
+            workoutEdit(root, workoutID)
+            window.dismiss()
+        }
+
+        root.post(Runnable { window.showAtLocation(root, Gravity.BOTTOM, 0, 0) })
+    }
+
+    private fun showMainDeleteWindow(root: View, workoutID: String) {
+        val view = getPopUpView(root.context, R.layout.pop_up_delete_dialog)
+        val window = getPopUpWindow(view)
+        view.btnDelete_DelDialog.setOnClickListener { _ ->
+            deleteMainWorkout(workoutID)
+            window.dismiss()
+        }
+        view.btnClose_DelDialog.setOnClickListener { _ -> window.dismiss() }
+        view.btnCancel_DelDialog.setOnClickListener { _ ->
+            showMainWorkoutInfo(root, workoutID)
+            window.dismiss()
+        }
+        root.post(Runnable { window.showAtLocation(root, Gravity.BOTTOM, 0, 0) })
+    }
+
+    private fun deleteMainWorkout(workoutID: String) {
+
+        Log.d(TAG, "DELETE MAIN $workoutID")
+    }
 
     /* CREATE AND UPDATE MAIN */
     fun addMainWorkout(view: View, workoutDate: String) {
@@ -61,48 +113,6 @@ class WorkoutCardHandler(root: View) {
     /* SHOW ALL */
     fun showAll(view: View, workoutID: String) {
         Log.d(TAG, "showAll: id: $workoutID")
-    }
-
-    /* SHOW MAIN */
-    fun showMainWorkoutInfo(view: View, workoutID: String) {
-        val popupView: View =
-            LayoutInflater.from(view.context).inflate(R.layout.pop_up_info, null)
-//        popupView.textTitle.setText(R.string.edit_dialog_title)
-        val popupWindow = PopupWindow(
-            popupView,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            true
-        )
-
-        FireBaseCore(appContainer).getWorkout(object : GetWorkoutCallback {
-            override fun onCallBack(workout: Workout, workoutID: String) {
-                val wo: Workout = workout
-//                Log.d(TAG, "onCallBack: $wo")
-
-                putDataToInfoUI(wo, popupView)
-
-            }
-        }, workoutID)
-        popupView.btnDelete.setOnClickListener { _ ->
-            Log.d(TAG, "DELETE MAIN $workoutID")
-        }
-//        popupView.puiHolder.setOnClickListener { _ -> popupWindow.dismiss() }
-        popupView.btnClose.setOnClickListener { _ -> popupWindow.dismiss() }
-        popupView.btnEdit.setOnClickListener { _ ->
-            workoutEdit(view, workoutID)
-            popupWindow.dismiss()
-        }
-//        popupView.btnDelete.setOnClickListener { _ ->
-////            val dataFromUI = collectDataFromUI(popupView, workoutID)
-////            FireBaseCore(appContainer).updateExtraWorkout(workoutID, dataFromUI, key)
-//
-//            popupWindow.dismiss()
-//        }
-        popupWindow.elevation = 20f
-        view.post(Runnable {
-            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0)
-        })
     }
 
 
@@ -167,7 +177,7 @@ class WorkoutCardHandler(root: View) {
         popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
         popupView.btnSave.setOnClickListener { _ ->
             val dataFromUI = collectDataFromUI(popupView, workoutDate)
-            fireBaseCore.addMoreWorkout(workoutDate, dataFromUI)
+            fbc.addMoreWorkout(workoutDate, dataFromUI)
 
             popupWindow.dismiss()
         }
@@ -178,102 +188,68 @@ class WorkoutCardHandler(root: View) {
     }
 
     /* SHOW EXTRA INFO */
-    fun editExtraWorkout(view: View) {
-        Log.d(
-            TAG,
-            "showExtraWorkout: key: ${view.cardHiddenTextWithAddKey.text} / date: ${view.cardHiddenTextWithID.text}"
-        )
-        val workoutID = view.cardHiddenTextWithID.text.toString()
-        val key = view.cardHiddenTextWithAddKey.text.toString()
-        val popupView: View =
-            LayoutInflater.from(view.context).inflate(R.layout.pop_up_edit, null)
-        popupView.textTitle.setText(R.string.edit_dialog_title)
-        val popupWindow = PopupWindow(
-            popupView,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            true
-        )
 
-        FireBaseCore(appContainer).getExtraWorkout(object : GetWorkoutCallback {
+
+    fun showExtraWorkoutInfo(rView: View) {
+        val workoutID = rView.cardHiddenTextWithID.text.toString()
+        val key = rView.cardHiddenTextWithAddKey.text.toString()
+
+        val view = getPopUpView(rView.context, R.layout.pop_up_info)
+        val window = getPopUpWindow(view)
+
+        fbc.getExtraWorkout(object : GetWorkoutCallback {
             override fun onCallBack(workout: Workout, workoutID: String) {
-                val wo: Workout = workout
-                Log.d(TAG, "onCallBack: $wo")
-
-                putDataToUI(wo, popupView)
-
+                putDataToInfoUI(workout, view)
             }
         }, workoutID, key)
 
-        setCategoryListeners(popupView)
-        popupView.btnCancel.setOnClickListener { _ -> popupWindow.dismiss() }
-        popupView.btnSave.setOnClickListener { _ ->
-            val dataFromUI = collectDataFromUI(popupView, workoutID)
-            FireBaseCore(appContainer).updateExtraWorkout(workoutID, dataFromUI, key)
-            popupWindow.dismiss()
-        }
-        popupWindow.elevation = 20f
-        view.post(Runnable {
-            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0)
-        })
-    }
-
-    fun showExtraWorkoutInfo(view: View) {
-//        Log.d(
-//            TAG,
-//            "showExtraWorkout: key: ${view.cardHiddenTextWithAddKey.text} / date: ${view.cardHiddenTextWithID.text}"
-//        )
-        val workoutID = view.cardHiddenTextWithID.text.toString()
-        val key = view.cardHiddenTextWithAddKey.text.toString()
-        val popupView: View =
-            LayoutInflater.from(view.context).inflate(R.layout.pop_up_info, null)
-//        popupView.textTitle.setText(R.string.edit_dialog_title)
-        val popupWindow = PopupWindow(
-            popupView,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.MATCH_PARENT,
-            true
-        )
-
-        FireBaseCore(appContainer).getExtraWorkout(object : GetWorkoutCallback {
-            override fun onCallBack(workout: Workout, workoutID: String) {
-                val wo: Workout = workout
-//                Log.d(TAG, "onCallBack: $wo")
-
-                putDataToInfoUI(wo, popupView)
-
-            }
-        }, workoutID, key)
-        popupView.btnDelete.setOnClickListener { _ ->
+        view.btnDelete.setOnClickListener { _ ->
             Log.d(TAG, "DELETE EXTRA $key")
-            //todo мб сделать диалог подтверждения удаления
-            FireBaseCore(appContainer).deleteExtraWorkout(workoutID, key)
-            popupWindow.dismiss()
+            fbc.deleteExtraWorkout(workoutID, key)
+            window.dismiss()
         }
-//        popupView.puiHolder.setOnClickListener { _ -> popupWindow.dismiss() }
-        popupView.btnClose.setOnClickListener { _ -> popupWindow.dismiss() }
-        popupView.btnEdit.setOnClickListener { _ ->
+        view.btnClose.setOnClickListener { _ -> window.dismiss() }
+        view.btnEdit.setOnClickListener { _ ->
             editExtraWorkout(view)
-            popupWindow.dismiss()
+            window.dismiss()
         }
-//        popupView.btnDelete.setOnClickListener { _ ->
-////            val dataFromUI = collectDataFromUI(popupView, workoutID)
-////            FireBaseCore(appContainer).updateExtraWorkout(workoutID, dataFromUI, key)
-//
-//            popupWindow.dismiss()
-//        }
-        popupWindow.elevation = 20f
+
         view.post(Runnable {
-            popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 0)
+            window.showAtLocation(view, Gravity.BOTTOM, 0, 0)
         })
     }
 
     /* EDIT EXTRA */
-    fun edit1ExtraWorkout(view: View) {
-        Log.d(
-            TAG,
-            "editExtraWorkout: key:${view.cardHiddenTextWithAddKey.text} id:${view.cardHiddenTextWithID.text}"
-        )
+    fun editExtraWorkout(rView: View) {
+        val workoutID = rView.cardHiddenTextWithID.text.toString()
+        val key = rView.cardHiddenTextWithAddKey.text.toString()
+
+        val view: View = getPopUpView(rView.context, R.layout.pop_up_edit)
+        val window = getPopUpWindow(view)
+        view.textTitle.setText(R.string.edit_dialog_title)
+
+
+        fbc.getExtraWorkout(object : GetWorkoutCallback {
+            override fun onCallBack(workout: Workout, workoutID: String) {
+                val wo: Workout = workout
+                Log.d(TAG, "onCallBack: $wo")
+
+                putDataToUI(wo, view)
+
+            }
+        }, workoutID, key)
+
+        setCategoryListeners(view)
+        view.btnCancel.setOnClickListener { _ -> window.dismiss() }
+        view.btnSave.setOnClickListener { _ ->
+            val dataFromUI = collectDataFromUI(view, workoutID)
+            fbc.updateExtraWorkout(workoutID, dataFromUI, key)
+            window.dismiss()
+        }
+
+        rView.post(Runnable {
+            window.showAtLocation(rView, Gravity.BOTTOM, 0, 0)
+        })
     }
 
     /* DELETE EXTRA */
@@ -327,30 +303,16 @@ class WorkoutCardHandler(root: View) {
     }
 
 
-    fun showAdditionalInfo(view: View?) {
-        if (view == null) return
-//        val contView = view.frameForHide
-
-//        when (contView.visibility) {
-//            View.GONE -> setVisible(contView)
-//            View.VISIBLE -> setGone(contView)
-//        }
-    }
-
     fun showAdditionalInfoNew(view: View?) {
         val shPref = ctx.getSharedPreferences(
             AppConfig.SHARED_PREFERENCE_NAME_FOR_CARD,
             Context.MODE_PRIVATE
         )
-
         var rotationAngle = 0f
         rotationAngle = if (rotationAngle == 0f) 180f else 0f //toggle
 //todo починить поворот
-
         if (view == null) return else {
             val cardID = view.cardId.text.toString()
-
-
             view.ivOpener.animate().rotation(rotationAngle).setDuration(500).start()
             val cardView = view.parent.parent.parent.parent as View
             val contView = cardView.hideThis
@@ -366,5 +328,16 @@ class WorkoutCardHandler(root: View) {
                 }
             }
         }
+    }
+
+    /*DEL*/
+    fun showAdditionalInfo(view: View?) {
+        if (view == null) return
+//        val contView = view.frameForHide
+
+//        when (contView.visibility) {
+//            View.GONE -> setVisible(contView)
+//            View.VISIBLE -> setGone(contView)
+//        }
     }
 }

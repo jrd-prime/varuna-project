@@ -1,5 +1,6 @@
 package ru.jrd_prime.trainingdiary.impl
 
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
@@ -11,6 +12,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.gauth.GAuth
+import ru.jrd_prime.trainingdiary.ui.DashboardActivity
 import ru.jrd_prime.trainingdiary.utils.AppUtils
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 import java.util.concurrent.ExecutorService
@@ -23,10 +25,13 @@ interface AppContainer {
     val gAuth: GAuth
     val fireDB: FirebaseDatabase
     val fireAuth: FirebaseAuth
+    val activity: Activity
 }
 
 class AppContainerImpl(private val appContext: TrainingDiaryApp) : AppContainer {
-
+    override val activity: Activity by lazy {
+        DashboardActivity().activity
+    }
     override val sharedPreferences: SharedPreferences by lazy {
         appContext.getSharedPreferences(AppConfig().getSharedPreferenceName(), Context.MODE_PRIVATE)
     }
