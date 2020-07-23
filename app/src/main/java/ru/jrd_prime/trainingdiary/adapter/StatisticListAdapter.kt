@@ -44,4 +44,8 @@ class StatisticListAdapter : RecyclerView.Adapter<StatisticListViewHolder>() {
         data.addAll(list)
         notifyDataSetChanged()
     }
+
+    fun changed() {
+        notifyDataSetChanged()
+    }
 }

@@ -17,18 +17,18 @@
     <RelativeLayout
         android:id="@+id/stat1stLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/statPlaceContainerHeight"
+        android:layout_height="30dp"
         app:layout_constraintTop_toBottomOf="@+id/statTitleLayout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/statIVCont1"
             android:layout_width="48dp"
-            android:layout_height="32dp"
+            android:layout_height="30dp"
             android:layout_alignParentStart="true">
 
             <RelativeLayout
                 android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_height="26dp"
                 android:background="@drawable/stat_icon_bg"
                 android:padding="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -74,7 +74,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/statProcCont1"
             android:layout_width="48dp"
-            android:layout_height="32dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true">
 
             <TextView

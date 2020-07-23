@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Varuna\'s Sport Diary</string>
-    <string name="stat_last_month">Статистика за последний месяц</string>
+    <string name="stat_last_month">Статистика с начала месяца</string>
     <string name="textDummy">заглушка</string>
 
     <!-- КАРТОЧКА -->

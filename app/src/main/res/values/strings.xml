@@ -41,7 +41,7 @@
 
     <string name="abbr_minute">m</string>
     <string name="abbr_hour">h</string>
-    <string name="stat_last_month">Statistics for the last month</string>
+    <string name="stat_last_month">Statistics from the start of the month</string>
 
     <string name="edit_dialog_title">EDIT</string>
     <string name="add_dialog_title">ADD</string>

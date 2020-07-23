@@ -32,6 +32,15 @@ fun getDatesWeekList(startDate: Long): MutableList<String> {
     return dates
 }
 
+fun getDatesMonthList(startDate: Long, daysBack: Int): MutableList<String> {
+    val formatter = DateTimeFormatter.ofPattern(DATE_FORMAT_STRING)
+    val dates = mutableListOf<String>()
+    val start = fromTimestamp(startDate).minusDays(daysBack.toLong())
+    for (i in 0..daysBack) {
+        dates.add(start.plusDays(i.toLong()).format(formatter))
+    }
+    return dates
+}
 fun setDateForHead(view: TextView?){
     val start = LocalDateTime.now()
     val day = Integer.parseInt(DateTimeFormatter.ofPattern("dd").format(start))

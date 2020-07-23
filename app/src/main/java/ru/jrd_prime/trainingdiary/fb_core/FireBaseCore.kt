@@ -12,7 +12,9 @@ import ru.jrd_prime.trainingdiary.fb_core.models.Category
 import ru.jrd_prime.trainingdiary.fb_core.models.User
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.handlers.GetWorkoutCallback
+import ru.jrd_prime.trainingdiary.handlers.GetWorkoutsCallback
 import ru.jrd_prime.trainingdiary.impl.AppContainer
+import ru.jrd_prime.trainingdiary.ui.DashboardActivity
 
 class FireBaseCore(private val appContainer: AppContainer) {
     companion object {
@@ -102,7 +104,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
     ) {
         val weekData = mutableListOf<Workout>()
         for (date in dates) {
-            Log.d(TAG, "getWeekData: data = $date")
+//            Log.d(TAG, "getWeekData: data = $date")
             val actualRef = workoutPathConstructor(date)
 
             val dateData = actualRef.child(date)
@@ -131,6 +133,17 @@ class FireBaseCore(private val appContainer: AppContainer) {
         }
     }
 
+    fun getData( callback: GetWorkoutsCallback) {
+        val weekData = mutableListOf<Workout>()
+        val dateData = woRef.child("2020").child("07")
+        dateData.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+            }
+            override fun onDataChange(snapshot: DataSnapshot) {
+                    callback.onWorkoutsCallBack(snapshot)
+            }
+        })
+    }
 
     private fun getEmptyWorkout(date: String): Workout {
         return Workout(id = date)
@@ -170,7 +183,35 @@ class FireBaseCore(private val appContainer: AppContainer) {
         // next
         woRef.child("2020").child(monthList[2]).addChildEventListener(listener)
     }
+    fun listenNewData2(myNewAdapter: DashboardActivity) {
+        //TODO get current year and month for listen
+        //todo проверить обновление данных при смене года
 
+        val listener = object : ChildEventListener {
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                Log.d(TAG, "onChildChanged: chch")
+                myNewAdapter.updateStat()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+            }
+
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                myNewAdapter.updateStat()
+            }
+
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                Log.d(TAG, "onChildChanged: chchR")
+                myNewAdapter.updateStat()
+            }
+        }
+
+        // past
+        woRef.child("2020").addChildEventListener(listener)
+    }
     private fun addEmptyWorkout(
         t: DatabaseReference,
         date: String
@@ -210,7 +251,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
         })
     }
 
-    fun deleteMainWorkout(workoutID: String){
+    fun deleteMainWorkout(workoutID: String) {
 
         val actualRef = workoutPathConstructor(workoutID)
         val dateData = actualRef.child(workoutID)
@@ -218,8 +259,8 @@ class FireBaseCore(private val appContainer: AppContainer) {
         dateData.setValue(defaultMainWorkout)
         Log.d(TAG, "deleteMainWorkout: $dateData")
     }
-    
-    
+
+
     fun getExtraWorkout(getWorkoutCallback: GetWorkoutCallback, workoutID: String, key: String) {
         val actualRef = workoutPathConstructor(workoutID)
         val dateData = actualRef.child(workoutID).child("additional").child(key)
@@ -241,7 +282,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
         val actualRef = workoutPathConstructor(workoutID)
         val dateData = actualRef.child(workoutID).child("additional").child(key)
         Log.d(TAG, "deleteExtraWorkout: day:$workoutID, key:$key, uri: ${dateData} ")
-    dateData.removeValue()
+        dateData.removeValue()
     }
 
     fun clearWorkout(workoutID: String) {

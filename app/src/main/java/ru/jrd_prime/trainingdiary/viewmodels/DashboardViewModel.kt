@@ -30,7 +30,8 @@ class DashboardViewModel : ViewModel() {
         4 to "rest" */
 
     fun setNewStatistic(list: List<Workout>): List<PlaceStatisticModel> {
-        val data = list.filter { workoutModel -> !workoutModel.empty }
+//        val data = list.filter { workoutModel -> !workoutModel.empty }
+        val data = list
         val cardioSize = data.filter { workoutModel -> workoutModel.category == 1 }.size
         val powerSize = data.filter { workoutModel -> workoutModel.category == 2 }.size
         val stretchSize = data.filter { workoutModel -> workoutModel.category == 3 }.size

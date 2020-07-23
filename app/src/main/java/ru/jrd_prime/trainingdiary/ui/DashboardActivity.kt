@@ -20,15 +20,23 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.a_root_header.view.*
 import kotlinx.android.synthetic.main.activity_dashboard.*
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.format.DateTimeFormatter
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
+import ru.jrd_prime.trainingdiary.fb_core.config.DATE_FORMAT_STRING
+import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.gauth.GAuth
+import ru.jrd_prime.trainingdiary.handlers.GetWorkoutsCallback
 import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.ui.dialog.ExitDialog
@@ -56,8 +64,11 @@ class DashboardActivity : AppCompatActivity() {
     private var fireAuth: FirebaseAuth = Firebase.auth
     lateinit var fireBaseCore: FireBaseCore
     lateinit var appContainer: AppContainer
-
+    val statisticAdapter = StatisticListAdapter()
     val DIALOG_EXIT = 1
+    lateinit var binding: ActivityDashboardBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -75,12 +86,12 @@ class DashboardActivity : AppCompatActivity() {
 //        fireBaseCore.addMoreWorkout( "2020-07-20", Workout(id = "2020-07-20"))
 //        fireBaseCore.addMoreWorkout( "2020-07-20", Workout(id = "2020-07-20"))
         utils = appContainer.appUtils
-        val binding: ActivityDashboardBinding =
+        binding =
             DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
         val viewmodel = dashboardViewModel
         val workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
         val statisticRecyclerView: RecyclerView = findViewById<RecyclerView>(R.id.statListView)
-        val statisticAdapter = StatisticListAdapter()
+
         navDrawerFragment = NavDrawerFragment(appContainer)
 
 /* START */
@@ -123,11 +134,85 @@ class DashboardActivity : AppCompatActivity() {
 //            this,
 //            Observer { list -> statisticAdapter.setNewData(viewmodel.setNewStatistic(list)) })
 
+        val datez = getWeekFromDate(getStartDateForPosition(START_PAGE))
+        val dates = getDatesMonthList(
+            startDate = dateToTimestamp(LocalDateTime.now()),
+            daysBack = 28
+        )
+        Log.d(TAG, "---------------------------------------------")
+        Log.d(TAG, "onCreateView: $dates")
+        Log.d(TAG, "---------------------------------------------")
+
+        updateStat()
+
+        fireBaseCore.listenNewData2(this)
+
         statisticRecyclerView.layoutManager = LinearLayoutManager(this)
 
 
     }
 
+    //todo проверить статистику на переходе месяцв
+    fun updateStat() {
+        fireBaseCore.getData(object : GetWorkoutsCallback {
+            override fun onWorkoutsCallBack(workouts: DataSnapshot) {
+                val workoutsList: Iterable<DataSnapshot> = workouts.children
+                val dataList = mutableListOf<Workout>()
+                val last =
+                    DateTimeFormatter.ofPattern(DATE_FORMAT_STRING).format(LocalDateTime.now())
+                val cutter = DateTimeFormatter.ofPattern(DATE_FORMAT_STRING)
+                    .format(LocalDateTime.now().plusDays(1))
+                Log.d(TAG, "onWorkoutsCallBack: $last")
+                for (d in workoutsList) {
+                    val workout = d.getValue<Workout>()
+                    if (workout != null) {
+
+                        if (workout.id == cutter) {
+                            Log.d(TAG, "CUTTER: $cutter")
+                            break
+                        }
+
+                        if (workout.empty && workout.category != 4) {
+                            fireBaseCore.deleteMainWorkout(workout.id)
+                        }
+                        if (!workout.empty) {
+                            dataList.add(workout)
+                        } else if (workout.category == 4) {
+                            dataList.add(workout)
+                        }
+
+                        val adds = workout.additional
+                        if (adds != null) {
+                            for (ad in adds) {
+                                dataList.add(ad.value)
+                            }
+                        }
+                    }
+                }
+
+                statisticAdapter.setNewData(dashboardViewModel.setNewStatistic(dataList))
+                setStats(dataList)
+            }
+        })
+    }
+
+    fun setStats(dataList: MutableList<Workout>) {
+        var time = 0
+        var cal = 0
+        var dist = 0f
+
+        for (workout in dataList) {
+            time += workout.time
+            cal += workout.kcal
+            dist += workout.distance
+        }
+
+        val f = binding.frameHeader
+        f.tvTime_Stat.text = resources.getString(R.string.minutes_val, time.toString())
+        f.tvCalories_Stat.text = resources.getString(R.string.calories_val, cal.toString())
+        f.tvDistance_Stat.text = resources.getString(R.string.distance_val, dist.toString())
+
+    }
 
     override fun onStart() {
         super.onStart()

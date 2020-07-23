@@ -93,7 +93,7 @@ class WorkoutPageFragment : Fragment() {
 
             val date = getWeekFromDate(getStartDateForPosition(pageNumber))
             val dates = getDatesWeekList(startDate = date[0])
-            Log.d(TAG, "onCreateView: $dates")
+//            Log.d(TAG, "onCreateView: $dates")
 
 
             val d = fireBaseCore.getWeekData(dates, workoutsListAdapter)
