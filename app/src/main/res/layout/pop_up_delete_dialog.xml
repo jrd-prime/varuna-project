@@ -28,15 +28,16 @@
 
             <TextView
                 android:id="@+id/textTitle"
+                style="@style/jpTextTitleCaps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_medium"
                 android:paddingBottom="8dp"
+                android:paddingTop="8dp"
                 android:text="@string/action_delete"
-                android:textAllCaps="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <LinearLayout
                 android:id="@+id/btnClose_DelDialog"
                 android:layout_width="wrap_content"
@@ -77,12 +78,13 @@
                 android:id="@+id/etGroups"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorGreyDark"
-                android:textSize="12sp"
                 android:padding="4dp"
+                android:fontFamily="@font/ubuntu_reg"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:text="IMPORTANT: If you delete the main workout, the additional workouts will also be deleted. If you don't want to delete additional workouts, select edit the main workout." />
+                android:text="@string/dialog_delete_note_about_main"
+                android:textColor="@color/colorGreyDark"
+                android:textSize="14sp" />
 
         </LinearLayout>
 
@@ -91,6 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/colorLightGrey" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -101,33 +104,22 @@
             android:paddingBottom="8dp">
 
             <TextView
+                style="@style/jpTextTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="4dp"
+                android:padding="16dp"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:textSize="16sp"
-                android:textAlignment="center"
-                android:text="Delete main workout?" />
+                android:fontFamily="@font/ubuntu_medium"
+                android:text="@string/dialog_delete_main_workout_question"
+                android:textAlignment="center" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/hideme"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="1dp"
+            android:background="@color/colorLightGrey" />
 
-            <FrameLayout
-                android:id="@+id/viewForHide"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/colorLightGrey" />
-
-
-
-
-
-        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -148,9 +140,9 @@
                 android:layout_height="@dimen/stardantLineHeight"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:fontFamily="@font/montserrat_medium"
+                android:fontFamily="@font/ubuntu_medium"
                 android:text="@string/dialog_cancel_btn"
-                android:textColor="#ccc" />
+                android:textColor="#aaa" />
 
             <Button
                 android:id="@+id/btnDelete_DelDialog"
@@ -160,7 +152,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/red"
-                android:fontFamily="@font/montserrat_medium"
+                android:fontFamily="@font/ubuntu_medium"
                 android:text="@string/dialog_delete_btn"
                 android:textColor="@color/colorWhite" />
         </LinearLayout>

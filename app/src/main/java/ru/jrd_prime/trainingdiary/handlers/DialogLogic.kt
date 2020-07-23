@@ -38,9 +38,10 @@ fun putDataToUI(wo: Workout, view: View) {
     setCategory(view, wo.category)
     view.etGroups.setText(wo.title)
     view.etDescription.setText(wo.description)
-    view.etMinutes.setText(wo.time.toString())
-    view.etCalories.setText(wo.kcal.toString())
-    view.etDistance.setText(wo.distance.toString())
+    view.etMinutes.setText(if (wo.time == 0) "" else wo.time.toString())
+    view.etCalories.setText(if (wo.kcal == 0) "" else wo.kcal.toString())
+    view.etDistance.setText(if (wo.distance == 0f) "" else wo.distance.toString())
+
 }
 
 fun putDataToInfoUI(wo: Workout, view: View) {
@@ -52,6 +53,10 @@ fun putDataToInfoUI(wo: Workout, view: View) {
     view.tvMinutes.text = wo.getFormattedMinutes(res)
     view.tvCalories.text = wo.getFormattedCalories(res)
     view.tvDistance.text = wo.getFormattedDistance(res)
+    if (wo.category == 4) {
+        setGone(view.puiDescContainer)
+        setGone(view.puiMoreContainer)
+    }
 }
 
 fun collectDataFromUI(

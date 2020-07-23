@@ -33,6 +33,7 @@
                 android:id="@+id/ivIcon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
+                android:paddingTop="8dp"
                 android:src="@drawable/jp_question"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -75,9 +76,9 @@
 
             <TextView
                 android:id="@+id/tvTitle"
+                style="@style/jpTextTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/ubuntu_medium"
                 android:text="@string/textDummy"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"

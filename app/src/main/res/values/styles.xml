@@ -45,4 +45,21 @@
         <item name="android:padding">8dp</item>
         <item name="android:textAlignment">center</item>
     </style>
+
+    <style name="MyCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@android:color/holo_green_light</item>
+        <item name="colorControlActivated">@android:color/holo_orange_dark</item>
+    </style>
+
+    <style name="jpTextTitleCaps">
+        <item name="fontFamily">@font/ubuntu_medium</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorGreyDark</item>
+    </style>
+
+    <style name="jpTextTitle">
+        <item name="fontFamily">@font/ubuntu_medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorGreyDark</item></style>
 </resources>

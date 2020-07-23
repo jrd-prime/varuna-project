@@ -210,6 +210,16 @@ class FireBaseCore(private val appContainer: AppContainer) {
         })
     }
 
+    fun deleteMainWorkout(workoutID: String){
+
+        val actualRef = workoutPathConstructor(workoutID)
+        val dateData = actualRef.child(workoutID)
+        val defaultMainWorkout = Workout(id = workoutID, category = 4)
+        dateData.setValue(defaultMainWorkout)
+        Log.d(TAG, "deleteMainWorkout: $dateData")
+    }
+    
+    
     fun getExtraWorkout(getWorkoutCallback: GetWorkoutCallback, workoutID: String, key: String) {
         val actualRef = workoutPathConstructor(workoutID)
         val dateData = actualRef.child(workoutID).child("additional").child(key)

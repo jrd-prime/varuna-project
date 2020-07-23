@@ -4,7 +4,7 @@
 
     <string name="textDummy">dummy</string>
 
-    <string name="logout">Выйти</string>
+    <string name="logout">Logout</string>
     <string name="avatar">Avatar</string>
     <string name="procent">100%</string>
     <string name="minusDay">На день назад</string>
@@ -52,21 +52,25 @@
     <string name="dialog_save_btn">Save</string>
     <string name="nav_menu_exit">Close application</string>
     <string name="dialog_additional_info">Tip: after creating the main workout of the day, you can also add several additional ones, for this in the day card select \"Add more\"</string>
-    <string name="message_text">msg</string>
-    <string name="yes">yes</string>
-    <string name="no">no</string>
-    <string name="maybe">maybe</string>
+    <string name="msg_exit_from_app">Close Application?</string>
+
     <string name="dialog_edit_btn">edit</string>
     <string name="dialog_close_btn">Close</string>
     <string name="edit_text_calories_hint">Calories</string>
     <string name="edit_text_distance_hint">Distance</string>
-    <string name="space">" "</string>
+    <string name="space" translatable="false">" "</string>
     <string name="distance_val">%1$s mi</string>
     <string name="calories_val">%1$s kcal</string>
     <string name="abbr_calorie">kcal</string>
     <string name="abbr_distance">mi</string>
     <string name="minutes_val">%1$s min</string>
     <string name="dialog_delete_btn">Delete</string>
+    <string name="dialog_delete_note_about_main">IMPORTANT: If you delete the main workout, the additional workouts will also be deleted. If you don\'t want to delete additional workouts, select edit the main workout.</string>
+    <string name="dialog_delete_main_workout_question">Delete main workout?</string>
+    <string name="dont_ask">Don\'t ask again</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
+    <string name="action_maybe">Maybe</string>
     <string-array name="weekDays">
         <item>Mon</item>
         <item>Tue</item>

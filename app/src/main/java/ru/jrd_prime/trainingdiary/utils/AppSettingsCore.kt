@@ -7,6 +7,7 @@ class AppSettingsCore(private val ctx: Context) {
     //todo добавить в меню пункт вида карточек, где можно будет скрыть описание карточек
     companion object {
         const val SHOW_WORKOUT_DESCRIPTION = true
+        const val HIDE_CONFIRMATION_FOR_DELETE_MAIN_WORKOUT = false
     }
 
     fun getShowWorkoutDescription(): Boolean {
@@ -22,9 +23,11 @@ class AppSettingsCore(private val ctx: Context) {
         pref.edit().putBoolean("show_work", true).apply()
     }
 
-    fun setFalse(){
+    fun setFalse() {
 
         val pref = ctx.getSharedPreferences(AppConfig.SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE)
         pref.edit().putBoolean("show_work", false).apply()
     }
+
+
 }

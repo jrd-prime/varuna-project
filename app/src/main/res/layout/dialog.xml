@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="20dp"
-        android:text="@string/message_text"
+        android:text="@string/msg_exit_from_app"
         android:textAppearance="?android:attr/textAppearanceLarge">
     </TextView>
     <LinearLayout
@@ -21,21 +21,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="@string/yes">
+            android:text="@string/action_yes">
         </Button>
         <Button
             android:id="@+id/btnNo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="@string/no">
+            android:text="@string/action_no">
         </Button>
         <Button
             android:id="@+id/btnMaybe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="@string/maybe">
+            android:text="@string/action_maybe">
         </Button>
     </LinearLayout>
 </LinearLayout>

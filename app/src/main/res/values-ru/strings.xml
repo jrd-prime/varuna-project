@@ -14,9 +14,6 @@
     <string name="abbr_hour">ч</string>
     <!-- КАРТОЧКА -->
 
-<!--    ВАЖНО: при удалении основной тренировки, также удалятся и дополнитеьные тренировки. Если вы не хотите удалять дополнительные - выберите редактирование основной тренировки.-->
-
-<!--    Удалить оснвоную тренировку?-->
     <!-- DIALOG -->
     <string name="edit_dialog_title">Редактирование</string>
     <string name="add_dialog_title">Добавление</string>
@@ -26,8 +23,17 @@
     <string name="dialog_cancel_btn">Отмена</string>
     <string name="dialog_save_btn">Сохранить</string>
     <string name="nav_menu_exit">Закрыть приложение</string>
+    <string name="dialog_delete_btn">Удалить</string>
     <string name="dialog_additional_info">Подсказка: после создания основной тренировки дня, вы можете также добавить несколько дополнительных, для этого в карточке дня выберите "Добавить еще"</string>
 
+    <string name="dialog_delete_note_about_main">ВАЖНО: при удалении основной тренировки, также удалятся и дополнительные тренировки. Если вы не хотите удалять дополнительные - выберите редактирование основной тренировки.</string>
+    <string name="dialog_delete_main_workout_question">Удалить основную тренировку?</string>
+
+    <string name="dialog_edit_btn">Редактировать</string>
+    <string name="dialog_close_btn">Закрыть</string>
+    <string name="edit_text_calories_hint">Калории</string>
+    <string name="edit_text_distance_hint">Дистанция</string>
+    <string name="dont_ask">Больше не спрашивать</string>
     <!-- DIALOG -->
     <string-array name="weekDays">
         <item>Пн</item>
@@ -38,4 +44,17 @@
         <item>Сб</item>
         <item>Вс</item>
     </string-array>
+
+
+    <string name="distance_val">%1$s км</string>
+    <string name="calories_val">%1$s ккал</string>
+    <string name="abbr_calorie">ккал</string>
+    <string name="abbr_distance">км</string>
+    <string name="minutes_val">%1$s мин</string>
+
+
+    <!-- ACTIONS -->
+
+    <string name="action_delete">Удалить</string>
+    <string name="msg_exit_from_app">Выйти из приложения?</string>
 </resources>

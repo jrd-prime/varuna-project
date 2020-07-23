@@ -70,17 +70,23 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         if (workout?.id?.split("-")?.get(2).equals(z)) {
             binding.todayMarker.visibility = View.VISIBLE
         }
-
         setDefaultVisibilityToViews() // Скрываем вьювы по дефаулту
         setNumOfDayToView(workout?.id) // Пишем дату во вьюв
         setWeekDayToView(position) // Пишем день недели во вьюв
 
         if (workout != null) {
 
+            setImageFromConstants(workout.category, binding.ivCategory)
             var totalTime = 0
             var totalCalories = 0
             var totalDistance = 0f
-
+            if (position == 1) {
+                Log.d(TAG, "= = = = = = = = = = = = = = = = = = = ")
+                Log.d(
+                    TAG,
+                    "before workout: time: $totalTime, cal: $totalCalories, dist: $totalDistance"
+                )
+            }
 
             val wo = workout
             val adds = workout.additional //todo if adds null - need write empty data to db
@@ -88,16 +94,22 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             if (!wo.empty) { /* wo NOT EMPTY */
                 showMainView(wo = wo) // show main view with info
 
+
                 totalTime += wo.time
                 totalCalories += wo.kcal
                 totalDistance += wo.distance
 
+                if (position == 1) {
+                    Log.d(
+                        TAG,
+                        "after workout: time: $totalTime, cal: $totalCalories, dist: $totalDistance"
+                    )
+                }
                 if (adds.isNullOrEmpty()) showAddsEmptyView(
                     0,
                     wo.id
                 ) else {
                     showAddsViews(adds, wo.id)
-
                     for (add in adds) {
                         if (!add.value.empty) {
                             totalTime += add.value.time
@@ -105,20 +117,27 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
                             totalDistance += add.value.distance
                         }
                     }
-
-                    binding.tvTotalMinutes.text =
-                        String.format(res.getString(R.string.minutes_val), totalTime.toString())
-
-                    binding.tvTotalCalories.text = String.format(
-                        res.getString(R.string.calories_val),
-                        totalCalories.toString()
-                    )
-
-                    binding.tvTotalDistance.text = String.format(
-                        res.getString(R.string.distance_val),
-                        totalDistance.toString()
-                    )
                 }
+
+                if (position == 1) {
+                    Log.d(
+                        TAG,
+                        "after adds: time: $totalTime, cal: $totalCalories, dist: $totalDistance"
+                    )
+                    Log.d(TAG, "= = = = = = = = = = = = = = = = = = = ")
+                }
+                binding.tvTotalMinutes.text =
+                    String.format(res.getString(R.string.minutes_val), totalTime.toString())
+
+                binding.tvTotalCalories.text = String.format(
+                    res.getString(R.string.calories_val),
+                    totalCalories.toString()
+                )
+
+                binding.tvTotalDistance.text = String.format(
+                    res.getString(R.string.distance_val),
+                    totalDistance.toString()
+                )
             } else { /* wo EMPTY*/
                 showEmptyMainView(wo)
             }
@@ -270,7 +289,6 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
     }
 
     private fun showMainView(wo: Workout) { // show main card with workout info
-        Log.d(TAG, "showMainView: ")
         val cardF = binding.incCardFilled
         val cardE = binding.incCardEmpty
         setVisible(cardF.mainCardFilled)
@@ -361,6 +379,16 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         incLine2Empty.addsCardCont.visibility = View.GONE
         incLine3Empty.addsCardCont.visibility = View.GONE
         binding.extraCount.visibility = View.GONE
+        binding.tvTotalMinutes.text =
+            String.format(res.getString(R.string.minutes_val), 0)
+
+        binding.tvTotalCalories.text = String.format(
+            res.getString(R.string.calories_val), 0
+        )
+
+        binding.tvTotalDistance.text = String.format(
+            res.getString(R.string.distance_val), 0
+        )
     }
 
     private fun setImageFromConstants(catId: Int, catIv: ImageView, dot: FrameLayout) {

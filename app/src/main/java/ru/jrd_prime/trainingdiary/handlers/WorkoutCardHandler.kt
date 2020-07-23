@@ -21,6 +21,7 @@ import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
+import ru.jrd_prime.trainingdiary.utils.AppSettingsCore
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 import ru.jrd_prime.trainingdiary.utils.getPopUpView
 import ru.jrd_prime.trainingdiary.utils.getPopUpWindow
@@ -32,6 +33,7 @@ class WorkoutCardHandler(root: View) {
     private val asyncReq: AsyncRequests = AsyncRequests(appContainer)
     private val ctx: Context = root.context
     private val fbc: FireBaseCore = FireBaseCore(appContainer)
+    private val asc: AppSettingsCore = AppSettingsCore(ctx)
 
     companion object {
         const val TAG = "Handler"
@@ -77,12 +79,14 @@ class WorkoutCardHandler(root: View) {
             showMainWorkoutInfo(root, workoutID)
             window.dismiss()
         }
+//todo создать чекбокс для ускорения удаления. типа не спрашивать больше удалять
         root.post(Runnable { window.showAtLocation(root, Gravity.BOTTOM, 0, 0) })
     }
 
-    private fun deleteMainWorkout(workoutID: String) {
+    private fun deleteMainWorkout(woID: String) {
 
-        Log.d(TAG, "DELETE MAIN $workoutID")
+        Log.d(TAG, "DELETE MAIN $woID")
+        fbc.deleteMainWorkout(woID)
     }
 
     /* CREATE AND UPDATE MAIN */
@@ -190,15 +194,16 @@ class WorkoutCardHandler(root: View) {
     /* SHOW EXTRA INFO */
 
 
-    fun showExtraWorkoutInfo(rView: View) {
-        val workoutID = rView.cardHiddenTextWithID.text.toString()
-        val key = rView.cardHiddenTextWithAddKey.text.toString()
+    fun showExtraWorkoutInfo(root: View) {
+        val workoutID = root.cardHiddenTextWithID.text.toString()
+        val key = root.cardHiddenTextWithAddKey.text.toString()
 
-        val view = getPopUpView(rView.context, R.layout.pop_up_info)
+        val view = getPopUpView(root.context, R.layout.pop_up_info)
         val window = getPopUpWindow(view)
 
         fbc.getExtraWorkout(object : GetWorkoutCallback {
             override fun onCallBack(workout: Workout, workoutID: String) {
+                Log.d(TAG, "onCallBack: ")
                 putDataToInfoUI(workout, view)
             }
         }, workoutID, key)
@@ -210,21 +215,21 @@ class WorkoutCardHandler(root: View) {
         }
         view.btnClose.setOnClickListener { _ -> window.dismiss() }
         view.btnEdit.setOnClickListener { _ ->
-            editExtraWorkout(view)
+            editExtraWorkout(root)
             window.dismiss()
         }
 
-        view.post(Runnable {
+        root.post(Runnable {
             window.showAtLocation(view, Gravity.BOTTOM, 0, 0)
         })
     }
 
     /* EDIT EXTRA */
-    fun editExtraWorkout(rView: View) {
-        val workoutID = rView.cardHiddenTextWithID.text.toString()
-        val key = rView.cardHiddenTextWithAddKey.text.toString()
+    private fun editExtraWorkout(root: View) {
+        val workoutID = root.cardHiddenTextWithID.text.toString()
+        val key = root.cardHiddenTextWithAddKey.text.toString()
 
-        val view: View = getPopUpView(rView.context, R.layout.pop_up_edit)
+        val view: View = getPopUpView(root.context, R.layout.pop_up_edit)
         val window = getPopUpWindow(view)
         view.textTitle.setText(R.string.edit_dialog_title)
 
@@ -247,8 +252,8 @@ class WorkoutCardHandler(root: View) {
             window.dismiss()
         }
 
-        rView.post(Runnable {
-            window.showAtLocation(rView, Gravity.BOTTOM, 0, 0)
+        root.post(Runnable {
+            window.showAtLocation(root, Gravity.BOTTOM, 0, 0)
         })
     }
 
