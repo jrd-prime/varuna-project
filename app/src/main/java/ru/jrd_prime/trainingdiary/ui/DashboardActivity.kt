@@ -11,6 +11,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -39,7 +40,6 @@ import ru.jrd_prime.trainingdiary.gauth.GAuth
 import ru.jrd_prime.trainingdiary.handlers.GetWorkoutsCallback
 import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.impl.AppContainer
-import ru.jrd_prime.trainingdiary.ui.dialog.ExitDialog
 import ru.jrd_prime.trainingdiary.utils.*
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 import ru.jrd_prime.trainingdiary.viewmodels.DashboardViewModel
@@ -310,8 +310,18 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        val dl = ExitDialog()
-        dl.show(supportFragmentManager, "exitDialog")
+        val root =
+            (findViewById<View>(android.R.id.content) as ViewGroup).getChildAt(0) as ViewGroup
+
+        val yesListener = View.OnClickListener { _ ->
+            Toast.makeText(
+                this,
+                "asd asdqwe123213 asd ",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+        makeDialogYesOrNo(activity.applicationContext, root, yesListener, title = R.string.msg_exit_from_app)
         Log.d(TAG, "onBackPressed: ")
     }
 

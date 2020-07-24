@@ -1,8 +1,10 @@
 package ru.jrd_prime.trainingdiary.adapter
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import ru.jrd_prime.trainingdiary.R
@@ -36,6 +38,7 @@ class WorkoutListAdapter : RecyclerView.Adapter<WorkoutListViewHolder>() {
         workoutsList.addAll(newData)
         notifyDataSetChanged()
     }
+
     fun addItem(weekData: Workout) {
         workoutsList.add(weekData)
         notifyDataSetChanged()
@@ -56,6 +59,12 @@ class WorkoutListAdapter : RecyclerView.Adapter<WorkoutListViewHolder>() {
     }
 
     fun changed() {
+        notifyDataSetChanged()
+    }
+
+    fun changed2(ctx: Context?) {
+        
+        Toast.makeText(ctx, " aasd asd", Toast.LENGTH_LONG).show()
         notifyDataSetChanged()
     }
 }

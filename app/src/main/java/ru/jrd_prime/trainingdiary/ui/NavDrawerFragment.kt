@@ -9,8 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.app.ActivityCompat.finishAffinity
-import androidx.transition.Transition
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -22,12 +20,12 @@ import kotlinx.android.synthetic.main.lay_frg_navdrawer_not_auth.view.*
 import kotlinx.android.synthetic.main.lay_frg_navdrawer_not_auth.view.ivUserAvatar
 import kotlinx.android.synthetic.main.lay_frg_navdrawer_with_auth.view.*
 import ru.jrd_prime.trainingdiary.R
+import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.utils.AppSettingsCore
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
-import kotlin.system.exitProcess
 
 
 class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment() {
@@ -97,7 +95,7 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
         navigationView!!.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navCloseApp -> {
-
+                    WorkoutListAdapter().changed2(context)
                 }
                 R.id.changeSet -> {
                     val pref = context?.getSharedPreferences(
@@ -106,17 +104,12 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
                     )
 
                     if (pref != null) {
-                        if (!pref.getBoolean(
-                                "show_work",
-                                false
-                            )
-                        ) context?.let { AppSettingsCore(it).setTru() } else context?.let {
-                            AppSettingsCore(
-                                it
-                            ).setFalse()
+                        if (!pref.getBoolean("show_work", false)) {
+                            context?.let { AppSettingsCore(it).setTru() }
+                        } else context?.let {
+                            AppSettingsCore(it).setFalse()
                         }
                     }
-
 
                     val int = Intent(context, DashboardActivity::class.java)
                     startActivity(int)

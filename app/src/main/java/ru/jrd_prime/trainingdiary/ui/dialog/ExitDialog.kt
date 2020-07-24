@@ -21,11 +21,10 @@ class ExitDialog : DialogFragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        dialog?.setTitle("Close APP ???")
+//        dialog?.setTitle("Close APP ???")
         val v: View = inflater.inflate(R.layout.dialog, null)
         v.findViewById<Button>(R.id.btnYes).setOnClickListener(this)
         v.findViewById<Button>(R.id.btnNo).setOnClickListener(this)
-        v.findViewById<Button>(R.id.btnMaybe).setOnClickListener(this)
         return v
     }
 
@@ -39,9 +38,6 @@ class ExitDialog : DialogFragment(), View.OnClickListener {
             }
             R.id.btnNo -> {
                 Log.d(TAG, "but neg: ")
-            }
-            R.id.btnMaybe -> {
-                Log.d(TAG, "but ney: ")
             }
         }
         dismiss()

@@ -61,5 +61,23 @@
     <style name="jpTextTitle">
         <item name="fontFamily">@font/ubuntu_medium</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/colorGreyDark</item></style>
+        <item name="android:textColor">@color/colorGreyDark</item>
+    </style>
+
+    <style name="jpButtonFontFamily"  parent="Widget.AppCompat.Button">
+        <item name="android:fontFamily">@font/ubuntu_reg</item>
+    </style>
+
+    <style name="jpPrimaryButton" parent="jpButtonFontFamily">
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="textAllCaps">true</item>
+    </style>
+
+    <style name="jpPrimaryButtonGrey" parent="Widget.AppCompat.Button.Borderless">
+        <item name="backgroundTint">@android:color/transparent</item>
+        <item name="android:textColor">@color/jpPrimary4</item>
+        <item name="textAllCaps">true</item>
+    </style>
 </resources>
