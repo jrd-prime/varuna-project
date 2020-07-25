@@ -16,9 +16,9 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         android:background="@drawable/popup_shape"
+        android:clickable="false"
         android:orientation="vertical"
         android:padding="16dp"
-        android:clickable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -166,15 +166,15 @@
                     android:id="@+id/btnDelete"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/jp_trash"
                     android:padding="15dp"
+                    android:src="@drawable/jp_trash"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_toEndOf="@+id/btnDeleteContainer"
@@ -182,19 +182,16 @@
 
                 <Button
                     android:id="@+id/btnEdit"
-                    style="@style/Widget.MaterialComponents.Button"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:backgroundTint="@color/colorPrimaryX"
-                    android:fontFamily="@font/ubuntu_medium"
+                    style="@style/jpButton.PrimaryColor"
+
+                    android:layout_weight="1"
                     android:text="@string/dialog_edit_btn"
-                    android:textColor="@color/colorPrimaryLight"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="0dp" />
+            </LinearLayout>
         </RelativeLayout>
 
     </LinearLayout>

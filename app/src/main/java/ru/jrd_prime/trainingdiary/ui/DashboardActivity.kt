@@ -21,28 +21,22 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.a_root_header.view.*
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import org.threeten.bp.LocalDateTime
-import org.threeten.bp.format.DateTimeFormatter
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
-import ru.jrd_prime.trainingdiary.fb_core.config.DATE_FORMAT_STRING
-import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.gauth.GAuth
-import ru.jrd_prime.trainingdiary.handlers.GetWorkoutsCallback
 import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.utils.*
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 import ru.jrd_prime.trainingdiary.viewmodels.DashboardViewModel
+import ru.jrd_prime.trainingdiary.viewmodels.StatisticViewModel
 
 
 const val TAG = "myLogs"
@@ -66,7 +60,8 @@ class DashboardActivity : AppCompatActivity() {
     lateinit var appContainer: AppContainer
     val statisticAdapter = StatisticListAdapter()
     val DIALOG_EXIT = 1
-    lateinit var binding: ActivityDashboardBinding
+    lateinit var mainBinding: ActivityDashboardBinding
+    private val mainLayout = R.layout.activity_dashboard
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,16 +76,11 @@ class DashboardActivity : AppCompatActivity() {
 
         // Add Categories
         fireBaseCore.pushCategories()
-//
-//        fireBaseCore.addMoreWorkout( "2020-07-20", Workout(id = "2020-07-20"))
-//        fireBaseCore.addMoreWorkout( "2020-07-20", Workout(id = "2020-07-20"))
-//        fireBaseCore.addMoreWorkout( "2020-07-20", Workout(id = "2020-07-20"))
+
         utils = appContainer.appUtils
-        binding =
-            DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
-        val viewmodel = dashboardViewModel
+        mainBinding = DataBindingUtil.setContentView(this, mainLayout)
         val workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
-        val statisticRecyclerView: RecyclerView = findViewById<RecyclerView>(R.id.statListView)
+        val statRecView = findViewById<RecyclerView>(R.id.statListView)
 
         navDrawerFragment = NavDrawerFragment(appContainer)
 
@@ -99,135 +89,54 @@ class DashboardActivity : AppCompatActivity() {
 
         gAuth = appContainer.gAuth
 /* END */
-        binding.viewmodel = viewmodel
+        mainBinding.viewmodel = dashboardViewModel
+
         setWindow()
-
-
-
 
         workoutPager.adapter = workoutPagerAdapter
         workoutPager.setCurrentItem(START_PAGE + 1, false)
         workoutPager.addOnPageChangeListener(pageListener)
-
-
-
         statisticAdapter.notifyDataSetChanged()
-        statisticRecyclerView.adapter = statisticAdapter
-
+        statRecView.adapter = statisticAdapter
         setSupportActionBar(vBottomAppBar)
+
 /* START */
         if (mSettings.getBoolean(cfg.getSpNameFirstRun(), true)) {
             // Выполняем необходимые настройки для первого запуска
             utils!!.setDefaultConfig(mSettings, cfg)
         }
-
 /* END */
 
         val date: MutableList<Long> = getWeekFromDate(getStartDateForPosition(START_PAGE))
         val statEndDate = date[1]
         val statStartDate = fromTimestamp(statEndDate).minusMonths(1)
-//        val workoutsForMonth = appContainer.workoutsRepository.getWorkoutsForWeek(
-//            dateToTimestamp(statStartDate),
-//            statEndDate
-//        )
-//        workoutsForMonth.observe(
-//            this,
-//            Observer { list -> statisticAdapter.setNewData(viewmodel.setNewStatistic(list)) })
 
         val datez = getWeekFromDate(getStartDateForPosition(START_PAGE))
         val dates = getDatesMonthList(
             startDate = dateToTimestamp(LocalDateTime.now()),
             daysBack = 28
         )
-        Log.d(TAG, "---------------------------------------------")
-        Log.d(TAG, "onCreateView: $dates")
-        Log.d(TAG, "---------------------------------------------")
 
         updateStat()
-
         fireBaseCore.listenNewData2(this)
 
-        statisticRecyclerView.layoutManager = LinearLayoutManager(this)
-
-
+        statRecView.layoutManager = LinearLayoutManager(this)
     }
 
-    //todo проверить статистику на переходе месяцв
     fun updateStat() {
-        fireBaseCore.getData(object : GetWorkoutsCallback {
-            override fun onWorkoutsCallBack(workouts: DataSnapshot) {
-                val workoutsList: Iterable<DataSnapshot> = workouts.children
-                val dataList = mutableListOf<Workout>()
-                val last =
-                    DateTimeFormatter.ofPattern(DATE_FORMAT_STRING).format(LocalDateTime.now())
-                val cutter = DateTimeFormatter.ofPattern(DATE_FORMAT_STRING)
-                    .format(LocalDateTime.now().plusDays(1))
-                Log.d(TAG, "onWorkoutsCallBack: $last")
-                for (d in workoutsList) {
-                    val workout = d.getValue<Workout>()
-                    if (workout != null) {
-
-                        if (workout.id == cutter) {
-                            Log.d(TAG, "CUTTER: $cutter")
-                            break
-                        }
-
-                        if (workout.empty && workout.category != 4) {
-                            fireBaseCore.deleteMainWorkout(workout.id)
-                        }
-                        if (!workout.empty) {
-                            dataList.add(workout)
-                        } else if (workout.category == 4) {
-                            dataList.add(workout)
-                        }
-
-                        val adds = workout.additional
-                        if (adds != null) {
-                            for (ad in adds) {
-                                dataList.add(ad.value)
-                            }
-                        }
-                    }
-                }
-
-                statisticAdapter.setNewData(dashboardViewModel.setNewStatistic(dataList))
-                setStats(dataList)
-            }
-        })
-    }
-
-    fun setStats(dataList: MutableList<Workout>) {
-        var time = 0
-        var cal = 0
-        var dist = 0f
-
-        for (workout in dataList) {
-            time += workout.time
-            cal += workout.kcal
-            dist += workout.distance
-        }
-
-        val f = binding.frameHeader
-        f.tvTime_Stat.text = resources.getString(R.string.minutes_val, time.toString())
-        f.tvCalories_Stat.text = resources.getString(R.string.calories_val, cal.toString())
-        f.tvDistance_Stat.text = resources.getString(R.string.distance_val, dist.toString())
-
+        StatisticViewModel().updateStat(
+            fireBaseCore,
+            statisticAdapter,
+            dashboardViewModel,
+            mainBinding
+        )
     }
 
     override fun onStart() {
         super.onStart()
-        Log.d(TAG, "onStart: ")
-
-
-        // Check for existing Google Sign In account, if the user is already signed in
-        // the GoogleSignInAccount will be non-null.
-
         if (fireAuth.currentUser != null) {
             Log.d(TAG, "onStart: USER NO NULL")
             val u = fireAuth.currentUser
-//            if (u != null) {
-////                 fireBaseCore.pushRan()
-//            }
         }
         gAuth!!.getLastSignedInAccount()
     }
@@ -287,15 +196,6 @@ class DashboardActivity : AppCompatActivity() {
         Process.killProcess(Process.myPid())
     }
 
-    private fun show_children(v: View) {
-        val viewgroup = v as ViewGroup
-        for (i in 0 until viewgroup.childCount) {
-            val v1 = viewgroup.getChildAt(i)
-            (v1 as? ViewGroup)?.let { show_children(it) }
-            Log.d("APPNAME", v1.toString())
-        }
-    }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         Log.d(TAG, "onOptionsItemSelected: ${item.itemId}")
@@ -314,14 +214,15 @@ class DashboardActivity : AppCompatActivity() {
             (findViewById<View>(android.R.id.content) as ViewGroup).getChildAt(0) as ViewGroup
 
         val yesListener = View.OnClickListener { _ ->
-            Toast.makeText(
-                this,
-                "asd asdqwe123213 asd ",
-                Toast.LENGTH_LONG
-            ).show()
+            utils?.closeApp(this)
         }
 
-        makeDialogYesOrNo(activity.applicationContext, root, yesListener, title = R.string.msg_exit_from_app)
+        makeDialogYesOrNo(
+            activity.applicationContext,
+            root,
+            yesListener,
+            title = R.string.msg_exit_from_app
+        )
         Log.d(TAG, "onBackPressed: ")
     }
 

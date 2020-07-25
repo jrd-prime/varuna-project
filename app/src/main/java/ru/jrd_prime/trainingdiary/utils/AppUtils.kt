@@ -1,5 +1,6 @@
 package ru.jrd_prime.trainingdiary.utils
 
+import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
 import android.content.ContextWrapper
@@ -24,6 +25,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.util.concurrent.ExecutionException
+import kotlin.system.exitProcess
 
 class AppUtils(
     private val appContext: TrainingDiaryApp
@@ -222,5 +224,11 @@ class AppUtils(
 
     fun setDefaultConfig() {
         shPref.edit().putBoolean(cfg.getSpNameFirstRun(), false).apply()
+    }
+
+    fun closeApp(act: Activity) {
+        act.finishAffinity()
+        exitProcess(0)
+
     }
 }

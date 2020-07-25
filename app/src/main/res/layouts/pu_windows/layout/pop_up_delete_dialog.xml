@@ -135,26 +135,17 @@
 
             <Button
                 android:id="@+id/btnCancel_DelDialog"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/stardantLineHeight"
+                style="@style/jpButton.TextButton.Light"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                android:fontFamily="@font/ubuntu_medium"
-                android:text="@string/dialog_cancel_btn"
-                android:textColor="#aaa" />
+                android:text="@string/dialog_cancel_btn"/>
 
             <Button
                 android:id="@+id/btnDelete_DelDialog"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/stardantLineHeight"
+                style="@style/jpButton.Red"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/red"
-                android:fontFamily="@font/ubuntu_medium"
-                android:text="@string/dialog_delete_btn"
-                android:textColor="@color/colorWhite" />
+                android:text="@string/dialog_delete_btn" />
         </LinearLayout>
 
     </LinearLayout>

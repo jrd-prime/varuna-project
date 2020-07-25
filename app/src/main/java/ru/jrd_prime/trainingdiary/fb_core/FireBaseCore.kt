@@ -183,14 +183,14 @@ class FireBaseCore(private val appContainer: AppContainer) {
         // next
         woRef.child("2020").child(monthList[2]).addChildEventListener(listener)
     }
-    fun listenNewData2(myNewAdapter: DashboardActivity) {
+    fun listenNewData2(mainActivity: DashboardActivity) {
         //TODO get current year and month for listen
         //todo проверить обновление данных при смене года
 
         val listener = object : ChildEventListener {
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 Log.d(TAG, "onChildChanged: chch")
-                myNewAdapter.updateStat()
+                mainActivity.updateStat()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -200,12 +200,12 @@ class FireBaseCore(private val appContainer: AppContainer) {
             }
 
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                myNewAdapter.updateStat()
+                mainActivity.updateStat()
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
                 Log.d(TAG, "onChildChanged: chchR")
-                myNewAdapter.updateStat()
+                mainActivity.updateStat()
             }
         }
 

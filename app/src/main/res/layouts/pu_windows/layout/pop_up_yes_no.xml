@@ -103,43 +103,19 @@
             android:orientation="horizontal">
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <Button
+                android:id="@+id/popUpYesNoBtnNo"
+                style="@style/jpButton.TextButton.Light"
                 android:layout_weight="1"
-                android:paddingEnd="8dp">
+                android:text="@string/action_no" />
 
-                <Button
-                    android:id="@+id/popUpYesNoBtnNo"
-                    style="@style/jpPrimaryButtonGrey"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:text="@string/action_no"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <Button
+                android:id="@+id/popUpYesNoBtnYes"
+                style="@style/jpButton.PrimaryColor"
                 android:layout_weight="1"
-                android:paddingStart="8dp">
+                android:text="@string/action_yes" />
 
-                <Button
-                    android:id="@+id/popUpYesNoBtnYes"
-                    style="@style/jpPrimaryButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|center_horizontal"
-                    android:text="@string/action_yes"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
     </LinearLayout>

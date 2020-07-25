@@ -10,6 +10,39 @@
         <item name="android:textColor">#122231</item>
     </style>
 
+
+    <!--BEGIN -> BUTTON -->
+    <style name="jpButton" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/ubuntu_medium</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="jpButton.Red">
+        <item name="backgroundTint">@color/red</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="jpButton.PrimaryColor">
+        <item name="backgroundTint">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+    <!-- END -> BUTTON-->
+    <!--BEGIN -> TEXT BUTTON -->
+    <style name="jpButton.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="backgroundTint">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorGrey</item>
+    </style>
+    <style name="jpButton.TextButton.Light">
+        <item name="backgroundTint">@color/colorWhite</item>
+        <item name="android:textColor">@color/colorGrey</item>
+    </style>
+
+    <!-- END -> TEXT BUTTON-->
+
     <style name="NavigationDrawerStyle">
         <item name="android:textSize">16sp</item><!-- text size in menu-->
         <item name="android:listPreferredItemHeightSmall">56dp</item><!-- item size in menu-->
@@ -64,20 +97,4 @@
         <item name="android:textColor">@color/colorGreyDark</item>
     </style>
 
-    <style name="jpButtonFontFamily"  parent="Widget.AppCompat.Button">
-        <item name="android:fontFamily">@font/ubuntu_reg</item>
-    </style>
-
-    <style name="jpPrimaryButton" parent="jpButtonFontFamily">
-        <item name="backgroundTint">@color/colorPrimary</item>
-        <item name="android:textColor">@color/colorWhite</item>
-        <item name="cornerRadius">8dp</item>
-        <item name="textAllCaps">true</item>
-    </style>
-
-    <style name="jpPrimaryButtonGrey" parent="Widget.AppCompat.Button.Borderless">
-        <item name="backgroundTint">@android:color/transparent</item>
-        <item name="android:textColor">@color/jpPrimary4</item>
-        <item name="textAllCaps">true</item>
-    </style>
 </resources>
