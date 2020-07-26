@@ -255,14 +255,14 @@
 
             <Button
                 android:id="@+id/btnCancel"
-                style="@style/jpButton.TextButton.Light"
+                style="@style/Varuna.TextButton"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="@string/dialog_cancel_btn" />
 
             <Button
                 android:id="@+id/btnSave"
-                style="@style/jpButton.PrimaryColor"
+                style="@style/Varuna.Button.Primary"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:text="@string/dialog_save_btn" />

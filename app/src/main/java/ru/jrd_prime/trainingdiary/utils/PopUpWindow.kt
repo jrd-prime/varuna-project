@@ -14,7 +14,6 @@ fun getPopUpView(ctx: Context, layout: Int): View {
 }
 
 fun getPopUpWindow(view: View): PopupWindow {
-
     return PopupWindow(
         view,
         WindowManager.LayoutParams.MATCH_PARENT,

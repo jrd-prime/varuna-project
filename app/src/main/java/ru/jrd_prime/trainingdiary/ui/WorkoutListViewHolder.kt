@@ -304,7 +304,6 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         var extraCount = 0
 
         val adds = wo.additional
-
         if (adds != null) {
             for (add in adds) {
                 if (!add.value.empty) extraCount += 1
@@ -378,7 +377,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         incLine1Empty.addsCardCont.visibility = View.GONE
         incLine2Empty.addsCardCont.visibility = View.GONE
         incLine3Empty.addsCardCont.visibility = View.GONE
-        binding.extraCount.visibility = View.GONE
+        binding.extraCountContainer.visibility = View.GONE
         binding.tvTotalMinutes.text =
             String.format(res.getString(R.string.minutes_val), 0)
 

@@ -135,14 +135,14 @@
 
             <Button
                 android:id="@+id/btnCancel_DelDialog"
-                style="@style/jpButton.TextButton.Light"
+                style="@style/Varuna.TextButton"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
                 android:text="@string/dialog_cancel_btn"/>
 
             <Button
                 android:id="@+id/btnDelete_DelDialog"
-                style="@style/jpButton.Red"
+                style="@style/Varuna.Button.Red"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:text="@string/dialog_delete_btn" />

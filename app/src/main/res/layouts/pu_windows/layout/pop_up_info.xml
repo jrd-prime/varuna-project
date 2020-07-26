@@ -182,7 +182,7 @@
 
                 <Button
                     android:id="@+id/btnEdit"
-                    style="@style/jpButton.PrimaryColor"
+                    style="@style/Varuna.Button.Primary"
 
                     android:layout_weight="1"
                     android:text="@string/dialog_edit_btn"

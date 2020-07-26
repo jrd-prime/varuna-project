@@ -1,6 +1,5 @@
 package ru.jrd_prime.trainingdiary.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.getValue
@@ -14,17 +13,16 @@ import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.fb_core.config.DATE_FORMAT_STRING
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.handlers.GetWorkoutsCallback
-import ru.jrd_prime.trainingdiary.ui.TAG
 
 class StatisticViewModel : ViewModel() {
     //todo проверить статистику на переходе месяцв
     fun updateStat(
-        fireBaseCore: FireBaseCore,
+        fbc: FireBaseCore,
         statAdapter: StatisticListAdapter,
         mainViewModel: DashboardViewModel,
         binding: ActivityDashboardBinding
     ) {
-        fireBaseCore.getData(object : GetWorkoutsCallback {
+        fbc.getData(object : GetWorkoutsCallback {
             override fun onWorkoutsCallBack(workouts: DataSnapshot) {
                 val workoutsList: Iterable<DataSnapshot> = workouts.children
                 val dataList = mutableListOf<Workout>()
@@ -32,31 +30,20 @@ class StatisticViewModel : ViewModel() {
                     DateTimeFormatter.ofPattern(DATE_FORMAT_STRING).format(LocalDateTime.now())
                 val cutter = DateTimeFormatter.ofPattern(DATE_FORMAT_STRING)
                     .format(LocalDateTime.now().plusDays(1))
-                Log.d(TAG, "onWorkoutsCallBack: $last")
                 for (d in workoutsList) {
                     val workout = d.getValue<Workout>()
                     if (workout != null) {
+                        if (workout.id == cutter) break
 
-                        if (workout.id == cutter) {
-                            Log.d(TAG, "CUTTER: $cutter")
-                            break
-                        }
+                        if (workout.empty && workout.category != 4) fbc.deleteMainWorkout(workout.id)
 
-                        if (workout.empty && workout.category != 4) {
-                            fireBaseCore.deleteMainWorkout(workout.id)
-                        }
                         if (!workout.empty) {
                             dataList.add(workout)
                         } else if (workout.category == 4) {
                             dataList.add(workout)
                         }
-
                         val adds = workout.additional
-                        if (adds != null) {
-                            for (ad in adds) {
-                                dataList.add(ad.value)
-                            }
-                        }
+                        if (adds != null) for (ad in adds) dataList.add(ad.value)
                     }
                 }
 
