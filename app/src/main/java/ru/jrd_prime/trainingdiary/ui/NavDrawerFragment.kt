@@ -5,10 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.FrameLayout
+import androidx.core.view.get
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -52,6 +51,13 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(mainLayout, container, false)
+
+        val me = root.findViewById<NavigationView>(R.id.vNavigationView).menu
+        val me2 = me.findItem(R.id.navCloseApp)
+
+        me2.setTitle("fdpsfkqwef")
+        Log.d(TAG, "onCreateView: $me2")
+
         if (isUserAuth) {
             // AUTH
             // Update UI
@@ -75,7 +81,11 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
                 dismiss()
             }
         }
-        navigationView = root.findViewById(R.id.vNavigationView)
+
+        navigationView = root.findViewById<NavigationView>(R.id.vNavigationView)
+        setHasOptionsMenu(true)
+
+
         // closeImage = root.findViewById(R.id.close_imageview);
         return root
     }
@@ -89,9 +99,11 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
         workoutPager?.addOnPageChangeListener(pageListener)
     }
 
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Snackbar.make(navigationView!!, "dada", Snackbar.LENGTH_SHORT)
+
         navigationView!!.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.navCloseApp -> {
@@ -131,6 +143,9 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+
+
+
         dialog.setOnShowListener { bsdialog ->
             val d = bsdialog as BottomSheetDialog
             val bottomSheet = d.findViewById<View>(R.id.design_bottom_sheet) as FrameLayout?

@@ -4,6 +4,7 @@ import android.widget.TextView
 import androidx.room.TypeConverter
 import org.threeten.bp.*
 import org.threeten.bp.format.DateTimeFormatter
+import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.fb_core.config.DATE_FORMAT_STRING
 import ru.jrd_prime.trainingdiary.ui.START_PAGE
 import java.text.SimpleDateFormat
@@ -41,26 +42,16 @@ fun getDatesMonthList(startDate: Long, daysBack: Int): MutableList<String> {
     }
     return dates
 }
-fun setDateForHead(view: TextView?){
+
+fun setDateForHead(view: TextView?) {
     val start = LocalDateTime.now()
     val day = Integer.parseInt(DateTimeFormatter.ofPattern("dd").format(start))
     val month = Integer.parseInt(DateTimeFormatter.ofPattern("MM").format(start))
     val year = Integer.parseInt(DateTimeFormatter.ofPattern("yyyy").format(start))
     //TODO переписать месяца для ялокализации
-    val textMonth = when (month) {
-        1 -> "January"
-        2 -> "February"
-        3 -> "March"
-        4 -> "April"
-        5 -> "May"
-        6 -> "June"
-        7 -> "July"
-        8 -> "August"
-        9 -> "September"
-        10 -> "October"
-        11 -> "November"
-        12 -> "December"
-        else -> ""
+    var textMonth = ""
+    if (month != 0) {
+        textMonth = view?.resources?.getStringArray(R.array.months)?.get(month - 1).toString()
     }
     view?.text = "$day $textMonth $year"
 }

@@ -69,7 +69,8 @@ class StatisticViewModel : ViewModel() {
             dist += workout.distance
         }
 
-        statRootView.tvTime_Stat.text = res.getString(R.string.minutes_val, time.toString())
+//        statRootView.tvTime_Stat.text = res.getString(R.string.minutes_val, time.toString())
+        statRootView.tvTime_Stat.text = Workout(time = time).convertMinsToHM(res)
         statRootView.tvCalories_Stat.text = res.getString(R.string.calories_val, cal.toString())
         statRootView.tvDistance_Stat.text = res.getString(R.string.distance_val, dist.toString())
     }

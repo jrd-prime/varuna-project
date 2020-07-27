@@ -5,16 +5,21 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewParent
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.a_need_auth_page.view.*
 import kotlinx.android.synthetic.main.a_workout_list_pager.view.*
+import kotlinx.android.synthetic.main.activity_dashboard.view.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
+import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.databinding.ANeedAuthPageBinding
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutListPagerNewBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
@@ -90,6 +95,14 @@ class WorkoutPageFragment : Fragment() {
             rootView.recView.adapter = workoutsListAdapter
 
             setDateForHead(view = activity?.findViewById<TextView>(R.id.tvTodayDay))
+
+            val t = activity?.findViewById<TextView>(R.id.tvTodayDay)
+            val workoutPager = activity?.findViewById<ViewPager>(R.id.viewPagerMainDashboard)
+            t?.setOnClickListener {
+                workoutPager?.setCurrentItem(START_PAGE, true)
+            }
+
+
 
             val date = getWeekFromDate(getStartDateForPosition(pageNumber))
             val dates = getDatesWeekList(startDate = date[0])

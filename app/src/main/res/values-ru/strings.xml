@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Varuna\'s Sport Diary</string>
+    <string name="app_name">Simple Training Diary</string>
     <string name="stat_last_month">Статистика с начала месяца</string>
     <string name="textDummy">заглушка</string>
 
@@ -44,7 +44,20 @@
         <item>Сб</item>
         <item>Вс</item>
     </string-array>
-
+    <string-array name="months">
+        <item>Января</item>
+        <item>Февраля</item>
+        <item>Марта</item>
+        <item>Апреля</item>
+        <item>Мая</item>
+        <item>Июня</item>
+        <item>Июля</item>
+        <item>Августа</item>
+        <item>Сентября</item>
+        <item>Октября</item>
+        <item>Ноября</item>
+        <item>Декабря</item>
+    </string-array>
 
     <string name="distance_val">%1$s км</string>
     <string name="calories_val">%1$s ккал</string>

@@ -11,7 +11,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -62,7 +61,7 @@ class DashboardActivity : AppCompatActivity() {
     val DIALOG_EXIT = 1
     lateinit var mainBinding: ActivityDashboardBinding
     private val mainLayout = R.layout.activity_dashboard
-
+    lateinit var workoutPager: ViewPager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +78,7 @@ class DashboardActivity : AppCompatActivity() {
 
         utils = appContainer.appUtils
         mainBinding = DataBindingUtil.setContentView(this, mainLayout)
-        val workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
+        workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
         val statRecView = findViewById<RecyclerView>(R.id.statListView)
 
         navDrawerFragment = NavDrawerFragment(appContainer)
@@ -156,11 +155,11 @@ class DashboardActivity : AppCompatActivity() {
     }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.bottom_nav_drawer_menu, menu)
-        return true
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        val inflater = menuInflater
+//        inflater.inflate(R.menu.bottom_nav_drawer_menu, menu)
+//        return true
+//    }
 
     override fun onResume() {
         super.onResume()

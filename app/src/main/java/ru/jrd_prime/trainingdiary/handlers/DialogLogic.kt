@@ -19,6 +19,7 @@ fun setCategoryListeners(popupView: View) {
     val btnPower = popupView.btnPower // 2
     val btnStretch = popupView.btnStretch // 3
     val btnRest = popupView.btnRest // 4
+    popupView.btnSave.isEnabled = false
     val rbListener = View.OnClickListener {
         when {
             btnCardio.isChecked -> setCardioChecked(popupView)
@@ -104,7 +105,9 @@ fun collectDataFromUI(
 
 fun setCategory(container: View, cat: Int) {
     when (cat) {
-        0 -> setAllBtnToFalse(container)
+        0 -> {
+            setAllBtnToFalse(container)
+        }
         1 -> {
             container.btnCardio.isChecked = true
             container.btnCardio.setColoredBg()
@@ -129,6 +132,7 @@ fun setCategory(container: View, cat: Int) {
 }
 
 fun setRestChecked(container: View) {
+    container.btnSave.isEnabled = true
     container.btnRest.setColoredBg()
     container.btnCardio.isChecked = false
     container.btnPower.isChecked = false
@@ -141,6 +145,7 @@ fun setRestChecked(container: View) {
 }
 
 fun setStretchChecked(container: View) {
+    container.btnSave.isEnabled = true
     container.btnStretch.setColoredBg()
     container.btnCardio.isChecked = false
     container.btnPower.isChecked = false
@@ -153,6 +158,7 @@ fun setStretchChecked(container: View) {
 }
 
 fun setPowerChecked(container: View) {
+    container.btnSave.isEnabled = true
     container.btnPower.setColoredBg()
     container.btnCardio.isChecked = false
     container.btnPower.isChecked = true
@@ -165,6 +171,7 @@ fun setPowerChecked(container: View) {
 }
 
 fun setCardioChecked(container: View) {
+    container.btnSave.isEnabled = true
     container.btnCardio.setColoredBg()
     container.btnCardio.isChecked = true
     container.btnPower.isChecked = false
@@ -177,6 +184,7 @@ fun setCardioChecked(container: View) {
 }
 
 fun setAllBtnToFalse(container: View) {
+    container.btnSave.isEnabled = false
     container.btnCardio.isChecked = false
     container.btnPower.isChecked = false
     container.btnStretch.isChecked = false

@@ -70,38 +70,31 @@
 
                 <TextView
                     android:id="@+id/tvMuscleGroup"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:animateLayoutChanges="true"
                     android:fontFamily="@font/ubuntu_reg"
                     android:gravity="center_vertical"
                     android:padding="12dp"
-                    android:text="@string/textDummy"
+                    android:text="@string/long_text"
                     android:textColor="@color/colorGreyDark"
                     android:textSize="16sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:ellipsize="end"
+                    android:maxLines="1" />
 
                 <TextView
                     android:id="@+id/cardHiddenTextWithID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|right"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/tvTitle" />
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/cardHiddenTextWithAddKey"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|right"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:visibility="gone"/>
             </FrameLayout>
 
             <LinearLayout

@@ -27,13 +27,12 @@
             android:id="@+id/puiIconContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp">
+            android:paddingBottom="16dp">
 
             <ImageView
                 android:id="@+id/ivIcon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:paddingTop="8dp"
                 android:src="@drawable/jp_question"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -140,6 +140,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
                 )
             } else { /* wo EMPTY*/
                 showEmptyMainView(wo)
+                setGone(hideView)
             }
 
         } else {
