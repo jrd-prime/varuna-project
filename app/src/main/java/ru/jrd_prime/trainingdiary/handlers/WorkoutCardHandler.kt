@@ -326,7 +326,7 @@ class WorkoutCardHandler(root: View) {
             val contView = cardView.hideThis
             when (contView.visibility) {
                 View.GONE -> {
-                    setVisible(contView)
+                    setVisbl(contView)
                     shPref.edit().putBoolean(cardID, true).apply()
                 }
                 View.VISIBLE -> {

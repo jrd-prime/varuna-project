@@ -6,87 +6,98 @@ import com.google.firebase.database.ktx.getValue
 import org.threeten.bp.LocalDateTime
 import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
 import ru.jrd_prime.trainingdiary.fb_core.config._CATEGORIES
+import ru.jrd_prime.trainingdiary.fb_core.config._PREMIUM
 import ru.jrd_prime.trainingdiary.fb_core.config._USERS
 import ru.jrd_prime.trainingdiary.fb_core.config._WORKOUTS
 import ru.jrd_prime.trainingdiary.fb_core.models.Category
+import ru.jrd_prime.trainingdiary.fb_core.models.Premium
 import ru.jrd_prime.trainingdiary.fb_core.models.User
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
-import ru.jrd_prime.trainingdiary.handlers.GetWorkoutCallback
-import ru.jrd_prime.trainingdiary.handlers.GetWorkoutsCallback
+import ru.jrd_prime.trainingdiary.handlers.*
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.ui.DashboardActivity
+import ru.jrd_prime.trainingdiary.utils.dateToTimestamp
 
 class FireBaseCore(private val appContainer: AppContainer) {
     companion object {
-        const val TAG = "FireBaseCore"
+        const val TAG = "FireBaseCore: drops:"
     }
 
     private val db = appContainer.fireDB
     private val userRef = db.getReference(_USERS)
+    private val premiumRef = db.getReference(_PREMIUM)
     private val categoriesRef = db.getReference(_CATEGORIES)
     private val workoutsRef = db.getReference(_WORKOUTS)
-    private val userId = appContainer.sharedPreferences.getString("jp_uid", "").toString()
+    private val userId = appContainer.preferences.getString("jp_uid", "").toString()
     private val today = LocalDateTime.now()
     private val year = today.year.toString()
     private val month = today.monthValue.toString()
     private val woRef = workoutsRef.child(userId)
+    private val refUserWithID = userRef.child(userId)
 
-    private fun workoutPathConstructor(workoutId: String): DatabaseReference {
-        val splitDate = workoutId.split("-")
-        val year = splitDate[0]
-        val month = splitDate[1]
-        return woRef.child(year).child(month)
-    }
-
-    private fun addWorkoutWithId(workoutId: String, workout: Workout) {
-        val actualRef = workoutPathConstructor(workoutId)
-        actualRef.child(workoutId).setValue(workout)
-    }
-
-    fun addMoreWorkout(workoutDate: String, workout: Workout) {
-        val splitDate = workoutDate.split("-")
-        val year = splitDate[0]
-        val month = splitDate[1]
-        val day = splitDate[2]
-        val key = woRef.child(year).child(month).child(workoutDate).child("additional").push().key
-        if (key == null) {
-            Log.w(TAG, "Couldn't get push key for posts")
-            return
-        }
-        woRef.child(year).child(month).child(workoutDate).child("additional").child(key)
-            .setValue(workout)
-    }
-
-    fun updateExtraWorkout(workoutDate: String, workout: Workout, key: String) {
-        Log.d(TAG, "updateExtraWorkout: UPDATE. NEW DATA")
-        val splitDate = workoutDate.split("-")
-        val year = splitDate[0]
-        val month = splitDate[1]
-        val day = splitDate[2]
-
-        woRef.child(year).child(month).child(workoutDate).child("additional").child(key)
-            .setValue(workout)
-    }
-
-    fun pushCategories() {
-        val category = listOf<Category>(
-            Category(1, "cardio"),
-            Category(2, "power"),
-            Category(3, "stretch"),
-            Category(4, "rest")
-        )
-        for (cat in category) {
-            categoriesRef.child(cat.id.toString()).setValue(cat.name)
-        }
-    }
 
     fun addNewUserOnSignIn(uid: String?, name: String?, mail: String?) {
-        val user = User(uid, name, mail, "")
+        val user = User(uid, name, mail, "", true)
         if (uid != null) {
             userRef.child(uid).setValue(user)
+
+            /* Set Premium Status */
+            setDefaultUserPremiumStatus(uid)
         }
     }
 
+
+    fun setPremium(to: Boolean) {
+        premiumRef.child(userId).child("premium").setValue(to)
+    }
+
+    private fun setDefaultUserPremiumStatus(uid: String) {
+        getUserPremiumInfo(object : UserPremium {
+            override fun onGetUserPremium(
+                premium: Premium?,
+                uid: String
+            ) {
+                if (premium == null) {
+                    val timestamp = dateToTimestamp(LocalDateTime.now())
+                    val defaultPremium = Premium(
+                        premium = false,
+                        start = timestamp,
+                        end = timestamp,
+                        userID = uid,
+                        forever = false,
+                        set = true
+                    )
+                    Log.d(TAG, "onGetUserPremium: SET Default Premium Status")
+                    premiumRef.child(uid).setValue(defaultPremium)
+                } else {
+                    Log.d(TAG, "onGetUserPremium: Premium Status TUNED")
+                }
+            }
+        }, uid)
+    }
+
+    fun getUserPremiumInfo(callback: UserPremium, uid: String) {
+        premiumRef.child(uid).addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                callback.onGetUserPremium(snapshot.getValue<Premium>(), uid)
+            }
+        })
+    }
+
+    fun getUserPremiumListener(callback: UserPremiumChange, uid: String) {
+        premiumRef.child(uid).addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                callback.onChangeUserPremium(snapshot.getValue<Premium>(), uid)
+            }
+
+        })
+    }
 
     /*
     * 1. Берем список дат в виде массива дд-мм-гггг из 7ми дат
@@ -133,14 +144,15 @@ class FireBaseCore(private val appContainer: AppContainer) {
         }
     }
 
-    fun getData( callback: GetWorkoutsCallback) {
+    fun getData(callback: GetWorkoutsCallback) {
         val weekData = mutableListOf<Workout>()
         val dateData = woRef.child("2020").child("07")
         dateData.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
             }
+
             override fun onDataChange(snapshot: DataSnapshot) {
-                    callback.onWorkoutsCallBack(snapshot)
+                callback.onWorkoutsCallBack(snapshot)
             }
         })
     }
@@ -183,6 +195,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
         // next
         woRef.child("2020").child(monthList[2]).addChildEventListener(listener)
     }
+
     fun listenNewData2(mainActivity: DashboardActivity) {
         //TODO get current year and month for listen
         //todo проверить обновление данных при смене года
@@ -212,6 +225,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
         // past
         woRef.child("2020").addChildEventListener(listener)
     }
+
     private fun addEmptyWorkout(
         t: DatabaseReference,
         date: String
@@ -285,6 +299,55 @@ class FireBaseCore(private val appContainer: AppContainer) {
         dateData.removeValue()
     }
 
+    private fun workoutPathConstructor(workoutId: String): DatabaseReference {
+        val splitDate = workoutId.split("-")
+        val year = splitDate[0]
+        val month = splitDate[1]
+        return woRef.child(year).child(month)
+    }
+
+    private fun addWorkoutWithId(workoutId: String, workout: Workout) {
+        val actualRef = workoutPathConstructor(workoutId)
+        actualRef.child(workoutId).setValue(workout)
+    }
+
+    fun addMoreWorkout(workoutDate: String, workout: Workout) {
+        val splitDate = workoutDate.split("-")
+        val year = splitDate[0]
+        val month = splitDate[1]
+        val day = splitDate[2]
+        val key = woRef.child(year).child(month).child(workoutDate).child("additional").push().key
+        if (key == null) {
+            Log.w(TAG, "Couldn't get push key for posts")
+            return
+        }
+        woRef.child(year).child(month).child(workoutDate).child("additional").child(key)
+            .setValue(workout)
+    }
+
+    fun updateExtraWorkout(workoutDate: String, workout: Workout, key: String) {
+        Log.d(TAG, "updateExtraWorkout: UPDATE. NEW DATA")
+        val splitDate = workoutDate.split("-")
+        val year = splitDate[0]
+        val month = splitDate[1]
+        val day = splitDate[2]
+
+        woRef.child(year).child(month).child(workoutDate).child("additional").child(key)
+            .setValue(workout)
+    }
+
+    fun pushCategories() {
+        val category = listOf<Category>(
+            Category(1, "cardio"),
+            Category(2, "power"),
+            Category(3, "stretch"),
+            Category(4, "rest")
+        )
+        for (cat in category) {
+            categoriesRef.child(cat.id.toString()).setValue(cat.name)
+        }
+    }
+
     fun clearWorkout(workoutID: String) {
         val actualRef = workoutPathConstructor(workoutID)
         val dateData = actualRef.child(workoutID)
@@ -295,5 +358,17 @@ class FireBaseCore(private val appContainer: AppContainer) {
         val actualRef = workoutPathConstructor(workoutID)
         val dateData = actualRef.child(workoutID)
         dateData.child("empty").setValue(false)
+    }
+
+    fun getUserInfo(callback: UserInfo, userID: String) {
+        userRef.child(userID).addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                callback.onChangeUserInfo(snapshot.getValue<User>())
+            }
+        })
+
     }
 }

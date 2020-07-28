@@ -11,6 +11,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
+import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
+import ru.jrd_prime.trainingdiary.fb_core.config._USERS
+import ru.jrd_prime.trainingdiary.fb_core.models.User
 import ru.jrd_prime.trainingdiary.gauth.GAuth
 import ru.jrd_prime.trainingdiary.ui.DashboardActivity
 import ru.jrd_prime.trainingdiary.utils.AppUtils
@@ -19,7 +22,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 interface AppContainer {
-    val sharedPreferences: SharedPreferences
+    val preferences: SharedPreferences
     val appConfig: AppConfig
     val appUtils: AppUtils
     val gAuth: GAuth
@@ -32,7 +35,8 @@ class AppContainerImpl(private val appContext: TrainingDiaryApp) : AppContainer 
     override val activity: Activity by lazy {
         DashboardActivity().activity
     }
-    override val sharedPreferences: SharedPreferences by lazy {
+
+    override val preferences: SharedPreferences by lazy {
         appContext.getSharedPreferences(AppConfig().getSharedPreferenceName(), Context.MODE_PRIVATE)
     }
     override val appConfig: AppConfig by lazy {

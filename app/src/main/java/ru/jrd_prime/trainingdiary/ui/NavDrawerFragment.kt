@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
-import androidx.core.view.get
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -19,20 +18,20 @@ import kotlinx.android.synthetic.main.lay_frg_navdrawer_not_auth.view.*
 import kotlinx.android.synthetic.main.lay_frg_navdrawer_not_auth.view.ivUserAvatar
 import kotlinx.android.synthetic.main.lay_frg_navdrawer_with_auth.view.*
 import ru.jrd_prime.trainingdiary.R
-import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
+import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.utils.AppSettingsCore
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 
 
-class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment() {
+class NavDrawerFragment(private val appContainer: AppContainer) : BottomSheetDialogFragment() {
     private var navigationView: NavigationView? = null
     private var btmShBeh: BottomSheetBehavior<*>? = null
     private var isUserAuth = false
     private var mainLayout = 0
-    private val shPref = appContainer.sharedPreferences
+    private val shPref = appContainer.preferences
     private val cfg = appContainer.appConfig
     private val utils = appContainer.appUtils
     private val gAuth = appContainer.gAuth
@@ -52,11 +51,11 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
     ): View? {
         val root = inflater.inflate(mainLayout, container, false)
 
-        val me = root.findViewById<NavigationView>(R.id.vNavigationView).menu
-        val me2 = me.findItem(R.id.navCloseApp)
+//        val me = root.findViewById<NavigationView>(R.id.vNavigationView).menu
+//        val me2 = me.findItem(R.id.navCloseApp)
 
-        me2.setTitle("fdpsfkqwef")
-        Log.d(TAG, "onCreateView: $me2")
+//        me2.setTitle("fdpsfkqwef")
+//        Log.d(TAG, "onCreateView: $me2")
 
         if (isUserAuth) {
             // AUTH
@@ -106,8 +105,15 @@ class NavDrawerFragment(appContainer: AppContainer) : BottomSheetDialogFragment(
 
         navigationView!!.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.navCloseApp -> {
-                    WorkoutListAdapter().changed2(context)
+//                R.id.navCloseApp -> {
+//                    WorkoutListAdapter().changed2(context)
+//                }
+                R.id.premiumOn -> {
+                    FireBaseCore(appContainer).setPremium(true)
+                }
+                R.id.premiumOff -> {
+                    FireBaseCore(appContainer).setPremium(false)
+
                 }
                 R.id.changeSet -> {
                     val pref = context?.getSharedPreferences(

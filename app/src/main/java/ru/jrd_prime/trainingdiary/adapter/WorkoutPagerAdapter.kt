@@ -8,6 +8,7 @@ import ru.jrd_prime.trainingdiary.ui.WorkoutPageFragment
 
 class WorkoutPageAdapter(manager: FragmentManager) :
     FragmentPagerAdapter(manager, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+
     override fun getItem(position: Int): Fragment {
         return WorkoutPageFragment.newInstance(position)
     }

@@ -110,21 +110,25 @@ fun setCategory(container: View, cat: Int) {
         }
         1 -> {
             container.btnCardio.isChecked = true
+            container.btnSave.isEnabled = true
             container.btnCardio.setColoredBg()
-            setVisible(container.hideme)
+            setVisbl(container.hideme)
         }
         2 -> {
             container.btnPower.isChecked = true
+            container.btnSave.isEnabled = true
             container.btnPower.setColoredBg()
-            setVisible(container.hideme)
+            setVisbl(container.hideme)
         }
         3 -> {
             container.btnStretch.isChecked = true
+            container.btnSave.isEnabled = true
             container.btnStretch.setColoredBg()
-            setVisible(container.hideme)
+            setVisbl(container.hideme)
         }
         4 -> {
             container.btnRest.isChecked = true
+            container.btnSave.isEnabled = true
             container.btnRest.setColoredBg()
             setGone(container.hideme)
         }
@@ -154,7 +158,7 @@ fun setStretchChecked(container: View) {
     container.btnCardio.setTransBg()
     container.btnPower.setTransBg()
     container.btnRest.setTransBg()
-    setVisible(container.hideme)
+    setVisbl(container.hideme)
 }
 
 fun setPowerChecked(container: View) {
@@ -167,7 +171,7 @@ fun setPowerChecked(container: View) {
     container.btnCardio.setTransBg()
     container.btnStretch.setTransBg()
     container.btnRest.setTransBg()
-    setVisible(container.hideme)
+    setVisbl(container.hideme)
 }
 
 fun setCardioChecked(container: View) {
@@ -180,7 +184,7 @@ fun setCardioChecked(container: View) {
     container.btnPower.setTransBg()
     container.btnStretch.setTransBg()
     container.btnRest.setTransBg()
-    setVisible(container.hideme)
+    setVisbl(container.hideme)
 }
 
 fun setAllBtnToFalse(container: View) {
@@ -193,7 +197,7 @@ fun setAllBtnToFalse(container: View) {
     container.btnPower.setTransBg()
     container.btnStretch.setTransBg()
     container.btnRest.setTransBg()
-    setVisible(container.hideme)
+    setVisbl(container.hideme)
 
 }
 
@@ -212,7 +216,7 @@ fun setGone(viewGroup: ViewGroup) {
     viewGroup.visibility = View.GONE
 }
 
-fun setVisible(viewGroup: ViewGroup) {
+fun setVisbl(viewGroup: ViewGroup) {
     TransitionManager.beginDelayedTransition(viewGroup, AutoTransition())
     viewGroup.visibility = View.VISIBLE
 }

@@ -5,12 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Process
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -18,9 +17,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.google.android.gms.ads.AdLoader
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.a_root_header.*
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import org.threeten.bp.LocalDateTime
 import ru.jrd_prime.trainingdiary.R
@@ -29,8 +30,10 @@ import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
+import ru.jrd_prime.trainingdiary.fb_core.models.Premium
+import ru.jrd_prime.trainingdiary.fb_core.models.User
 import ru.jrd_prime.trainingdiary.gauth.GAuth
-import ru.jrd_prime.trainingdiary.handlers.pageListener
+import ru.jrd_prime.trainingdiary.handlers.*
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.utils.*
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
@@ -38,7 +41,7 @@ import ru.jrd_prime.trainingdiary.viewmodels.DashboardViewModel
 import ru.jrd_prime.trainingdiary.viewmodels.StatisticViewModel
 
 
-const val TAG = "myLogs"
+const val TAG = "Dashboard: drops:"
 const val PAGE_COUNT = 5000
 const val START_PAGE = 313
 
@@ -55,38 +58,69 @@ class DashboardActivity : AppCompatActivity() {
     private var utils: AppUtils? = null
     internal val activity: Activity = this
     private var fireAuth: FirebaseAuth = Firebase.auth
-    lateinit var fireBaseCore: FireBaseCore
+    lateinit var fbc: FireBaseCore
     lateinit var appContainer: AppContainer
-    val statisticAdapter = StatisticListAdapter()
-    val DIALOG_EXIT = 1
+    private val statAdapter = StatisticListAdapter()
     lateinit var mainBinding: ActivityDashboardBinding
     private val mainLayout = R.layout.activity_dashboard
     lateinit var workoutPager: ViewPager
+    lateinit var adLoader: AdLoader
+    private var premiumStatus: Premium? = null
+    lateinit var statRecView: RecyclerView
+    var userStatus: User? = null
+    var userID: String? = null
+
+    companion object {
+        const val PREMIUM_STATUS_FREE = "free"
+        const val PREMIUM_STATUS_PRO = "premium"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         appContainer = (application as TrainingDiaryApp).container
-
         val database = appContainer.fireDB
 
-        fireBaseCore = FireBaseCore(appContainer)
+        fbc = FireBaseCore(appContainer)
+        userID = appContainer.gAuth.getLastSignedInAccount()?.id
+
+        Log.d(TAG, "- - - - - - - - - -")
+        Log.d(TAG, "ON CREATE. Пытаемся опознать юзера и показать необходимый ЮИ")
+        getUserInfo(userID)
+        Log.d(TAG, "- - - - - - - - - -")
+
+
 //fireBaseCore.addNewUserOnSignIn()
 
-        // Add Categories
-        fireBaseCore.pushCategories()
 
+        // Add Categories
+        fbc.pushCategories()
         utils = appContainer.appUtils
         mainBinding = DataBindingUtil.setContentView(this, mainLayout)
         workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
-        val statRecView = findViewById<RecyclerView>(R.id.statListView)
+
+        val mSettings = getSharedPreferences(cfg.getSharedPreferenceName(), Context.MODE_PRIVATE)
+
+        gAuth = appContainer.gAuth
+
+
+        statRecView = findViewById<RecyclerView>(R.id.statListView)
+        statRecView.adapter = statAdapter
+        statAdapter.notifyDataSetChanged()
+        statRecView.layoutManager = LinearLayoutManager(this)
+
+
+        var userID: String? = null
+        try {
+            userID = gAuth!!.getLastSignedInAccount()!!.id
+        } catch (e: NullPointerException) {
+        }
+        updateUIOnGetUserPremium(userID, appContainer)
+
 
         navDrawerFragment = NavDrawerFragment(appContainer)
 
 /* START */
-        val mSettings = getSharedPreferences(cfg.getSharedPreferenceName(), Context.MODE_PRIVATE)
 
-        gAuth = appContainer.gAuth
 /* END */
         mainBinding.viewmodel = dashboardViewModel
 
@@ -95,16 +129,14 @@ class DashboardActivity : AppCompatActivity() {
         workoutPager.adapter = workoutPagerAdapter
         workoutPager.setCurrentItem(START_PAGE + 1, false)
         workoutPager.addOnPageChangeListener(pageListener)
-        statisticAdapter.notifyDataSetChanged()
-        statRecView.adapter = statisticAdapter
         setSupportActionBar(vBottomAppBar)
 
-/* START */
+        /* START */
         if (mSettings.getBoolean(cfg.getSpNameFirstRun(), true)) {
             // Выполняем необходимые настройки для первого запуска
             utils!!.setDefaultConfig(mSettings, cfg)
         }
-/* END */
+        /* END */
 
         val date: MutableList<Long> = getWeekFromDate(getStartDateForPosition(START_PAGE))
         val statEndDate = date[1]
@@ -117,15 +149,92 @@ class DashboardActivity : AppCompatActivity() {
         )
 
         updateStat()
-        fireBaseCore.listenNewData2(this)
+        fbc.listenNewData2(this)
+    }
 
-        statRecView.layoutManager = LinearLayoutManager(this)
+    private fun getUserInfo(userID: String?) {
+        if (userID != null) {
+            fbc.getUserInfo(object : UserInfo {
+                override fun onChangeUserInfo(user: User?) {
+                    if (user != null) {
+                        when (user.auth) {
+                            true -> Log.d(TAG, "Авторизация стоит в ТРУ")
+                            false -> Log.d(TAG, "Авторизация стоит в ФОЛС")
+                            null -> Log.d(TAG, "Еще нету записи об авторизации")
+                        }
+                    } else {
+                        /* NO USER */
+                        Log.d(TAG, "Юзера нету в БД")
+                    }
+
+                }
+            }, userID!!)
+        } else {
+
+            Log.d(TAG, "Нету ИД пользователя, значит тут еще не логинились, или вышли из аккаунта")
+        }
+
+    }
+
+    fun updateUIOnGetUserPremium(
+        userID: String?,
+        appContainerz: AppContainer
+    ) {
+
+        if (!userID.isNullOrEmpty()) {
+            FireBaseCore(appContainerz).getUserPremiumListener(object : UserPremiumChange {
+                override fun onChangeUserPremium(premium: Premium?, uid: String) {
+                    premiumStatus = premium
+                    if (premium != null) {
+                        when (premium.premium) {
+                            true -> {
+                                updateStatUI(PREMIUM_STATUS_PRO)
+                                updateStat()
+                            }
+                            false -> {
+                                updateStatUI(PREMIUM_STATUS_FREE)
+                            }
+                        }
+                    } else {
+                        Toast.makeText(
+                            applicationContext,
+                            "Error on get user premium",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }, userID)
+        } else {
+            Log.d(TAG, "onCreate: drops USER ID EMPTY!!")
+//            updateStatUI(PREMIUM_STATUS_FREE)
+            updateStatUI(PREMIUM_STATUS_PRO)
+        }
+    }
+
+    private fun updateStatUI(status: String) {
+        val statViewPremiumAd = statListViewPremiumAd
+        when (status) {
+            PREMIUM_STATUS_FREE -> {
+                Log.d(TAG, "updateStatUI: $PREMIUM_STATUS_FREE")
+                statAdapter.notifyDataSetChanged()
+                setGone(statRecView)
+                setVisbl(statViewPremiumAd)
+            }
+
+            PREMIUM_STATUS_PRO -> {
+                Log.d(TAG, "updateStatUI: $PREMIUM_STATUS_PRO")
+                updateStat()
+                statAdapter.notifyDataSetChanged()
+                setVisbl(statRecView)
+                setGone(statListViewPremiumAd)
+            }
+        }
     }
 
     fun updateStat() {
         StatisticViewModel().updateStat(
-            fireBaseCore,
-            statisticAdapter,
+            fbc,
+            statAdapter,
             dashboardViewModel,
             mainBinding
         )
@@ -134,7 +243,7 @@ class DashboardActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         if (fireAuth.currentUser != null) {
-            Log.d(TAG, "onStart: USER NO NULL")
+            Log.d(TAG, "onStart: FireAuth current user NOT NULL")
             val u = fireAuth.currentUser
         }
         gAuth!!.getLastSignedInAccount()
@@ -165,6 +274,15 @@ class DashboardActivity : AppCompatActivity() {
         super.onResume()
         Log.d(TAG, "MainActivity: onResume()")
 
+        userID = appContainer.gAuth.getLastSignedInAccount()?.id
+
+        Log.d(TAG, "- - - - - - - - - -")
+        Log.d(TAG, "ON RESUME. Пытаемся опознать юзера и показать необходимый ЮИ")
+        getUserInfo(userID)
+        Log.d(TAG, "- - - - - - - - - -")
+
+
+
         /* Update Pager After Login */
         if (utils!!.getUserAuth()) {
             val workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
@@ -172,6 +290,12 @@ class DashboardActivity : AppCompatActivity() {
             workoutPager.setCurrentItem(START_PAGE, false)
             workoutPager.addOnPageChangeListener(pageListener)
             utils?.setShowMenu(false)
+            var userID: String? = null
+            try {
+                userID = gAuth!!.getLastSignedInAccount()!!.id
+            } catch (e: NullPointerException) {
+            }
+            updateUIOnGetUserPremium(userID, appContainer)
         }
 
 //        if (utils!!.getShowMenu()) {
@@ -186,13 +310,6 @@ class DashboardActivity : AppCompatActivity() {
 
     fun isAuthenticatedUser(mSettings: SharedPreferences): Boolean {
         return mSettings.getBoolean(cfg.getSpNameUserAuth(), false)
-    }
-
-    fun off() {
-        if (gAuth!!.getGoogleSignInClient() != null) {
-            gAuth!!.gSignOut()
-        }
-        Process.killProcess(Process.myPid())
     }
 
 

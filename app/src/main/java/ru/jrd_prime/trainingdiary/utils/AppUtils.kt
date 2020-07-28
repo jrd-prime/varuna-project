@@ -31,7 +31,7 @@ class AppUtils(
     private val appContext: TrainingDiaryApp
 ) {
     private val appContainer = appContext.container
-    private val shPref = appContainer.sharedPreferences
+    private val shPref = appContainer.preferences
     private val cfg = appContainer.appConfig
     private val context = appContext.applicationContext
 

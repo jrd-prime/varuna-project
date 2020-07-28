@@ -1,5 +1,6 @@
 package ru.jrd_prime.trainingdiary.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil

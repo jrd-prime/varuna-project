@@ -16,7 +16,7 @@ import ru.jrd_prime.trainingdiary.databinding.ANewCardViewBinding
 import ru.jrd_prime.trainingdiary.databinding.CardExtraViewBinding
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.handlers.setGone
-import ru.jrd_prime.trainingdiary.handlers.setVisible
+import ru.jrd_prime.trainingdiary.handlers.setVisbl
 import ru.jrd_prime.trainingdiary.utils.AppSettingsCore
 import ru.jrd_prime.trainingdiary.utils.catColor
 import ru.jrd_prime.trainingdiary.utils.catColorBGNoCorners
@@ -205,17 +205,17 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
             0 -> {
                 fillLine(view = incLine1Filled, key = key, data = extraWorkout)
                 setImageFromConstants(extraWorkout.category, incLine1Filled.iv)
-                setVisible(addsLine1)
+                setVisbl(addsLine1)
             }
             1 -> {
                 fillLine(view = incLine2Filled, key = key, data = extraWorkout)
                 setImageFromConstants(extraWorkout.category, incLine2Filled.iv)
-                setVisible(addsLine2)
+                setVisbl(addsLine2)
             }
             2 -> {
                 fillLine(view = incLine3Filled, key = key, data = extraWorkout)
                 setImageFromConstants(extraWorkout.category, incLine3Filled.iv)
-                setVisible(addsLine3)
+                setVisbl(addsLine3)
             }
         }
     }
@@ -255,7 +255,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
 
         if (data.description.isNotEmpty()) {
-            if (settings.getShowWorkoutDescription()) setVisible(container.extraDesc)
+            if (settings.getShowWorkoutDescription()) setVisbl(container.extraDesc)
         } else {
             setGone(container.extraDesc)
         }
@@ -264,7 +264,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
         /* END FILL */
         setImageFromConstantsWOCorners(data.category, categoryIconView, view.dotView)
-        setVisible(container)
+        setVisbl(container)
     }
 
 
@@ -272,18 +272,18 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 //        binding.additionalCardsHolder.removeViewAt(atPosition) /* remove all views to fix dublicates */
         when (inLine) {
             0 -> {
-                setVisible(addsLine1)
-                setVisible(incLine1Empty.addsCardCont)
+                setVisbl(addsLine1)
+                setVisbl(incLine1Empty.addsCardCont)
                 incLine1Empty.cardHiddenTextWithID.text = mainWorkoutDate
             }
             1 -> {
-                setVisible(addsLine2)
-                setVisible(incLine2Empty.addsCardCont)
+                setVisbl(addsLine2)
+                setVisbl(incLine2Empty.addsCardCont)
                 incLine2Empty.cardHiddenTextWithID.text = mainWorkoutDate
             }
             2 -> {
-                setVisible(addsLine3)
-                setVisible(incLine3Empty.addsCardCont)
+                setVisbl(addsLine3)
+                setVisbl(incLine3Empty.addsCardCont)
                 incLine3Empty.cardHiddenTextWithID.text = mainWorkoutDate
             }
         }
@@ -292,7 +292,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
     private fun showMainView(wo: Workout) { // show main card with workout info
         val cardF = binding.incCardFilled
         val cardE = binding.incCardEmpty
-        setVisible(cardF.mainCardFilled)
+        setVisbl(cardF.mainCardFilled)
         setGone(cardE.mainCardEmpty)
 
         if (!settings.getShowWorkoutDescription()) setGone(cardF.mainDesc)
@@ -313,7 +313,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
         if (extraCount != 0) {
             binding.extraCount.text = "+$extraCount"
-            setVisible(binding.extraCountContainer)
+            setVisbl(binding.extraCountContainer)
         }
 
 
@@ -328,12 +328,12 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
         if (wo.time == 0) {
             setGone(cardF.textTimeContainer)
         } else {
-            setVisible(cardF.textTimeContainer)
+            setVisbl(cardF.textTimeContainer)
             time.text = wo.convertMinsToHM(res)
         }
 
         if (wo.description.isNotEmpty()) {
-            if (settings.getShowWorkoutDescription()) setVisible(cardF.mainDesc)
+            if (settings.getShowWorkoutDescription()) setVisbl(cardF.mainDesc)
         } else {
             setGone(cardF.mainDesc)
         }
@@ -349,7 +349,7 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
     private fun showEmptyMainView(wo: Workout) { // show empty main view with add button
         setGone(binding.incCardFilled.mainCardFilled)
-        setVisible(binding.incCardEmpty.mainCardEmpty)
+        setVisbl(binding.incCardEmpty.mainCardEmpty)
     }
 
     private fun setNumOfDayToView(wo: String?) {

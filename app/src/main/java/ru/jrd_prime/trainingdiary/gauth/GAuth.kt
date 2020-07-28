@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.fragment.app.FragmentActivity
-import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -14,13 +13,10 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
-import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.ui.DashboardActivity
-import ru.jrd_prime.trainingdiary.ui.START_PAGE
 import ru.jrd_prime.trainingdiary.utils.AppUtils
 import ru.jrd_prime.trainingdiary.utils.Toasts
 
@@ -28,6 +24,7 @@ class GAuth(val appContext: TrainingDiaryApp) {
     companion object {
         const val RC_SIGN_IN = 0
         const val TAG: String = " / GAuth.class"
+        const val USER_PREF_UID = "jp_uid"
     }
 
     private val appContainer: AppContainer = appContext.container
@@ -83,7 +80,7 @@ class GAuth(val appContext: TrainingDiaryApp) {
             val account = completedTask.getResult(ApiException::class.java)!!
             utils.setConfigAfterSignIn(account)
             addUser(account)
-            appContainer.sharedPreferences.edit().putString("jp_uid", account.id).apply()
+            appContainer.preferences.edit().putString(USER_PREF_UID, account.id).apply()
             Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
             firebaseAuthWithGoogle(account.idToken!!)
         } catch (e: ApiException) {
@@ -115,12 +112,12 @@ class GAuth(val appContext: TrainingDiaryApp) {
 //        }
     }
 
-    fun addUser(account: GoogleSignInAccount) {
+    private fun addUser(account: GoogleSignInAccount) {
         Log.d(ru.jrd_prime.trainingdiary.ui.TAG, "addUser: ")
         fireBaseCore.addNewUserOnSignIn(account.id, account.displayName, account.email)
     }
 
-    fun firebaseAuthWithGoogle(idToken: String) {
+    private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         Log.d(ru.jrd_prime.trainingdiary.ui.TAG, "firebaseAuthWithGoogle------------: $credential")
         fireAuth.signInWithCredential(credential)

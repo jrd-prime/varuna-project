@@ -1,25 +1,24 @@
 package ru.jrd_prime.trainingdiary.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.size
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.a_need_auth_page.view.*
 import kotlinx.android.synthetic.main.a_workout_list_pager.view.*
-import kotlinx.android.synthetic.main.activity_dashboard.view.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
 import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
-import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.databinding.ANeedAuthPageBinding
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutListPagerNewBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
@@ -94,6 +93,14 @@ class WorkoutPageFragment : Fragment() {
             workoutsListAdapter.notifyDataSetChanged()
             rootView.recView.adapter = workoutsListAdapter
 
+            MobileAds.initialize(context)
+            val mAdView = pagerBinding.adView
+            val adRequest = AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build()
+            mAdView.loadAd(adRequest)
+
+
+
+
             setDateForHead(view = activity?.findViewById<TextView>(R.id.tvTodayDay))
 
             val t = activity?.findViewById<TextView>(R.id.tvTodayDay)
@@ -101,7 +108,6 @@ class WorkoutPageFragment : Fragment() {
             t?.setOnClickListener {
                 workoutPager?.setCurrentItem(START_PAGE, true)
             }
-
 
 
             val date = getWeekFromDate(getStartDateForPosition(pageNumber))

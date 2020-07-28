@@ -2,12 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="none">
         <item
+            android:id="@+id/premiumOn"
+            android:icon="@drawable/jp_crown"
+            android:title="Premium ON" />
+        <item
+            android:id="@+id/premiumOff"
+            android:icon="@drawable/jp_crown"
+            android:title="Premium OFF" />
+        <item
             android:id="@+id/changeSet"
             android:icon="@drawable/baseline_note_white_24"
             android:title="Show/Hide Descriptions" />
-        <item
-            android:id="@+id/navCloseApp"
-            android:icon="@drawable/jp_times"
-            android:title="@string/nav_menu_exit" />
+
     </group>
 </menu>
