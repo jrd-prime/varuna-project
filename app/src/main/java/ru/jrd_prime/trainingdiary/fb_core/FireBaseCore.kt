@@ -6,17 +6,16 @@ import com.google.firebase.database.ktx.getValue
 import org.threeten.bp.LocalDateTime
 import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
 import ru.jrd_prime.trainingdiary.fb_core.config._CATEGORIES
-import ru.jrd_prime.trainingdiary.fb_core.config._PREMIUM
 import ru.jrd_prime.trainingdiary.fb_core.config._USERS
 import ru.jrd_prime.trainingdiary.fb_core.config._WORKOUTS
 import ru.jrd_prime.trainingdiary.fb_core.models.Category
-import ru.jrd_prime.trainingdiary.fb_core.models.Premium
 import ru.jrd_prime.trainingdiary.fb_core.models.User
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
-import ru.jrd_prime.trainingdiary.handlers.*
+import ru.jrd_prime.trainingdiary.handlers.GetWorkoutCallback
+import ru.jrd_prime.trainingdiary.handlers.GetWorkoutsCallback
+import ru.jrd_prime.trainingdiary.handlers.UserInfo
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.ui.DashboardActivity
-import ru.jrd_prime.trainingdiary.utils.dateToTimestamp
 
 class FireBaseCore(private val appContainer: AppContainer) {
     companion object {
@@ -25,9 +24,9 @@ class FireBaseCore(private val appContainer: AppContainer) {
 
     private val db = appContainer.fireDB
     private val userRef = db.getReference(_USERS)
-    private val premiumRef = db.getReference(_PREMIUM)
     private val categoriesRef = db.getReference(_CATEGORIES)
     private val workoutsRef = db.getReference(_WORKOUTS)
+    //todo delete uid from pref
     private val userId = appContainer.preferences.getString("jp_uid", "").toString()
     private val today = LocalDateTime.now()
     private val year = today.year.toString()
@@ -37,69 +36,28 @@ class FireBaseCore(private val appContainer: AppContainer) {
 
 
     fun addNewUserOnSignIn(uid: String?, name: String?, mail: String?) {
-        val user = User(uid, name, mail, "", true)
+        val user = User(
+            uid, name, mail, "",
+            auth = false,
+            premium = false,
+            start = null,
+            end = null,
+            forever = false,
+            set = true
+        )
         if (uid != null) {
             userRef.child(uid).setValue(user)
 
             /* Set Premium Status */
-            setDefaultUserPremiumStatus(uid)
+//            setDefaultUserPremiumStatus(uid)
         }
     }
 
 
-    fun setPremium(to: Boolean) {
-        premiumRef.child(userId).child("premium").setValue(to)
-    }
-    fun setAuth(id: String,to: Boolean) {
+    fun setAuth(id: String, to: Boolean) {
         userRef.child(id).child("auth").setValue(to)
     }
-    private fun setDefaultUserPremiumStatus(uid: String) {
-        getUserPremiumInfo(object : UserPremium {
-            override fun onGetUserPremium(
-                premium: Premium?,
-                uid: String
-            ) {
-                if (premium == null) {
-                    val timestamp = dateToTimestamp(LocalDateTime.now())
-                    val defaultPremium = Premium(
-                        premium = false,
-                        start = timestamp,
-                        end = timestamp,
-                        userID = uid,
-                        forever = false,
-                        set = true
-                    )
-                    Log.d(TAG, "onGetUserPremium: SET Default Premium Status")
-                    premiumRef.child(uid).setValue(defaultPremium)
-                } else {
-                    Log.d(TAG, "onGetUserPremium: Premium Status TUNED")
-                }
-            }
-        }, uid)
-    }
 
-    fun getUserPremiumInfo(callback: UserPremium, uid: String) {
-        premiumRef.child(uid).addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-            }
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                callback.onGetUserPremium(snapshot.getValue<Premium>(), uid)
-            }
-        })
-    }
-
-    fun getUserPremiumListener(callback: UserPremiumChange, uid: String) {
-        premiumRef.child(uid).addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(error: DatabaseError) {
-            }
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-                callback.onChangeUserPremium(snapshot.getValue<Premium>(), uid)
-            }
-
-        })
-    }
 
     /*
     * 1. Берем список дат в виде массива дд-мм-гггг из 7ми дат
@@ -372,5 +330,10 @@ class FireBaseCore(private val appContainer: AppContainer) {
             }
         })
 
+    }
+
+    fun setPremium(to: Boolean) {
+        userRef.child(appContainer.gAuth.getLastSignedInAccount()?.id.toString()).child("premium")
+            .setValue(to)
     }
 }

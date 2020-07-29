@@ -2,7 +2,6 @@ package ru.jrd_prime.trainingdiary.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.model.PlaceStatisticModel
 
@@ -11,15 +10,6 @@ class DashboardViewModel : ViewModel() {
     val TAG = "dashVM"
     var place: PlaceStatisticModel? = null
     var workoutsSum = 0
-    var p1icon: Int = R.drawable.jp_day_fri
-    var p2icon: Int = R.drawable.jp_day_fri
-    var p3icon: Int = R.drawable.jp_day_fri
-    var p4icon: Int = R.drawable.jp_day_fri
-
-    var p1progress = 0
-    var p2progress = 0
-    var p3progress = 0
-    var p4progress = 0
 
     fun setPlaces(placeList: MutableList<PlaceStatisticModel>) {
     }

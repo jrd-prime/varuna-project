@@ -8,7 +8,12 @@ data class User(
     val name: String?,
     val mail: String?,
     val fbUid: String?,
-    var auth: Boolean?
+    var auth: Boolean?,
+    val premium: Boolean?,
+    val start: Long?,
+    val end: Long?,
+    val forever: Boolean?,
+    val set: Boolean?
 ) {
-    constructor() : this(id = null, name = null, mail = null, fbUid = null, auth = null)
+    constructor() : this(null, null, null, null, null, null, null, null, null, null)
 }

@@ -31,7 +31,6 @@ import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
-import ru.jrd_prime.trainingdiary.fb_core.models.Premium
 import ru.jrd_prime.trainingdiary.fb_core.models.User
 import ru.jrd_prime.trainingdiary.gauth.GAuth
 import ru.jrd_prime.trainingdiary.handlers.*
@@ -52,9 +51,7 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
     private val mainViewModel by lazy {
         ViewModelProvider(this).get(DashboardViewModel::class.java)
     }
-    private val mPagerAdapter by lazy {
-        WorkoutPageAdapter(supportFragmentManager)
-    }
+    lateinit var mPagerAdapter: WorkoutPageAdapter
     private var mGoogleAuth: GAuth? = null
     private var mNavDrawerFragment: NavDrawerFragment? = null
     private val mConfig: AppConfig = AppConfig()
@@ -69,7 +66,6 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
     lateinit var mBinding: ActivityDashboardBinding
     lateinit var mPagerView: ViewPager
     lateinit var adLoader: AdLoader
-    private var premiumStatus: Premium? = null
     var userStatus: User? = null
     var userID: String? = null
 
@@ -113,11 +109,6 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
 
         userID = mGoogleAuth!!.getLastSignedInAccount()?.id
 
-        Log.d(TAG, "- - - - - - - - - -")
-        Log.d(TAG, "ON CREATE. Пытаемся опознать юзера и показать необходимый ЮИ")
-        getUserInfo(userID)
-        Log.d(TAG, "- - - - - - - - - -")
-
 
         //fireBaseCore.addNewUserOnSignIn()
 
@@ -144,9 +135,9 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
 
         setWindow()
 
-        mPagerView.adapter = mPagerAdapter
-        mPagerView.setCurrentItem(START_PAGE + 1, false)
-        mPagerView.addOnPageChangeListener(pageListener)
+
+
+
         setSupportActionBar(vBottomAppBar)
 
 
@@ -162,7 +153,14 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
 
 //        updateStat()
         fbc.listenNewData2(this)
-        Toast.makeText(this, "ACTIVITY", Toast.LENGTH_SHORT).show()
+
+
+        Log.d(TAG, "- - - - - - - - - -")
+        Log.d(TAG, "ON CREATE. Пытаемся опознать юзера и показать необходимый ЮИ")
+        getUserInfo(userID)
+        Log.d(TAG, "- - - - - - - - - -")
+
+
     }
 
     private fun getUserInfo(userID: String?) {
@@ -176,12 +174,17 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
                                 mNavDrawerFragment =
                                     NavDrawerFragment(appCont, UI_WAY_USER, user)  /* Меню */
                                 mStatViewModel.showAuthUI(mStatAdapter) /* Статистика */
+
+                                val up = user.premium ?: false
+//                                val up = if (user.premium != null) user.premium else false
+                                showPager(userAuth = true, userPremium = up) /* Контент */
                             }
                             false -> {
                                 Log.d(TAG, "Авторизация стоит в ФОЛС")
                                 mStatViewModel.showUnAuthUI(mStatAdapter) /* Статистика */
                                 mNavDrawerFragment =
                                     NavDrawerFragment(appCont, UI_WAY_NO_USER, null)  /* Меню */
+                                showPager(userAuth = false, userPremium = false) /* Контент */
                             }
                             null -> {
                                 Toast.makeText(
@@ -203,8 +206,16 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
             /* Инициализируем ЮИ для незалогиненного юзера*/
             mStatViewModel.showUnAuthUI(mStatAdapter) /* Статистика */
             mNavDrawerFragment = NavDrawerFragment(appCont, UI_WAY_NO_USER, null)  /* Меню */
-            WorkoutPageFragment().showUnAuthUI() /* Контент */
+            showPager(userAuth = false, userPremium = false) /* Контент */
         }
+    }
+
+    private fun showPager(userAuth: Boolean, userPremium: Boolean) {
+        mPagerAdapter = WorkoutPageAdapter(supportFragmentManager, userAuth, userPremium)
+        Log.d(TAG, "showPager: new $mPagerAdapter")
+        mPagerView.adapter = mPagerAdapter
+        mPagerView.setCurrentItem(START_PAGE + 1, false)
+        mPagerView.addOnPageChangeListener(pageListener)
     }
 
     private fun updateUIOnGetUserPremium(
@@ -213,32 +224,33 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
     ) {
 
         if (!userID.isNullOrEmpty()) {
-            FireBaseCore(appContainerz).getUserPremiumListener(object : UserPremiumChange {
-                override fun onChangeUserPremium(premium: Premium?, uid: String) {
-                    premiumStatus = premium
-                    if (premium != null) {
-                        when (premium.premium) {
-                            true -> {
-                                updateStatUI(PREMIUM_STATUS_PRO)
-//                                updateStat()
-                            }
-                            false -> {
-                                updateStatUI(PREMIUM_STATUS_FREE)
-                            }
-                        }
-                    } else {
-                        Toast.makeText(
-                            applicationContext,
-                            "Error on get user premium",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-            }, userID)
-        } else {
-            Log.d(TAG, "onCreate: drops USER ID EMPTY!!")
-//            updateStatUI(PREMIUM_STATUS_FREE)
-            updateStatUI(PREMIUM_STATUS_PRO)
+//            FireBaseCore(appContainerz).getUserPremiumListener(object : UserPremiumChange {
+//                override fun onChangeUserPremium(premium: Premium?, uid: String) {
+//                    premiumStatus = premium
+//                    if (premium != null) {
+//                        when (premium.premium) {
+//                            true -> {
+//                                updateStatUI(PREMIUM_STATUS_PRO)
+////                                updateStat()
+//                            }
+//                            false -> {
+//                                updateStatUI(PREMIUM_STATUS_FREE)
+//                            }
+//                        }
+//                    } else {
+//                        Toast.makeText(
+//                            applicationContext,
+//                            "Error on get user premium",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//                }
+//            }, userID)
+//        } else {
+//            Log.d(TAG, "onCreate: drops USER ID EMPTY!!")
+////            updateStatUI(PREMIUM_STATUS_FREE)
+//            updateStatUI(PREMIUM_STATUS_PRO)
+//        }
         }
     }
 

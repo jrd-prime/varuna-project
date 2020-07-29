@@ -1,18 +1,17 @@
 package ru.jrd_prime.trainingdiary.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.view.size
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.a_need_auth_page.view.*
 import kotlinx.android.synthetic.main.a_workout_list_pager.view.*
@@ -22,18 +21,22 @@ import ru.jrd_prime.trainingdiary.adapter.WorkoutListAdapter
 import ru.jrd_prime.trainingdiary.databinding.ANeedAuthPageBinding
 import ru.jrd_prime.trainingdiary.databinding.AWorkoutListPagerNewBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
+import ru.jrd_prime.trainingdiary.fb_core.models.User
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.utils.getDatesWeekList
 import ru.jrd_prime.trainingdiary.utils.getStartDateForPosition
 import ru.jrd_prime.trainingdiary.utils.getWeekFromDate
-import ru.jrd_prime.trainingdiary.utils.setDateForHead
 
 
 const val ARGUMENT_PAGE_NUMBER = "arg_page_number"
+const val ARGUMENT_USER_AUTH = "arg_user_auth"
+const val ARGUMENT_USER_PREMIUM = "arg_user_premium"
 
 class WorkoutPageFragment : Fragment() {
     private var pageNumber = 0
-    private val appContainerz: AppContainer by lazy {
+    private var userAuth = false
+    private var userPremium = false
+    private val appCont: AppContainer by lazy {
         (activity?.application as TrainingDiaryApp).container
     }
 
@@ -42,9 +45,11 @@ class WorkoutPageFragment : Fragment() {
     которое пришло на вход. Это число – номер страницы, которую хочет показать ViewPager.
     По нему фрагмент будет определять, какое содержимое создавать в фрагменте. */
     companion object {
-        fun newInstance(page: Int): WorkoutPageFragment {
+        fun newInstance(page: Int, userAuth: Boolean, userPremium: Boolean): WorkoutPageFragment {
             val pageFragment = WorkoutPageFragment()
             val arguments = Bundle()
+            arguments.putBoolean(ARGUMENT_USER_AUTH, userAuth)
+            arguments.putBoolean(ARGUMENT_USER_PREMIUM, userPremium)
             arguments.putInt(ARGUMENT_PAGE_NUMBER, page)
             pageFragment.arguments = arguments
             return pageFragment
@@ -58,6 +63,9 @@ class WorkoutPageFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pageNumber = requireArguments().getInt(ARGUMENT_PAGE_NUMBER)
+        userAuth = requireArguments().getBoolean(ARGUMENT_USER_AUTH)
+        Log.d(TAG, "onCreate: !!!!! $userAuth")
+        userPremium = requireArguments().getBoolean(ARGUMENT_USER_PREMIUM)
     }
 
     /*
@@ -67,8 +75,10 @@ class WorkoutPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val fireBaseCore = FireBaseCore(appContainerz)
-        if (!appContainerz.appUtils.getUserAuth()) {
+        val fireBaseCore = FireBaseCore(appCont)
+        Log.d(TAG, "!!!!!!!!!!!!!onCreateView: $userAuth")
+        if (!userAuth) {
+
             /* USER NOT AUTH*/
             val pagerBinding: ANeedAuthPageBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(activity),
@@ -78,7 +88,7 @@ class WorkoutPageFragment : Fragment() {
             )
             val rootView = pagerBinding.root
             rootView.btnSignInOnMain.setOnClickListener {
-                appContainerz.gAuth.gSignIn(activity) /*SIGN IN*/
+                appCont.gAuth.gSignIn(activity) /*SIGN IN*/
             }
             return rootView
         } else {
@@ -99,9 +109,6 @@ class WorkoutPageFragment : Fragment() {
             mAdView.loadAd(adRequest)
 
 
-
-
-
             val t = activity?.findViewById<TextView>(R.id.tvTodayDay)
             val workoutPager = activity?.findViewById<ViewPager>(R.id.viewPagerMainDashboard)
             t?.setOnClickListener {
@@ -115,7 +122,7 @@ class WorkoutPageFragment : Fragment() {
 
 
             val d = fireBaseCore.getWeekData(dates, workoutsListAdapter)
-            FireBaseCore(appContainerz).listenNewData(workoutsListAdapter)
+            FireBaseCore(appCont).listenNewData(workoutsListAdapter)
 
 
             rootView.recView.layoutManager = LinearLayoutManager(context)

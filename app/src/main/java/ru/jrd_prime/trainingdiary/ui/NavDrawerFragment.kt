@@ -128,15 +128,15 @@ class NavDrawerFragment(
         }
     }
 
-    private fun updatePagerOnLogOut() {
-        Log.d(ru.jrd_prime.trainingdiary.ui.TAG, "onResume: update on logout")
-
-
-        val workoutPager = activity?.findViewById<ViewPager>(R.id.viewPagerMainDashboard)
-        workoutPager?.adapter = activity?.supportFragmentManager?.let { WorkoutPageAdapter(it) }
-        workoutPager?.setCurrentItem(START_PAGE, false)
-        workoutPager?.addOnPageChangeListener(pageListener)
-    }
+//    private fun updatePagerOnLogOut() {
+//        Log.d(ru.jrd_prime.trainingdiary.ui.TAG, "onResume: update on logout")
+//
+//
+//        val workoutPager = activity?.findViewById<ViewPager>(R.id.viewPagerMainDashboard)
+//        workoutPager?.adapter = activity?.supportFragmentManager?.let { WorkoutPageAdapter(it, null) }
+//        workoutPager?.setCurrentItem(START_PAGE, false)
+//        workoutPager?.addOnPageChangeListener(pageListener)
+//    }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
