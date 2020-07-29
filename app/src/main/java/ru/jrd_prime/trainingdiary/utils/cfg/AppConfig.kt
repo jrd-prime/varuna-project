@@ -15,11 +15,11 @@ class AppConfig {
 
     }
 
-    fun getSharedPreferenceName(): String? {
+    fun getPrefName(): String? {
         return SHARED_PREFERENCE_NAME
     }
 
-    fun getSpNameFirstRun(): String? {
+    fun getPrefNameFirstRun(): String? {
         return SP_NAME_FIRST_RUN
     }
 

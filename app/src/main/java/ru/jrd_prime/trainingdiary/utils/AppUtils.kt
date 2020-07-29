@@ -52,7 +52,7 @@ class AppUtils(
 
 
     fun setDefaultConfig(mSettings: SharedPreferences, cfg: AppConfig) {
-        mSettings.edit().putBoolean(cfg.getSpNameFirstRun(), false).apply()
+        mSettings.edit().putBoolean(cfg.getPrefNameFirstRun(), false).apply()
     }
 
     // SETTINGS AFTER SIGN IN
@@ -223,7 +223,7 @@ class AppUtils(
     }
 
     fun setDefaultConfig() {
-        shPref.edit().putBoolean(cfg.getSpNameFirstRun(), false).apply()
+        shPref.edit().putBoolean(cfg.getPrefNameFirstRun(), false).apply()
     }
 
     fun closeApp(act: Activity) {

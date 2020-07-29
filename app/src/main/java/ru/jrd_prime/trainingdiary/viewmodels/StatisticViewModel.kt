@@ -1,5 +1,7 @@
 package ru.jrd_prime.trainingdiary.viewmodels
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.getValue
@@ -13,8 +15,20 @@ import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.fb_core.config.DATE_FORMAT_STRING
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.handlers.GetWorkoutsCallback
+import ru.jrd_prime.trainingdiary.handlers.setGone
+import ru.jrd_prime.trainingdiary.model.PlaceStatisticModel
 
-class StatisticViewModel : ViewModel() {
+class StatisticViewModel(private val ctx: Context, private val mBinding: ActivityDashboardBinding) :
+    ViewModel() {
+    var statTitle = "Statistics for the last month"
+    val TAG = "dashVM"
+    var place: PlaceStatisticModel? = null
+    var workoutsSum = 0
+    val statContainer = mBinding.frameHeader.layHeader
+    val statView = statContainer.statListView
+    val needPremiumView = statContainer.statListViewPremiumAd
+    val statExampleOver = statContainer.statListViewPremiumAdEx
+
     //todo проверить статистику на переходе месяцв
     fun updateStat(
         fbc: FireBaseCore,
@@ -73,5 +87,57 @@ class StatisticViewModel : ViewModel() {
         statRootView.tvTime_Stat.text = Workout(time = time).convertMinsToHM(res)
         statRootView.tvCalories_Stat.text = res.getString(R.string.calories_val, cal.toString())
         statRootView.tvDistance_Stat.text = res.getString(R.string.distance_val, dist.toString())
+    }
+
+    fun calculateStatistic(list: List<Workout>): List<PlaceStatisticModel> {
+//        val data = list.filter { workoutModel -> !workoutModel.empty }
+        val data = list
+        val cardioSize = data.filter { workoutModel -> workoutModel.category == 1 }.size
+        val powerSize = data.filter { workoutModel -> workoutModel.category == 2 }.size
+        val stretchSize = data.filter { workoutModel -> workoutModel.category == 3 }.size
+        val restSize = data.filter { workoutModel -> workoutModel.category == 4 }.size
+
+        workoutsSum = cardioSize + powerSize + stretchSize + restSize
+
+
+        val onePercent: Float =
+            if (workoutsSum != 0) 100f / workoutsSum else 0f // no records - set def
+
+        val cardioPercent = onePercent * cardioSize
+        val powerPercent = onePercent * powerSize
+        val stretchPercent = onePercent * stretchSize
+        val restPercent = onePercent * restSize
+
+        val z = mutableListOf<PlaceStatisticModel>()
+        z.add(PlaceStatisticModel(1, cardioPercent))
+        z.add(PlaceStatisticModel(2, powerPercent))
+        z.add(PlaceStatisticModel(3, stretchPercent))
+        z.add(PlaceStatisticModel(4, restPercent))
+        var maxPercent = 0f
+        for (item in z) {
+            maxPercent = if (item.catPercent > maxPercent) item.catPercent else maxPercent
+        }
+        z.sortByDescending { it.catPercent }
+        val placed = listOf<PlaceStatisticModel>(z[0], z[1], z[2], z[3])
+        placed[0].catPlace = 1
+        placed[1].catPlace = 2
+        placed[2].catPlace = 3
+        placed[3].catPlace = 4
+
+        Log.d(
+            TAG,
+            "setNewStatistics\nCardio: $cardioSize \nPower: $powerSize \nStretch: $stretchSize \nRest: $restSize"
+        )
+        return placed
+    }
+
+    fun showUnAuthUI(statAdapter: StatisticListAdapter) {
+        setGone(needPremiumView)
+        val previewData = mutableListOf<PlaceStatisticModel>()
+        previewData.add(PlaceStatisticModel(1, 43f, 1))
+        previewData.add(PlaceStatisticModel(2, 27f, 2))
+        previewData.add(PlaceStatisticModel(3, 16.3f, 3))
+        previewData.add(PlaceStatisticModel(4, 13.7f, 4))
+        statAdapter.setNewData(previewData)
     }
 }

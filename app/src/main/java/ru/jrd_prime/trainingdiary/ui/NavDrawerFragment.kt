@@ -197,4 +197,9 @@ class NavDrawerFragment(private val appContainer: AppContainer) : BottomSheetDia
         // Do something with your dialog like setContentView() or whatever
         return dialog
     }
+
+    fun showUnAuthUI() {
+
+
+    }
 }

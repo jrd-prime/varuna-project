@@ -125,4 +125,8 @@ class WorkoutPageFragment : Fragment() {
             return rootView
         }
     }
+
+    fun showUnAuthUI() {
+
+    }
 }

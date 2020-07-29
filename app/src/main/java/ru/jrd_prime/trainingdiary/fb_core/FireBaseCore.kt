@@ -203,7 +203,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
         val listener = object : ChildEventListener {
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 Log.d(TAG, "onChildChanged: chch")
-                mainActivity.updateStat()
+//                mainActivity.updateStat()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -213,12 +213,12 @@ class FireBaseCore(private val appContainer: AppContainer) {
             }
 
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                mainActivity.updateStat()
+//                mainActivity.updateStat()
             }
 
             override fun onChildRemoved(snapshot: DataSnapshot) {
                 Log.d(TAG, "onChildChanged: chchR")
-                mainActivity.updateStat()
+//                mainActivity.updateStat()
             }
         }
 

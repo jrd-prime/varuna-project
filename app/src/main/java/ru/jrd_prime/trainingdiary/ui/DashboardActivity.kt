@@ -46,27 +46,27 @@ const val PAGE_COUNT = 5000
 const val START_PAGE = 313
 
 class DashboardActivity : AppCompatActivity() {
-    private val dashboardViewModel by lazy {
+    private val mainViewModel by lazy {
         ViewModelProvider(this).get(DashboardViewModel::class.java)
     }
-    private val workoutPagerAdapter by lazy {
+    private val mPagerAdapter by lazy {
         WorkoutPageAdapter(supportFragmentManager)
     }
-    private var gAuth: GAuth? = null
-    private var navDrawerFragment: NavDrawerFragment? = null
-    private val cfg: AppConfig = AppConfig()
-    private var utils: AppUtils? = null
+    private var mGoogleAuth: GAuth? = null
+    private var mNavDrawerFragment: NavDrawerFragment? = null
+    private val mConfig: AppConfig = AppConfig()
+    private var mUtils: AppUtils? = null
     internal val activity: Activity = this
     private var fireAuth: FirebaseAuth = Firebase.auth
     lateinit var fbc: FireBaseCore
-    lateinit var appContainer: AppContainer
-    private val statAdapter = StatisticListAdapter()
-    lateinit var mainBinding: ActivityDashboardBinding
-    private val mainLayout = R.layout.activity_dashboard
-    lateinit var workoutPager: ViewPager
+    lateinit var appCont: AppContainer
+    lateinit var mStatView: RecyclerView
+    private val mStatAdapter = StatisticListAdapter()
+    lateinit var mStatViewModel: StatisticViewModel
+    lateinit var mBinding: ActivityDashboardBinding
+    lateinit var mPagerView: ViewPager
     lateinit var adLoader: AdLoader
     private var premiumStatus: Premium? = null
-    lateinit var statRecView: RecyclerView
     var userStatus: User? = null
     var userID: String? = null
 
@@ -77,11 +77,38 @@ class DashboardActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        appContainer = (application as TrainingDiaryApp).container
-        val database = appContainer.fireDB
+        /* begin INIT */
+        appCont = (application as TrainingDiaryApp).container
+        mNavDrawerFragment = NavDrawerFragment(appCont)
+        fbc = FireBaseCore(appCont)
+        mGoogleAuth = appCont.gAuth
+        mUtils = appCont.appUtils
+        val mPref = getSharedPreferences(mConfig.getPrefName(), Context.MODE_PRIVATE)
 
-        fbc = FireBaseCore(appContainer)
-        userID = appContainer.gAuth.getLastSignedInAccount()?.id
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_dashboard)
+        mBinding.viewmodel = mainViewModel
+        /* end INIT */
+
+
+        /* begin VIEWS */
+//        mPagerView = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
+        mPagerView = mBinding.viewPagerMainDashboard
+        mStatView = findViewById<RecyclerView>(R.id.statListView)
+
+
+        /* end VIEWS */
+
+        mStatViewModel = StatisticViewModel(this, mBinding)
+
+
+        /* START */
+        if (mPref.getBoolean(mConfig.getPrefNameFirstRun(), true)) {
+            // Выполняем необходимые настройки для первого запуска
+            mUtils!!.setDefaultConfig(mPref, mConfig)
+        }
+        /* END */
+
+        userID = mGoogleAuth!!.getLastSignedInAccount()?.id
 
         Log.d(TAG, "- - - - - - - - - -")
         Log.d(TAG, "ON CREATE. Пытаемся опознать юзера и показать необходимый ЮИ")
@@ -89,54 +116,35 @@ class DashboardActivity : AppCompatActivity() {
         Log.d(TAG, "- - - - - - - - - -")
 
 
-//fireBaseCore.addNewUserOnSignIn()
+        //fireBaseCore.addNewUserOnSignIn()
 
 
         // Add Categories
         fbc.pushCategories()
-        utils = appContainer.appUtils
-        mainBinding = DataBindingUtil.setContentView(this, mainLayout)
-        workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
-
-        val mSettings = getSharedPreferences(cfg.getSharedPreferenceName(), Context.MODE_PRIVATE)
-
-        gAuth = appContainer.gAuth
 
 
-        statRecView = findViewById<RecyclerView>(R.id.statListView)
-        statRecView.adapter = statAdapter
-        statAdapter.notifyDataSetChanged()
-        statRecView.layoutManager = LinearLayoutManager(this)
 
 
-        var userID: String? = null
-        try {
-            userID = gAuth!!.getLastSignedInAccount()!!.id
-        } catch (e: NullPointerException) {
-        }
-        updateUIOnGetUserPremium(userID, appContainer)
+        mStatView.adapter = mStatAdapter
+        mStatAdapter.notifyDataSetChanged()
+        mStatView.layoutManager = LinearLayoutManager(this)
 
 
-        navDrawerFragment = NavDrawerFragment(appContainer)
+//        var userID: String? = null
+//        try {
+//            userID = mGoogleAuth!!.getLastSignedInAccount()!!.id
+//        } catch (e: NullPointerException) {
+//        }
+//        updateUIOnGetUserPremium(userID, appCont)
 
-/* START */
-
-/* END */
-        mainBinding.viewmodel = dashboardViewModel
 
         setWindow()
 
-        workoutPager.adapter = workoutPagerAdapter
-        workoutPager.setCurrentItem(START_PAGE + 1, false)
-        workoutPager.addOnPageChangeListener(pageListener)
+        mPagerView.adapter = mPagerAdapter
+        mPagerView.setCurrentItem(START_PAGE + 1, false)
+        mPagerView.addOnPageChangeListener(pageListener)
         setSupportActionBar(vBottomAppBar)
 
-        /* START */
-        if (mSettings.getBoolean(cfg.getSpNameFirstRun(), true)) {
-            // Выполняем необходимые настройки для первого запуска
-            utils!!.setDefaultConfig(mSettings, cfg)
-        }
-        /* END */
 
         val date: MutableList<Long> = getWeekFromDate(getStartDateForPosition(START_PAGE))
         val statEndDate = date[1]
@@ -148,7 +156,7 @@ class DashboardActivity : AppCompatActivity() {
             daysBack = 28
         )
 
-        updateStat()
+//        updateStat()
         fbc.listenNewData2(this)
     }
 
@@ -166,14 +174,15 @@ class DashboardActivity : AppCompatActivity() {
                         /* NO USER */
                         Log.d(TAG, "Юзера нету в БД")
                     }
-
                 }
-            }, userID!!)
+            }, userID)
         } else {
-
             Log.d(TAG, "Нету ИД пользователя, значит тут еще не логинились, или вышли из аккаунта")
+            /* Инициализируем ЮИ для незалогиненного юзера*/
+            mStatViewModel.showUnAuthUI(mStatAdapter) /* Статистика */
+            mNavDrawerFragment?.showUnAuthUI()  /* Меню */
+            WorkoutPageFragment().showUnAuthUI() /* Контент */
         }
-
     }
 
     fun updateUIOnGetUserPremium(
@@ -189,7 +198,7 @@ class DashboardActivity : AppCompatActivity() {
                         when (premium.premium) {
                             true -> {
                                 updateStatUI(PREMIUM_STATUS_PRO)
-                                updateStat()
+//                                updateStat()
                             }
                             false -> {
                                 updateStatUI(PREMIUM_STATUS_FREE)
@@ -216,29 +225,29 @@ class DashboardActivity : AppCompatActivity() {
         when (status) {
             PREMIUM_STATUS_FREE -> {
                 Log.d(TAG, "updateStatUI: $PREMIUM_STATUS_FREE")
-                statAdapter.notifyDataSetChanged()
-                setGone(statRecView)
+                mStatAdapter.notifyDataSetChanged()
+                setGone(mStatView)
                 setVisbl(statViewPremiumAd)
             }
 
             PREMIUM_STATUS_PRO -> {
                 Log.d(TAG, "updateStatUI: $PREMIUM_STATUS_PRO")
-                updateStat()
-                statAdapter.notifyDataSetChanged()
-                setVisbl(statRecView)
+//                updateStat()
+                mStatAdapter.notifyDataSetChanged()
+                setVisbl(mStatView)
                 setGone(statListViewPremiumAd)
             }
         }
     }
 
-    fun updateStat() {
-        StatisticViewModel().updateStat(
-            fbc,
-            statAdapter,
-            dashboardViewModel,
-            mainBinding
-        )
-    }
+//    fun updateStat() {
+//        StatisticViewModel().updateStat(
+//            fbc,
+//            statAdapter,
+//            dashboardViewModel,
+//            mainBinding
+//        )
+//    }
 
     override fun onStart() {
         super.onStart()
@@ -246,7 +255,7 @@ class DashboardActivity : AppCompatActivity() {
             Log.d(TAG, "onStart: FireAuth current user NOT NULL")
             val u = fireAuth.currentUser
         }
-        gAuth!!.getLastSignedInAccount()
+        mGoogleAuth!!.getLastSignedInAccount()
     }
 
     //    override fun onResume() {
@@ -260,7 +269,7 @@ class DashboardActivity : AppCompatActivity() {
         result: Intent?
     ): Unit {
         super.onActivityResult(requestCode, resultCode, result)
-        gAuth!!.onActivityResult(requestCode, resultCode, result)
+        mGoogleAuth!!.onActivityResult(requestCode, resultCode, result)
     }
 
 
@@ -274,7 +283,7 @@ class DashboardActivity : AppCompatActivity() {
         super.onResume()
         Log.d(TAG, "MainActivity: onResume()")
 
-        userID = appContainer.gAuth.getLastSignedInAccount()?.id
+        userID = appCont.gAuth.getLastSignedInAccount()?.id
 
         Log.d(TAG, "- - - - - - - - - -")
         Log.d(TAG, "ON RESUME. Пытаемся опознать юзера и показать необходимый ЮИ")
@@ -282,20 +291,19 @@ class DashboardActivity : AppCompatActivity() {
         Log.d(TAG, "- - - - - - - - - -")
 
 
-
         /* Update Pager After Login */
-        if (utils!!.getUserAuth()) {
+        if (mUtils!!.getUserAuth()) {
             val workoutPager = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
-            workoutPager.adapter = workoutPagerAdapter
+            workoutPager.adapter = mPagerAdapter
             workoutPager.setCurrentItem(START_PAGE, false)
             workoutPager.addOnPageChangeListener(pageListener)
-            utils?.setShowMenu(false)
+            mUtils?.setShowMenu(false)
             var userID: String? = null
             try {
-                userID = gAuth!!.getLastSignedInAccount()!!.id
+                userID = mGoogleAuth!!.getLastSignedInAccount()!!.id
             } catch (e: NullPointerException) {
             }
-            updateUIOnGetUserPremium(userID, appContainer)
+            updateUIOnGetUserPremium(userID, appCont)
         }
 
 //        if (utils!!.getShowMenu()) {
@@ -309,7 +317,7 @@ class DashboardActivity : AppCompatActivity() {
 
 
     fun isAuthenticatedUser(mSettings: SharedPreferences): Boolean {
-        return mSettings.getBoolean(cfg.getSpNameUserAuth(), false)
+        return mSettings.getBoolean(mConfig.getSpNameUserAuth(), false)
     }
 
 
@@ -317,7 +325,7 @@ class DashboardActivity : AppCompatActivity() {
         Log.d(TAG, "onOptionsItemSelected: ${item.itemId}")
         when (item.itemId) {
             android.R.id.home -> {
-                navDrawerFragment!!.show(supportFragmentManager, navDrawerFragment!!.getTag())
+                mNavDrawerFragment!!.show(supportFragmentManager, mNavDrawerFragment!!.getTag())
                 return true
             }
             1 -> return true
@@ -330,7 +338,7 @@ class DashboardActivity : AppCompatActivity() {
             (findViewById<View>(android.R.id.content) as ViewGroup).getChildAt(0) as ViewGroup
 
         val yesListener = View.OnClickListener { _ ->
-            utils?.closeApp(this)
+            mUtils?.closeApp(this)
         }
 
         makeDialogYesOrNo(
