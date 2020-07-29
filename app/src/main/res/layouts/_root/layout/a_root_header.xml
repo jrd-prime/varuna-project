@@ -44,7 +44,7 @@
                     android:layout_centerInParent="true"
                     android:fontFamily="@font/ubuntu_reg"
                     android:text="@string/stat_last_month"
-                    android:textColor="@color/colorLightGrey" />
+                    android:textColor="@color/colorPrimaryLight" />
             </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -83,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
+                android:rotation="-30"
                 app:layout_constraintBottom_toTopOf="@id/moreStatCont"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -103,7 +104,7 @@
                     android:textAlignment="center"
                     android:textAllCaps="true"
                     android:textColor="@color/colorPrimaryLight"
-                    android:textSize="20sp" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <LinearLayout

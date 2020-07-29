@@ -23,7 +23,7 @@ class AppConfig {
         return SP_NAME_FIRST_RUN
     }
 
-    fun getSpNameUserAuth(): String? {
+    fun getPrefIsUserAuth(): String? {
         return SP_NAME_USER_AUTH
     }
 

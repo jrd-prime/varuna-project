@@ -50,7 +50,9 @@ class FireBaseCore(private val appContainer: AppContainer) {
     fun setPremium(to: Boolean) {
         premiumRef.child(userId).child("premium").setValue(to)
     }
-
+    fun setAuth(id: String,to: Boolean) {
+        userRef.child(id).child("auth").setValue(to)
+    }
     private fun setDefaultUserPremiumStatus(uid: String) {
         getUserPremiumInfo(object : UserPremium {
             override fun onGetUserPremium(

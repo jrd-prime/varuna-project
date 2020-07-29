@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -13,35 +15,56 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.internal.NavigationMenuView
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.lay_frg_navdrawer_not_auth.view.*
 import kotlinx.android.synthetic.main.lay_frg_navdrawer_not_auth.view.ivUserAvatar
 import kotlinx.android.synthetic.main.lay_frg_navdrawer_with_auth.view.*
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
+import ru.jrd_prime.trainingdiary.fb_core.models.User
+import ru.jrd_prime.trainingdiary.handlers.RefreshCallback
 import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.utils.AppSettingsCore
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
 
 
-class NavDrawerFragment(private val appContainer: AppContainer) : BottomSheetDialogFragment() {
+class NavDrawerFragment(
+    private val appContainer: AppContainer,
+    private val UIWay: String,
+    private val user: User?
+) : BottomSheetDialogFragment() {
+
+    companion object {
+        const val TAG = "NavDrawerFrg: drops: "
+    }
+
+    lateinit var refreshCallback: RefreshCallback
     private var navigationView: NavigationView? = null
     private var btmShBeh: BottomSheetBehavior<*>? = null
     private var isUserAuth = false
-    private var mainLayout = 0
-    private val shPref = appContainer.preferences
-    private val cfg = appContainer.appConfig
-    private val utils = appContainer.appUtils
-    private val gAuth = appContainer.gAuth
+    private var drawerLayout = 0
+    private val mPref = appContainer.preferences
+    private val mConfig = appContainer.appConfig
+    private val mUtils = appContainer.appUtils
+    private val mGoogleAuth = appContainer.gAuth
     private val authLayID = R.layout.lay_frg_navdrawer_with_auth
     private val notAuthLayID = R.layout.lay_frg_navdrawer_not_auth
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isUserAuth = shPref.getBoolean(cfg.getSpNameUserAuth(), false)
-        mainLayout = if (isUserAuth) authLayID else notAuthLayID
+        isUserAuth = if (user == null) false else user.auth!!
+        when (UIWay) {
+            UI_WAY_NO_USER -> {
+                Log.d(TAG, "onCreate: $UI_WAY_NO_USER")
+                drawerLayout = notAuthLayID
+            }
+            UI_WAY_USER -> {
+                Log.d(TAG, "onCreate: $UI_WAY_USER")
+                drawerLayout = authLayID
+            }
+        }
     }
 
     override fun onCreateView(
@@ -49,48 +72,65 @@ class NavDrawerFragment(private val appContainer: AppContainer) : BottomSheetDia
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(mainLayout, container, false)
+        val root = inflater.inflate(drawerLayout, container, false)
 
 //        val me = root.findViewById<NavigationView>(R.id.vNavigationView).menu
 //        val me2 = me.findItem(R.id.navCloseApp)
 
 //        me2.setTitle("fdpsfkqwef")
 //        Log.d(TAG, "onCreateView: $me2")
-
         if (isUserAuth) {
-            // AUTH
-            // Update UI
-            root.ivUserAvatar.setImageDrawable(utils.getUserAvatar())
-            root.tvUserName.text = shPref.getString(cfg.getSpNameUserName(), "Err")
-            root.tvUserMail.text = shPref.getString(cfg.getSpNameUserMail(), "Err")
-            root.ivLogOut.setOnClickListener { /*SIGN OUT*/
-                gAuth.gSignOut()
-                dismiss()
-                updatePagerOnLogOut()
-//                show(requireActivity().supportFragmentManager, "asd")
-            }
+            fillAuthUI(root)
         } else {
-            // NOT AUTH
-            // Update UI
-            shPref.edit().putBoolean(cfg.getSpNameUserAuth(), false).apply()
-            // FIND VIEWS IN NOT AUTH NAV
-            root.bSignIn.setOnClickListener {
-                Log.d("TAG", "SIGN IN")
-                gAuth.gSignIn(activity)
-                dismiss()
-            }
+            fillNotAuthUI(root)
         }
 
         navigationView = root.findViewById<NavigationView>(R.id.vNavigationView)
         setHasOptionsMenu(true)
-
-
-        // closeImage = root.findViewById(R.id.close_imageview);
         return root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is RefreshCallback) {
+            refreshCallback = context as RefreshCallback
+        } else {
+            throw RuntimeException(
+                context.javaClass.simpleName
+                        + " must implement Callback"
+            )
+        }
+    }
+
+    private fun fillAuthUI(root: View) {
+
+        root.ivUserAvatar.setImageDrawable(mUtils.getUserAvatar())
+        root.tvUserName.text = mPref.getString(mConfig.getSpNameUserName(), "Err")
+        root.tvUserMail.text = mPref.getString(mConfig.getSpNameUserMail(), "Err")
+        root.ivLogOut.setOnClickListener { /*SIGN OUT*/
+            if (user != null) {
+                mGoogleAuth.gSignOut(user.id.toString())
+            }
+            dismiss()
+//            refreshCallback.refreshActivity()
+//            updatePagerOnLogOut()
+        }
+
+    }
+
+    private fun fillNotAuthUI(root: View) {
+        root.bSignIn.setOnClickListener {
+            Log.d(TAG, "SIGN IN")
+            mGoogleAuth.gSignIn(activity)
+//            refreshCallback.refreshActivity()
+
+            dismiss()
+        }
     }
 
     private fun updatePagerOnLogOut() {
         Log.d(ru.jrd_prime.trainingdiary.ui.TAG, "onResume: update on logout")
+
 
         val workoutPager = activity?.findViewById<ViewPager>(R.id.viewPagerMainDashboard)
         workoutPager?.adapter = activity?.supportFragmentManager?.let { WorkoutPageAdapter(it) }
@@ -101,8 +141,6 @@ class NavDrawerFragment(private val appContainer: AppContainer) : BottomSheetDia
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Snackbar.make(navigationView!!, "dada", Snackbar.LENGTH_SHORT)
-
         navigationView!!.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
 //                R.id.navCloseApp -> {
@@ -120,7 +158,6 @@ class NavDrawerFragment(private val appContainer: AppContainer) : BottomSheetDia
                         AppConfig.SHARED_PREFERENCE_NAME,
                         Context.MODE_PRIVATE
                     )
-
                     if (pref != null) {
                         if (!pref.getBoolean("show_work", false)) {
                             context?.let { AppSettingsCore(it).setTru() }
@@ -128,12 +165,9 @@ class NavDrawerFragment(private val appContainer: AppContainer) : BottomSheetDia
                             AppSettingsCore(it).setFalse()
                         }
                     }
-
                     val int = Intent(context, DashboardActivity::class.java)
                     startActivity(int)
                     activity?.finish()
-
-
                 }
             }
             true
@@ -149,9 +183,6 @@ class NavDrawerFragment(private val appContainer: AppContainer) : BottomSheetDia
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-
-
-
         dialog.setOnShowListener { bsdialog ->
             val d = bsdialog as BottomSheetDialog
             val bottomSheet = d.findViewById<View>(R.id.design_bottom_sheet) as FrameLayout?
@@ -176,15 +207,11 @@ class NavDrawerFragment(private val appContainer: AppContainer) : BottomSheetDia
                         BottomSheetBehavior.STATE_SETTLING -> {
                         }
                         BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-
                         }
                     }
                 }
 
-                override fun onSlide(
-                    view: View,
-                    slideOffset: Float
-                ) {
+                override fun onSlide(view: View, slideOffset: Float) {
                     //                        if (slideOffset > 0.5) {
                     //                            closeImage.setVisibility(View.VISIBLE);
                     //                        } else {
@@ -196,10 +223,5 @@ class NavDrawerFragment(private val appContainer: AppContainer) : BottomSheetDia
 
         // Do something with your dialog like setContentView() or whatever
         return dialog
-    }
-
-    fun showUnAuthUI() {
-
-
     }
 }

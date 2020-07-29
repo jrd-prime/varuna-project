@@ -140,4 +140,16 @@ class StatisticViewModel(private val ctx: Context, private val mBinding: Activit
         previewData.add(PlaceStatisticModel(4, 13.7f, 4))
         statAdapter.setNewData(previewData)
     }
+
+    fun showAuthUI(statAdapter: StatisticListAdapter) {
+
+        /* check premium status */
+        setGone(needPremiumView)
+        val previewData = mutableListOf<PlaceStatisticModel>()
+        previewData.add(PlaceStatisticModel(1, 80f, 1))
+        previewData.add(PlaceStatisticModel(2, 10f, 2))
+        previewData.add(PlaceStatisticModel(3, 10f, 3))
+        previewData.add(PlaceStatisticModel(4, 0f, 4))
+        statAdapter.setNewData(previewData)
+    }
 }

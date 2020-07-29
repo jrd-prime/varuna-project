@@ -23,3 +23,7 @@ interface UserPremiumChange {
 interface UserInfo {
     fun onChangeUserInfo(user: User?)
 }
+
+interface RefreshCallback {
+    fun refreshActivity()
+}

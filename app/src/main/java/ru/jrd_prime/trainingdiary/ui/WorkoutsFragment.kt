@@ -101,7 +101,6 @@ class WorkoutPageFragment : Fragment() {
 
 
 
-            setDateForHead(view = activity?.findViewById<TextView>(R.id.tvTodayDay))
 
             val t = activity?.findViewById<TextView>(R.id.tvTodayDay)
             val workoutPager = activity?.findViewById<ViewPager>(R.id.viewPagerMainDashboard)

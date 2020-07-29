@@ -54,11 +54,13 @@ class GAuth(val appContext: TrainingDiaryApp) {
     }
 
     //---------- LOG OUT ----------//
-    fun gSignOut() {
+    fun gSignOut(id: String) {
         Log.d(TAG, "GSignOut: ")
         googleSignInClient.signOut().addOnCompleteListener {
             Log.d(TAG, "onComplete: ")
             utils.clearSettings()
+
+            fireBaseCore.setAuth(id, false)
             //TODO NOT AUTH
         }
     }
@@ -80,6 +82,7 @@ class GAuth(val appContext: TrainingDiaryApp) {
             val account = completedTask.getResult(ApiException::class.java)!!
             utils.setConfigAfterSignIn(account)
             addUser(account)
+            fireBaseCore.setAuth(account.id!!,true)
             appContainer.preferences.edit().putString(USER_PREF_UID, account.id).apply()
             Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
             firebaseAuthWithGoogle(account.idToken!!)

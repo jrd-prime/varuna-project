@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -44,8 +45,10 @@ import ru.jrd_prime.trainingdiary.viewmodels.StatisticViewModel
 const val TAG = "Dashboard: drops:"
 const val PAGE_COUNT = 5000
 const val START_PAGE = 313
+const val UI_WAY_NO_USER = "no_user"
+const val UI_WAY_USER = "user"
 
-class DashboardActivity : AppCompatActivity() {
+class DashboardActivity : AppCompatActivity(), RefreshCallback {
     private val mainViewModel by lazy {
         ViewModelProvider(this).get(DashboardViewModel::class.java)
     }
@@ -79,7 +82,7 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         /* begin INIT */
         appCont = (application as TrainingDiaryApp).container
-        mNavDrawerFragment = NavDrawerFragment(appCont)
+//        mNavDrawerFragment = NavDrawerFragment(appCont, UI_WAY_NO_USER)
         fbc = FireBaseCore(appCont)
         mGoogleAuth = appCont.gAuth
         mUtils = appCont.appUtils
@@ -124,6 +127,7 @@ class DashboardActivity : AppCompatActivity() {
 
 
 
+        setDateForHead(view = findViewById<TextView>(R.id.tvTodayDay))
 
         mStatView.adapter = mStatAdapter
         mStatAdapter.notifyDataSetChanged()
@@ -158,6 +162,7 @@ class DashboardActivity : AppCompatActivity() {
 
 //        updateStat()
         fbc.listenNewData2(this)
+        Toast.makeText(this, "ACTIVITY", Toast.LENGTH_SHORT).show()
     }
 
     private fun getUserInfo(userID: String?) {
@@ -166,9 +171,26 @@ class DashboardActivity : AppCompatActivity() {
                 override fun onChangeUserInfo(user: User?) {
                     if (user != null) {
                         when (user.auth) {
-                            true -> Log.d(TAG, "Авторизация стоит в ТРУ")
-                            false -> Log.d(TAG, "Авторизация стоит в ФОЛС")
-                            null -> Log.d(TAG, "Еще нету записи об авторизации")
+                            true -> {
+                                Log.d(TAG, "Авторизация стоит в ТРУ")
+                                mNavDrawerFragment =
+                                    NavDrawerFragment(appCont, UI_WAY_USER, user)  /* Меню */
+                                mStatViewModel.showAuthUI(mStatAdapter) /* Статистика */
+                            }
+                            false -> {
+                                Log.d(TAG, "Авторизация стоит в ФОЛС")
+                                mStatViewModel.showUnAuthUI(mStatAdapter) /* Статистика */
+                                mNavDrawerFragment =
+                                    NavDrawerFragment(appCont, UI_WAY_NO_USER, null)  /* Меню */
+                            }
+                            null -> {
+                                Toast.makeText(
+                                    this@DashboardActivity,
+                                    "ЗНАЧЕНИЕ В АВТОРИЗАЦИИ --- NULL",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                Log.d(TAG, "Еще нету записи об авторизации")
+                            }
                         }
                     } else {
                         /* NO USER */
@@ -180,12 +202,12 @@ class DashboardActivity : AppCompatActivity() {
             Log.d(TAG, "Нету ИД пользователя, значит тут еще не логинились, или вышли из аккаунта")
             /* Инициализируем ЮИ для незалогиненного юзера*/
             mStatViewModel.showUnAuthUI(mStatAdapter) /* Статистика */
-            mNavDrawerFragment?.showUnAuthUI()  /* Меню */
+            mNavDrawerFragment = NavDrawerFragment(appCont, UI_WAY_NO_USER, null)  /* Меню */
             WorkoutPageFragment().showUnAuthUI() /* Контент */
         }
     }
 
-    fun updateUIOnGetUserPremium(
+    private fun updateUIOnGetUserPremium(
         userID: String?,
         appContainerz: AppContainer
     ) {
@@ -317,7 +339,7 @@ class DashboardActivity : AppCompatActivity() {
 
 
     fun isAuthenticatedUser(mSettings: SharedPreferences): Boolean {
-        return mSettings.getBoolean(mConfig.getSpNameUserAuth(), false)
+        return mSettings.getBoolean(mConfig.getPrefIsUserAuth(), false)
     }
 
 
@@ -325,7 +347,7 @@ class DashboardActivity : AppCompatActivity() {
         Log.d(TAG, "onOptionsItemSelected: ${item.itemId}")
         when (item.itemId) {
             android.R.id.home -> {
-                mNavDrawerFragment!!.show(supportFragmentManager, mNavDrawerFragment!!.getTag())
+                mNavDrawerFragment!!.show(supportFragmentManager, mNavDrawerFragment!!.tag)
                 return true
             }
             1 -> return true
@@ -395,4 +417,12 @@ class DashboardActivity : AppCompatActivity() {
             applicationContext.theme
         )
     }
+
+    override fun refreshActivity() {
+        val intent = intent
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        finish()
+        startActivity(intent)
+    }
+
 }

@@ -103,7 +103,7 @@ class AppUtils(
             .putString(cfg.getSpNameUserName(), userAccount?.displayName)
             .putString(cfg.getSpNameUserID(), userAccount?.id)
             .putString(cfg.getSpNameUserMail(), userAccount?.email)
-            .putBoolean(cfg.getSpNameUserAuth(), true)
+            .putBoolean(cfg.getPrefIsUserAuth(), true)
             .apply()
     }
 
@@ -199,18 +199,18 @@ class AppUtils(
 
     private fun setUserAuth(b: Boolean) {
         shPref.edit()
-            .putBoolean(cfg.getSpNameUserAuth(), b).apply()
+            .putBoolean(cfg.getPrefIsUserAuth(), b).apply()
         Log.d(
             TAG,
             "setUserAuth: need true : " + shPref.getBoolean(
-                cfg.getSpNameUserAuth(),
+                cfg.getPrefIsUserAuth(),
                 false
             )
         )
     }
 
     fun getUserAuth(): Boolean {
-        return shPref.getBoolean(cfg.getSpNameUserAuth(), false)
+        return shPref.getBoolean(cfg.getPrefIsUserAuth(), false)
     }
 
     // SHOW MENU
