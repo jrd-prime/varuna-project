@@ -71,9 +71,14 @@ class NavDrawerFragment(
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(drawerLayout, container, false)
-
+        Log.d(TAG, "onCreateView: USER ^ $isUserAuth")
         if (isUserAuth) {
-            fillAuthUI(root)
+            val premium = user?.premium ?: false
+            if (premium) {
+                user?.let { fillPremiumAuthUI(root, it) }
+            } else {
+                user?.let { fillAuthUI(root, it) }
+            }
         } else {
             fillNotAuthUI(root)
             showNotAuthMenu(root)
@@ -82,6 +87,34 @@ class NavDrawerFragment(
         navigationView = root.findViewById<NavigationView>(R.id.vNavigationView)
         setHasOptionsMenu(true)
         return root
+    }
+
+    private fun fillPremiumAuthUI(
+        root: View,
+        user: User
+    ) {
+        val res = root.resources
+        val premium = user.premium ?: false
+
+        Log.d(TAG, "fillAuthUI: premium = $premium")
+        root.premiumBadge.visibility = View.VISIBLE
+        root.ivUserAvatar.setImageDrawable(mUtils.getUserAvatar())
+        root.tvUserName.text = mPref.getString(
+            mConfig.getPrefUserName(),
+            res.getString(R.string.empty_user_name)
+        )
+        root.tvUserMail.text = mPref.getString(
+            mConfig.getPrefUserMail(),
+            res.getString(R.string.empty_user_email)
+        )
+        root.ivLogOut.setOnClickListener { /*SIGN OUT*/
+            mGoogleAuth.gSignOut(user.id.toString())
+
+            dismiss()
+//            refreshCallback.refreshActivity()
+//            updatePagerOnLogOut()
+        }
+
     }
 
     private fun showNotAuthMenu(root: View?) {
@@ -101,8 +134,17 @@ class NavDrawerFragment(
         }
     }
 
-    private fun fillAuthUI(root: View) {
+    private fun fillAuthUI(
+        root: View,
+        user: User
+    ) {
         val res = root.resources
+        val premium = user.premium ?: false
+        root.premiumBadgeNo.visibility = View.VISIBLE
+
+        Log.d(TAG, "fillAuthUI: premium = $premium")
+
+
         root.ivUserAvatar.setImageDrawable(mUtils.getUserAvatar())
         root.tvUserName.text = mPref.getString(
             mConfig.getPrefUserName(),
@@ -113,7 +155,7 @@ class NavDrawerFragment(
             res.getString(R.string.empty_user_email)
         )
         root.ivLogOut.setOnClickListener { /*SIGN OUT*/
-            if (user != null) mGoogleAuth.gSignOut(user.id.toString())
+            mGoogleAuth.gSignOut(user.id.toString())
 
             dismiss()
 //            refreshCallback.refreshActivity()
@@ -124,14 +166,9 @@ class NavDrawerFragment(
 
     private fun fillNotAuthUI(root: View) {
         val res = root.resources
-        root.tvUserNameNA.text = mPref.getString(
-            mConfig.getPrefUserName(),
-            res.getString(R.string.empty_user_name)
-        )
-        root.tvUserMailNA.text = mPref.getString(
-            mConfig.getPrefUserMail(),
-            res.getString(R.string.empty_user_email)
-        )
+        root.tvUserNameNA.text = res.getString(R.string.empty_user_name)
+        root.tvUserMailNA.text = res.getString(R.string.empty_user_email)
+
         root.bSignIn.setOnClickListener {
             Log.d(TAG, "SIGN IN")
             mGoogleAuth.gSignIn(activity)
@@ -213,11 +250,9 @@ class NavDrawerFragment(
                 }
 
                 override fun onSlide(view: View, slideOffset: Float) {
-                    //                        if (slideOffset > 0.5) {
-                    //                            closeImage.setVisibility(View.VISIBLE);
-                    //                        } else {
-                    //                            closeImage.setVisibility(View.GONE);
-                    //                        }
+//                    if (slideOffset > 0.5) closeImage.setVisibility(View.VISIBLE) else closeImage.setVisibility(
+//                        View.GONE
+//                    )
                 }
             })
         }

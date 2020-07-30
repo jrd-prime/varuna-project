@@ -50,4 +50,5 @@ class AppConfig {
     fun getGlobalTag(): String? {
         return GLOBAL_TAG
     }
+
 }

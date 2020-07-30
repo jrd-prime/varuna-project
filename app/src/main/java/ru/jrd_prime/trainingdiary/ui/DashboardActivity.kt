@@ -54,15 +54,13 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
         WorkoutPageAdapter(supportFragmentManager)
     }
     private var mGoogleAuth: GAuth? = null
-    private var mNavDrawerFragment: NavDrawerFragment? = null
+    private var mNavFragment: NavDrawerFragment? = null
     private val mConfig: AppConfig = AppConfig()
     private var mUtils: AppUtils? = null
     internal val activity: Activity = this
     private var fireAuth: FirebaseAuth = Firebase.auth
     lateinit var fbc: FireBaseCore
     lateinit var appCont: AppContainer
-    lateinit var mStatView: RecyclerView
-    private val mStatAdapter = StatisticListAdapter()
     lateinit var mStatViewModel: StatisticViewModel
     lateinit var mBinding: ActivityDashboardBinding
     lateinit var mPagerView: ViewPager
@@ -93,7 +91,6 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
         /* begin VIEWS */
 //        mPagerView = findViewById<ViewPager>(R.id.viewPagerMainDashboard)
         mPagerView = mBinding.viewPagerMainDashboard
-        mStatView = findViewById<RecyclerView>(R.id.statListView)
 
 
         /* end VIEWS */
@@ -120,10 +117,6 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
 
 
         setDateForHead(view = findViewById<TextView>(R.id.tvTodayDay))
-
-        mStatView.adapter = mStatAdapter
-        mStatAdapter.notifyDataSetChanged()
-        mStatView.layoutManager = LinearLayoutManager(this)
 
 
 //        var userID: String? = null
@@ -182,21 +175,29 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
 
     private fun showAuthorizedUI(user: User) {
         Log.d(TAG, "Авторизация стоит в ТРУ")
-        appCont.preferences.edit()
-            .putBoolean(mConfig.getPrefIsUserAuth(), true).apply()
-        mNavDrawerFragment =
-            NavDrawerFragment(appCont, UI_WAY_USER, user)  /* Меню */
-        mStatViewModel.showAuthorizedStat(mStatAdapter) /* Статистика */
+        val premium = user.premium ?: false
+        mUtils?.setPrefIsUserAuth(true)
+
+        if (premium) {
+            /* PREMIUM Статистика */
+            mStatViewModel.showAuthorizedStat( true, user)
+
+        } else {
+            /* FREE Статистика */
+            mStatViewModel.showAuthorizedStat( false, user)
+        }
+
+        mNavFragment = NavDrawerFragment(appCont, UI_WAY_USER, user)  /* Меню */
         showPager() /* Контент */
     }
 
     private fun showUnAuthorizedUI() {
         /* Инициализируем ЮИ для незалогиненного юзера*/
         Log.d(TAG, "Нету ИД пользователя OR Авторизация стоит в ФОЛС")
-        appCont.preferences.edit()
-            .putBoolean(mConfig.getPrefIsUserAuth(), false).apply()
-        mStatViewModel.showUnAuthorizedStat(mStatAdapter) /* Статистика */
-        mNavDrawerFragment =
+
+        mUtils?.setPrefIsUserAuth(false)
+        mStatViewModel.showUnAuthorizedStat() /* Статистика */
+        mNavFragment =
             NavDrawerFragment(appCont, UI_WAY_NO_USER, null)  /* Меню */
         showPager() /* Контент */
     }
@@ -213,70 +214,7 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
         mPagerView.adapter?.notifyDataSetChanged()
     }
 
-    private fun updateUIOnGetUserPremium(
-        userID: String?,
-        appContainerz: AppContainer
-    ) {
 
-        if (!userID.isNullOrEmpty()) {
-//            FireBaseCore(appContainerz).getUserPremiumListener(object : UserPremiumChange {
-//                override fun onChangeUserPremium(premium: Premium?, uid: String) {
-//                    premiumStatus = premium
-//                    if (premium != null) {
-//                        when (premium.premium) {
-//                            true -> {
-//                                updateStatUI(PREMIUM_STATUS_PRO)
-////                                updateStat()
-//                            }
-//                            false -> {
-//                                updateStatUI(PREMIUM_STATUS_FREE)
-//                            }
-//                        }
-//                    } else {
-//                        Toast.makeText(
-//                            applicationContext,
-//                            "Error on get user premium",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//                }
-//            }, userID)
-//        } else {
-//            Log.d(TAG, "onCreate: drops USER ID EMPTY!!")
-////            updateStatUI(PREMIUM_STATUS_FREE)
-//            updateStatUI(PREMIUM_STATUS_PRO)
-//        }
-        }
-    }
-
-    private fun updateStatUI(status: String) {
-        val statViewPremiumAd = statListViewPremiumAd
-        when (status) {
-            PREMIUM_STATUS_FREE -> {
-                Log.d(TAG, "updateStatUI: $PREMIUM_STATUS_FREE")
-                mStatAdapter.notifyDataSetChanged()
-                setGone(mStatView)
-                setVisbl(statViewPremiumAd)
-            }
-
-            PREMIUM_STATUS_PRO -> {
-                Log.d(TAG, "updateStatUI: $PREMIUM_STATUS_PRO")
-//                updateStat()
-                mStatAdapter.notifyDataSetChanged()
-                setVisbl(mStatView)
-                setGone(statListViewPremiumAd)
-            }
-        }
-    }
-
-//    fun updateStat() {
-//        StatisticViewModel().updateStat(
-//            fbc,
-//            statAdapter,
-//            dashboardViewModel,
-//            mainBinding
-//        )
-//    }
 
     override fun onStart() {
         super.onStart()
@@ -327,12 +265,6 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
             workoutPager.setCurrentItem(START_PAGE, false)
             workoutPager.addOnPageChangeListener(pageListener)
             mUtils?.setShowMenu(false)
-            var userID: String? = null
-            try {
-                userID = mGoogleAuth!!.getLastSignedInAccount()!!.id
-            } catch (e: NullPointerException) {
-            }
-            updateUIOnGetUserPremium(userID, appCont)
         }
 
 //        if (utils!!.getShowMenu()) {
@@ -354,7 +286,7 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
         Log.d(TAG, "onOptionsItemSelected: ${item.itemId}")
         when (item.itemId) {
             android.R.id.home -> {
-                mNavDrawerFragment!!.show(supportFragmentManager, mNavDrawerFragment!!.tag)
+                mNavFragment!!.show(supportFragmentManager, mNavFragment!!.tag)
                 return true
             }
             1 -> return true

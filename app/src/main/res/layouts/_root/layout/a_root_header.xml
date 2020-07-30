@@ -22,125 +22,126 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:showIn="@layout/activity_dashboard">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp">
+        <include layout="@layout/stat_free_ui" />
+        <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="match_parent"-->
+        <!--            android:layout_marginStart="8dp"-->
+        <!--            android:layout_marginEnd="8dp"-->
+        <!--            android:layout_marginBottom="8dp">-->
 
-            <RelativeLayout
-                android:id="@+id/statTitleLayout"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+        <!--            <RelativeLayout-->
+        <!--                android:id="@+id/statTitleLayout"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="40dp"-->
+        <!--                android:layout_marginTop="24dp"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toTopOf="parent">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:fontFamily="@font/ubuntu_reg"
-                    android:text="@string/stat_last_month"
-                    android:textColor="@color/colorPrimaryLight" />
-            </RelativeLayout>
+        <!--                <TextView-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_centerInParent="true"-->
+        <!--                    android:fontFamily="@font/ubuntu_reg"-->
+        <!--                    android:text="@string/stat_last_month"-->
+        <!--                    android:textColor="@color/colorPrimaryLight" />-->
+        <!--            </RelativeLayout>-->
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/statListView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/statTitleLayout" />
+        <!--            <androidx.recyclerview.widget.RecyclerView-->
+        <!--                android:id="@+id/statListView"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toBottomOf="@id/statTitleLayout" />-->
 
 
-            <LinearLayout
-                android:id="@+id/statListViewPremiumAd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/statTitleLayout">
+        <!--            <LinearLayout-->
+        <!--                android:id="@+id/statListViewPremiumAd"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:gravity="center"-->
+        <!--                android:orientation="vertical"-->
+        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toBottomOf="@id/statTitleLayout">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/ubuntu_light"
-                    android:text="ONLY FOR PREMIUM"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="20sp" />
-            </LinearLayout>
+        <!--                <TextView-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:fontFamily="@font/ubuntu_light"-->
+        <!--                    android:text="ONLY FOR PREMIUM"-->
+        <!--                    android:textAlignment="center"-->
+        <!--                    android:textColor="@color/colorWhite"-->
+        <!--                    android:textSize="20sp" />-->
+        <!--            </LinearLayout>-->
 
-            <LinearLayout
-                android:id="@+id/statListViewPremiumAdEx"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:rotation="-30"
-                app:layout_constraintBottom_toTopOf="@id/moreStatCont"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/statTitleLayout">
+        <!--            <LinearLayout-->
+        <!--                android:id="@+id/statListViewPremiumAdEx"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="wrap_content"-->
+        <!--                android:gravity="center"-->
+        <!--                android:orientation="vertical"-->
+        <!--                android:rotation="-30"-->
+        <!--                app:layout_constraintBottom_toTopOf="@id/moreStatCont"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toStartOf="parent"-->
+        <!--                app:layout_constraintTop_toBottomOf="@id/statTitleLayout">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/shape_example"
-                    android:elevation="4dp"
-                    android:fontFamily="@font/ubuntu_light"
-                    android:paddingStart="12dp"
-                    android:paddingTop="4dp"
-                    android:paddingEnd="12dp"
-                    android:paddingBottom="4dp"
-                    android:text="@string/example_disclamer"
-                    android:textAlignment="center"
-                    android:textAllCaps="true"
-                    android:textColor="@color/colorPrimaryLight"
-                    android:textSize="16sp" />
-            </LinearLayout>
+        <!--                <TextView-->
+        <!--                    android:layout_width="wrap_content"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_margin="8dp"-->
+        <!--                    android:background="@drawable/shape_example"-->
+        <!--                    android:elevation="4dp"-->
+        <!--                    android:fontFamily="@font/ubuntu_light"-->
+        <!--                    android:paddingStart="12dp"-->
+        <!--                    android:paddingTop="4dp"-->
+        <!--                    android:paddingEnd="12dp"-->
+        <!--                    android:paddingBottom="4dp"-->
+        <!--                    android:text="@string/example_disclamer"-->
+        <!--                    android:textAlignment="center"-->
+        <!--                    android:textAllCaps="true"-->
+        <!--                    android:textColor="@color/colorPrimaryLight"-->
+        <!--                    android:textSize="16sp" />-->
+        <!--            </LinearLayout>-->
 
-            <LinearLayout
-                android:id="@+id/moreStatCont"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:orientation="horizontal"
-                android:paddingTop="4dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+        <!--            <LinearLayout-->
+        <!--                android:id="@+id/moreStatCont"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="30dp"-->
+        <!--                android:orientation="horizontal"-->
+        <!--                android:paddingTop="4dp"-->
+        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toStartOf="parent">-->
 
-                <TextView
-                    android:id="@+id/tvTime_Stat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorPrimaryLight" />
+        <!--                <TextView-->
+        <!--                    android:id="@+id/tvTime_Stat"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:textAlignment="center"-->
+        <!--                    android:textColor="@color/colorPrimaryLight" />-->
 
-                <TextView
-                    android:id="@+id/tvCalories_Stat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorPrimaryLight" />
+        <!--                <TextView-->
+        <!--                    android:id="@+id/tvCalories_Stat"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:textAlignment="center"-->
+        <!--                    android:textColor="@color/colorPrimaryLight" />-->
 
-                <TextView
-                    android:id="@+id/tvDistance_Stat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    android:textColor="@color/colorPrimaryLight" />
-            </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--                <TextView-->
+        <!--                    android:id="@+id/tvDistance_Stat"-->
+        <!--                    android:layout_width="match_parent"-->
+        <!--                    android:layout_height="wrap_content"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:textAlignment="center"-->
+        <!--                    android:textColor="@color/colorPrimaryLight" />-->
+        <!--            </LinearLayout>-->
+        <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
     </LinearLayout>
 </layout>

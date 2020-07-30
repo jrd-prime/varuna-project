@@ -4,4 +4,7 @@
     <string name="example_disclamer">Example</string>
     <string name="empty_user_name">Your name</string>
     <string name="empty_user_email">your@gmail.com</string>
+    <string name="premium_text">Premium</string>
+    <string name="free_text">free</string>
+    <string name="action_enable_statistics">Enable statistics</string>
 </resources>

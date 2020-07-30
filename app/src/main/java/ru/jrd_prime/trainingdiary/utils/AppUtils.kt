@@ -30,15 +30,22 @@ import kotlin.system.exitProcess
 class AppUtils(
     private val appContext: TrainingDiaryApp
 ) {
-    private val appContainer = appContext.container
-    private val shPref = appContainer.preferences
-    private val cfg = appContainer.appConfig
-    private val context = appContext.applicationContext
+    private val appCont = appContext.container
+    private val pref = appCont.preferences
+    private val config = appCont.appConfig
+    private val ctx = appContext.applicationContext
 
     companion object {
-
         const val SHOW_MENU = "ShowMenu"
     }
+
+    /*NEW*/
+
+    fun setPrefIsUserAuth(auth: Boolean) {
+        pref.edit().putBoolean(config.getPrefIsUserAuth(), auth).apply()
+    }
+    /*NEW*/
+
 
     fun getMonth(): MutableList<String> {
         val now = LocalDateTime.now()
@@ -64,8 +71,8 @@ class AppUtils(
     }
 
     fun getUserAvatar(): RoundedBitmapDrawable? {
-        return if (shPref.getString(
-                cfg.getSpNameUserPhotoOnDevice(),
+        return if (pref.getString(
+                config.getSpNameUserPhotoOnDevice(),
                 "error"
             ) == "error"
         ) {
@@ -75,22 +82,22 @@ class AppUtils(
                 "getUserAvatar:// NO PHOTO ON DEV "
             )
             val bitmap =
-                BitmapFactory.decodeResource(context.resources, R.drawable.user)
+                BitmapFactory.decodeResource(ctx.resources, R.drawable.user)
             val path =
                 Uri.parse("android.resource://ru.jrd_prime.go_calories/" + R.drawable.user)
             //img2.setCornerRadius(120);
             RoundedBitmapDrawableFactory.create(
-                context.resources,
+                ctx.resources,
                 (R.drawable.user).toString()
             )
         } else {
             // HAS PHOTO ON DEV
             //img2.setCornerRadius(120);
             RoundedBitmapDrawableFactory.create(
-                context.resources,
-                shPref.getString(
-                    cfg.getSpNameUserPhotoOnDevice(),
-                    getUriToResource(context, R.drawable.user)
+                ctx.resources,
+                pref.getString(
+                    config.getSpNameUserPhotoOnDevice(),
+                    getUriToResource(ctx, R.drawable.user)
                         .toString()
                 ).toString()
             )
@@ -99,11 +106,11 @@ class AppUtils(
 
     private fun setSettings(userAccount: GoogleSignInAccount?) {
         // Пишем данные пользователя в префы
-        shPref.edit()
-            .putString(cfg.getPrefUserName(), userAccount?.displayName)
-            .putString(cfg.getSpNameUserID(), userAccount?.id)
-            .putString(cfg.getPrefUserMail(), userAccount?.email)
-            .putBoolean(cfg.getPrefIsUserAuth(), true)
+        pref.edit()
+            .putString(config.getPrefUserName(), userAccount?.displayName)
+            .putString(config.getSpNameUserID(), userAccount?.id)
+            .putString(config.getPrefUserMail(), userAccount?.email)
+            .putBoolean(config.getPrefIsUserAuth(), true)
             .apply()
     }
 
@@ -111,8 +118,8 @@ class AppUtils(
         if (userAccount?.photoUrl == null) {
             // НЕТУ - Записать в превы ЕРРОР
             Log.d(TAG, "URI NULL")
-            shPref.edit()
-                .putString(cfg.getSpNameUserPhotoOnDevice(), "error").apply()
+            pref.edit()
+                .putString(config.getSpNameUserPhotoOnDevice(), "error").apply()
         } else {
             // Получить аватар
             // обработать
@@ -138,12 +145,12 @@ class AppUtils(
                 Log.d(TAG, "ERROR ON EXEC ASYC")
             }
             val img2 =
-                RoundedBitmapDrawableFactory.create(context.getResources(), bitmap)
+                RoundedBitmapDrawableFactory.create(ctx.getResources(), bitmap)
             img2.cornerRadius = 120f
             bitmap = (img2 as RoundedBitmapDrawable).bitmap
-            val wrapper = ContextWrapper(context)
+            val wrapper = ContextWrapper(ctx)
             var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
-            file = File(file, cfg.getSpNameUserPhotoOnDevice().toString() + ".jpg")
+            file = File(file, config.getSpNameUserPhotoOnDevice().toString() + ".jpg")
             try {
                 var stream: OutputStream? = null
                 stream = FileOutputStream(file)
@@ -159,7 +166,7 @@ class AppUtils(
             Log.d(
                 TAG,
                 "LoadAndSaveAvatar: " + getUriToResource(
-                    context,
+                    ctx,
                     R.drawable.user
                 )
             )
@@ -168,8 +175,8 @@ class AppUtils(
                 "PHOTO SAVED: " + Uri.parse(file.absolutePath)
             )
             // Parse the gallery image url to uri
-            shPref.edit().putString(
-                cfg.getSpNameUserPhotoOnDevice(),
+            pref.edit().putString(
+                config.getSpNameUserPhotoOnDevice(),
                 Uri.parse(file.absolutePath).toString()
             ).apply()
         }
@@ -194,36 +201,36 @@ class AppUtils(
 
     fun clearSettings() {
         Log.d(TAG, "Setting CLEARED!")
-        shPref.edit().clear().apply()
+        pref.edit().clear().apply()
     }
 
     private fun setUserAuth(b: Boolean) {
-        shPref.edit()
-            .putBoolean(cfg.getPrefIsUserAuth(), b).apply()
+        pref.edit()
+            .putBoolean(config.getPrefIsUserAuth(), b).apply()
         Log.d(
             TAG,
-            "setUserAuth: need true : " + shPref.getBoolean(
-                cfg.getPrefIsUserAuth(),
+            "setUserAuth: need true : " + pref.getBoolean(
+                config.getPrefIsUserAuth(),
                 false
             )
         )
     }
 
     fun getUserAuth(): Boolean {
-        return shPref.getBoolean(cfg.getPrefIsUserAuth(), false)
+        return pref.getBoolean(config.getPrefIsUserAuth(), false)
     }
 
     // SHOW MENU
     fun setShowMenu(b: Boolean) {
-        shPref.edit().putBoolean(SHOW_MENU, b).apply()
+        pref.edit().putBoolean(SHOW_MENU, b).apply()
     }
 
     fun getShowMenu(): Boolean {
-        return shPref.getBoolean(SHOW_MENU, false)
+        return pref.getBoolean(SHOW_MENU, false)
     }
 
     fun setDefaultConfig() {
-        shPref.edit().putBoolean(cfg.getPrefNameFirstRun(), false).apply()
+        pref.edit().putBoolean(config.getPrefNameFirstRun(), false).apply()
     }
 
     fun closeApp(act: Activity) {

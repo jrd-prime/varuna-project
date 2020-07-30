@@ -86,6 +86,10 @@
         <item name="android:backgroundTint">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorPrimaryLight</item>
     </style>
+    <style name="Varuna.Button.Primary.Light">
+        <item name="android:backgroundTint">@color/colorPrimaryLight</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
 
     <style name="Varuna.Button.Red">
         <item name="android:backgroundTint">@color/red</item>

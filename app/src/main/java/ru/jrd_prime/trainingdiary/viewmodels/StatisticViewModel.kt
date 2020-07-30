@@ -2,10 +2,14 @@ package ru.jrd_prime.trainingdiary.viewmodels
 
 import android.content.Context
 import android.util.Log
+import android.view.LayoutInflater
 import androidx.lifecycle.ViewModel
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.getValue
 import kotlinx.android.synthetic.main.a_root_header.view.*
+import kotlinx.android.synthetic.main.stat_example_ui.view.*
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import ru.jrd_prime.trainingdiary.R
@@ -13,9 +17,9 @@ import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.fb_core.config.DATE_FORMAT_STRING
+import ru.jrd_prime.trainingdiary.fb_core.models.User
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.handlers.GetWorkoutsCallback
-import ru.jrd_prime.trainingdiary.handlers.setGone
 import ru.jrd_prime.trainingdiary.model.PlaceStatisticModel
 
 class StatisticViewModel(private val ctx: Context, private val mBinding: ActivityDashboardBinding) :
@@ -26,8 +30,8 @@ class StatisticViewModel(private val ctx: Context, private val mBinding: Activit
     var workoutsSum = 0
     val statContainer = mBinding.frameHeader.layHeader
     val statView = statContainer.statListView
-    val needPremiumView = statContainer.statListViewPremiumAd
-    val statExampleOver = statContainer.statListViewPremiumAdEx
+    val li: LayoutInflater =
+        statContainer.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     //todo проверить статистику на переходе месяцв
     fun updateStat(
@@ -84,9 +88,9 @@ class StatisticViewModel(private val ctx: Context, private val mBinding: Activit
         }
 
 //        statRootView.tvTime_Stat.text = res.getString(R.string.minutes_val, time.toString())
-        statRootView.tvTime_Stat.text = Workout(time = time).convertMinsToHM(res)
-        statRootView.tvCalories_Stat.text = res.getString(R.string.calories_val, cal.toString())
-        statRootView.tvDistance_Stat.text = res.getString(R.string.distance_val, dist.toString())
+        statContainer.tvTime_Stat.text = Workout(time = time).convertMinsToHM(res)
+        statContainer.tvCalories_Stat.text = res.getString(R.string.calories_val, cal.toString())
+        statContainer.tvDistance_Stat.text = res.getString(R.string.distance_val, dist.toString())
     }
 
     fun calculateStatistic(list: List<Workout>): List<PlaceStatisticModel> {
@@ -131,25 +135,60 @@ class StatisticViewModel(private val ctx: Context, private val mBinding: Activit
         return placed
     }
 
-    fun showUnAuthorizedStat(statAdapter: StatisticListAdapter) {
-        setGone(needPremiumView)
+    fun showUnAuthorizedStat() {
+        val adapt = StatisticListAdapter()
+
+        statContainer.removeAllViews()
+        val exampleView = li.inflate(R.layout.stat_example_ui, null)
+        statContainer.addView(exampleView)
+        val statView = statContainer.findViewById<RecyclerView>(R.id.statListView)
+        val res = statContainer.context.resources
+
+        statView.adapter = adapt
+        statContainer.tvTime_Stat.text = Workout(time = 313).convertMinsToHM(res)
+        statContainer.tvCalories_Stat.text = res.getString(R.string.calories_val, 2020.toString())
+        statContainer.tvDistance_Stat.text = res.getString(R.string.distance_val, 38.5f.toString())
+        statView.layoutManager = LinearLayoutManager(statContainer.context)
         val previewData = mutableListOf<PlaceStatisticModel>()
         previewData.add(PlaceStatisticModel(1, 43f, 1))
         previewData.add(PlaceStatisticModel(2, 27f, 2))
         previewData.add(PlaceStatisticModel(3, 16.3f, 3))
         previewData.add(PlaceStatisticModel(4, 13.7f, 4))
-        statAdapter.setNewData(previewData)
+        adapt.setNewData(previewData)
     }
 
-    fun showAuthorizedStat(statAdapter: StatisticListAdapter) {
+    fun showAuthorizedStat(
+        premiumStatus: Boolean,
+        user: User
+    ) {
+        when (premiumStatus) {
+            true -> showPremiumUI()
+            false -> showFreeUI()
+        }
+    }
 
-        /* check premium status */
-        setGone(needPremiumView)
-        val previewData = mutableListOf<PlaceStatisticModel>()
-        previewData.add(PlaceStatisticModel(1, 80f, 1))
-        previewData.add(PlaceStatisticModel(2, 10f, 2))
-        previewData.add(PlaceStatisticModel(3, 10f, 3))
-        previewData.add(PlaceStatisticModel(4, 0f, 4))
-        statAdapter.setNewData(previewData)
+    private fun showFreeUI() {
+        val adapt = StatisticListAdapter()
+
+        statContainer.removeAllViews()
+        val freeView = li.inflate(R.layout.stat_free_ui, null)
+        statContainer.addView(freeView)
+
+    }
+
+    private fun showPremiumUI() {
+        val adapt = StatisticListAdapter()
+
+        statContainer.removeAllViews()
+        val exampleView = li.inflate(R.layout.stat_premium_ui, null)
+        statContainer.addView(exampleView)
+        val statView = statContainer.findViewById<RecyclerView>(R.id.statListView)
+        val res = statContainer.context.resources
+
+        statView.adapter = adapt
+        statContainer.tvTime_Stat.text = Workout(time = 313).convertMinsToHM(res)
+        statContainer.tvCalories_Stat.text = res.getString(R.string.calories_val, 2020.toString())
+        statContainer.tvDistance_Stat.text = res.getString(R.string.distance_val, 38.5f.toString())
+        statView.layoutManager = LinearLayoutManager(statContainer.context)
     }
 }
