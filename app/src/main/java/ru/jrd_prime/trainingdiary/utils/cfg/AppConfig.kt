@@ -27,7 +27,7 @@ class AppConfig {
         return SP_NAME_USER_AUTH
     }
 
-    fun getSpNameUserName(): String? {
+    fun getPrefUserName(): String? {
         return SP_NAME_USER_NAME
     }
 
@@ -43,7 +43,7 @@ class AppConfig {
         return SP_NAME_USER_PHOTO_ON_DEVICE
     }
 
-    fun getSpNameUserMail(): String? {
+    fun getPrefUserMail(): String? {
         return SP_NAME_USER_MAIL
     }
 

@@ -2,4 +2,6 @@
 <resources>
     <string name="ad_banner_google_test_ad_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="example_disclamer">Example</string>
+    <string name="empty_user_name">Your name</string>
+    <string name="empty_user_email">your@gmail.com</string>
 </resources>

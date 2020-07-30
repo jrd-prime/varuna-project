@@ -8,6 +8,34 @@
     app:behavior_hideable="true"
     app:layout_behavior="@string/bottom_sheet_behavior">
 
+    <TextView
+        android:id="@+id/tvUserNameNA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ubuntu_reg"
+        android:paddingStart="16dp"
+        android:text="@string/bottom_sheet_name"
+        android:textColor="@color/colorGrey"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@+id/ivUserAvatar"
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+
+    <TextView
+        android:id="@+id/tvUserMailNA"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="16dp"
+        android:fontFamily="@font/ubuntu_light"
+        android:text="@string/bottom_sheet_email"
+        android:textColor="@color/colorGrey"
+        android:ellipsize="end"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
+        app:layout_constraintStart_toStartOf="@+id/tvUserNameNA"
+        app:layout_constraintTop_toBottomOf="@+id/tvUserNameNA" />
     <ImageView
         android:id="@+id/ivUserAvatar"
         android:layout_width="48dp"

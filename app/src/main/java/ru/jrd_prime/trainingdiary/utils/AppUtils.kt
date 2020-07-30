@@ -100,9 +100,9 @@ class AppUtils(
     private fun setSettings(userAccount: GoogleSignInAccount?) {
         // Пишем данные пользователя в префы
         shPref.edit()
-            .putString(cfg.getSpNameUserName(), userAccount?.displayName)
+            .putString(cfg.getPrefUserName(), userAccount?.displayName)
             .putString(cfg.getSpNameUserID(), userAccount?.id)
-            .putString(cfg.getSpNameUserMail(), userAccount?.email)
+            .putString(cfg.getPrefUserMail(), userAccount?.email)
             .putBoolean(cfg.getPrefIsUserAuth(), true)
             .apply()
     }

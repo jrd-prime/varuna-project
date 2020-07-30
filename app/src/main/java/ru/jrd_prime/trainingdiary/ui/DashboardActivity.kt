@@ -10,7 +10,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
@@ -51,7 +50,9 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
     private val mainViewModel by lazy {
         ViewModelProvider(this).get(DashboardViewModel::class.java)
     }
-    lateinit var mPagerAdapter: WorkoutPageAdapter
+    private val mPagerAdapter: WorkoutPageAdapter by lazy {
+        WorkoutPageAdapter(supportFragmentManager)
+    }
     private var mGoogleAuth: GAuth? = null
     private var mNavDrawerFragment: NavDrawerFragment? = null
     private val mConfig: AppConfig = AppConfig()
@@ -136,7 +137,10 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
         setWindow()
 
 
+        mPagerView.adapter = mPagerAdapter
 
+        mPagerView.setCurrentItem(START_PAGE, false)
+        mPagerView.addOnPageChangeListener(pageListener)
 
         setSupportActionBar(vBottomAppBar)
 
@@ -154,13 +158,10 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
 //        updateStat()
         fbc.listenNewData2(this)
 
-
-        Log.d(TAG, "- - - - - - - - - -")
-        Log.d(TAG, "ON CREATE. Пытаемся опознать юзера и показать необходимый ЮИ")
-        getUserInfo(userID)
-        Log.d(TAG, "- - - - - - - - - -")
-
-
+//        Log.d(TAG, "- - - - - - - - - -")
+//        Log.d(TAG, "ON CREATE. Пытаемся опознать юзера и показать необходимый ЮИ")
+//        getUserInfo(userID)
+//        Log.d(TAG, "- - - - - - - - - -")
     }
 
     private fun getUserInfo(userID: String?) {
@@ -169,53 +170,47 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
                 override fun onChangeUserInfo(user: User?) {
                     if (user != null) {
                         when (user.auth) {
-                            true -> {
-                                Log.d(TAG, "Авторизация стоит в ТРУ")
-                                mNavDrawerFragment =
-                                    NavDrawerFragment(appCont, UI_WAY_USER, user)  /* Меню */
-                                mStatViewModel.showAuthUI(mStatAdapter) /* Статистика */
-
-                                val up = user.premium ?: false
-//                                val up = if (user.premium != null) user.premium else false
-                                showPager(userAuth = true, userPremium = up) /* Контент */
-                            }
-                            false -> {
-                                Log.d(TAG, "Авторизация стоит в ФОЛС")
-                                mStatViewModel.showUnAuthUI(mStatAdapter) /* Статистика */
-                                mNavDrawerFragment =
-                                    NavDrawerFragment(appCont, UI_WAY_NO_USER, null)  /* Меню */
-                                showPager(userAuth = false, userPremium = false) /* Контент */
-                            }
-                            null -> {
-                                Toast.makeText(
-                                    this@DashboardActivity,
-                                    "ЗНАЧЕНИЕ В АВТОРИЗАЦИИ --- NULL",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                                Log.d(TAG, "Еще нету записи об авторизации")
-                            }
+                            true -> showAuthorizedUI(user)
+                            false -> showUnAuthorizedUI()
+                            null -> userHaveNotAuthValue()
                         }
-                    } else {
-                        /* NO USER */
-                        Log.d(TAG, "Юзера нету в БД")
-                    }
+                    } else userNull()
                 }
             }, userID)
-        } else {
-            Log.d(TAG, "Нету ИД пользователя, значит тут еще не логинились, или вышли из аккаунта")
-            /* Инициализируем ЮИ для незалогиненного юзера*/
-            mStatViewModel.showUnAuthUI(mStatAdapter) /* Статистика */
-            mNavDrawerFragment = NavDrawerFragment(appCont, UI_WAY_NO_USER, null)  /* Меню */
-            showPager(userAuth = false, userPremium = false) /* Контент */
-        }
+        } else showUnAuthorizedUI()
     }
 
-    private fun showPager(userAuth: Boolean, userPremium: Boolean) {
-        mPagerAdapter = WorkoutPageAdapter(supportFragmentManager, userAuth, userPremium)
-        Log.d(TAG, "showPager: new $mPagerAdapter")
-        mPagerView.adapter = mPagerAdapter
-        mPagerView.setCurrentItem(START_PAGE + 1, false)
-        mPagerView.addOnPageChangeListener(pageListener)
+    private fun showAuthorizedUI(user: User) {
+        Log.d(TAG, "Авторизация стоит в ТРУ")
+        appCont.preferences.edit()
+            .putBoolean(mConfig.getPrefIsUserAuth(), true).apply()
+        mNavDrawerFragment =
+            NavDrawerFragment(appCont, UI_WAY_USER, user)  /* Меню */
+        mStatViewModel.showAuthorizedStat(mStatAdapter) /* Статистика */
+        showPager() /* Контент */
+    }
+
+    private fun showUnAuthorizedUI() {
+        /* Инициализируем ЮИ для незалогиненного юзера*/
+        Log.d(TAG, "Нету ИД пользователя OR Авторизация стоит в ФОЛС")
+        appCont.preferences.edit()
+            .putBoolean(mConfig.getPrefIsUserAuth(), false).apply()
+        mStatViewModel.showUnAuthorizedStat(mStatAdapter) /* Статистика */
+        mNavDrawerFragment =
+            NavDrawerFragment(appCont, UI_WAY_NO_USER, null)  /* Меню */
+        showPager() /* Контент */
+    }
+
+    private fun userHaveNotAuthValue() {
+        Log.d(TAG, "!_!_!_!_! Еще нету записи об авторизации")
+    }
+
+    private fun userNull() {
+        Log.d(TAG, "!_!_!_!_! Юзера нету в БД")
+    }
+
+    private fun showPager() {
+        mPagerView.adapter?.notifyDataSetChanged()
     }
 
     private fun updateUIOnGetUserPremium(

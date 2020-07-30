@@ -131,7 +131,7 @@ class StatisticViewModel(private val ctx: Context, private val mBinding: Activit
         return placed
     }
 
-    fun showUnAuthUI(statAdapter: StatisticListAdapter) {
+    fun showUnAuthorizedStat(statAdapter: StatisticListAdapter) {
         setGone(needPremiumView)
         val previewData = mutableListOf<PlaceStatisticModel>()
         previewData.add(PlaceStatisticModel(1, 43f, 1))
@@ -141,7 +141,7 @@ class StatisticViewModel(private val ctx: Context, private val mBinding: Activit
         statAdapter.setNewData(previewData)
     }
 
-    fun showAuthUI(statAdapter: StatisticListAdapter) {
+    fun showAuthorizedStat(statAdapter: StatisticListAdapter) {
 
         /* check premium status */
         setGone(needPremiumView)

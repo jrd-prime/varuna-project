@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -19,11 +18,10 @@ import kotlinx.android.synthetic.main.lay_frg_navdrawer_not_auth.view.*
 import kotlinx.android.synthetic.main.lay_frg_navdrawer_not_auth.view.ivUserAvatar
 import kotlinx.android.synthetic.main.lay_frg_navdrawer_with_auth.view.*
 import ru.jrd_prime.trainingdiary.R
-import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.fb_core.models.User
 import ru.jrd_prime.trainingdiary.handlers.RefreshCallback
-import ru.jrd_prime.trainingdiary.handlers.pageListener
+import ru.jrd_prime.trainingdiary.handlers.setGone
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.utils.AppSettingsCore
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
@@ -74,20 +72,21 @@ class NavDrawerFragment(
     ): View? {
         val root = inflater.inflate(drawerLayout, container, false)
 
-//        val me = root.findViewById<NavigationView>(R.id.vNavigationView).menu
-//        val me2 = me.findItem(R.id.navCloseApp)
-
-//        me2.setTitle("fdpsfkqwef")
-//        Log.d(TAG, "onCreateView: $me2")
         if (isUserAuth) {
             fillAuthUI(root)
         } else {
             fillNotAuthUI(root)
+            showNotAuthMenu(root)
         }
 
         navigationView = root.findViewById<NavigationView>(R.id.vNavigationView)
         setHasOptionsMenu(true)
         return root
+    }
+
+    private fun showNotAuthMenu(root: View?) {
+        /* HIDE MENU FOR NON-AUTH UI */
+        setGone(root!!.findViewById<NavigationView>(R.id.vNavigationView))
     }
 
     override fun onAttach(context: Context) {
@@ -103,14 +102,19 @@ class NavDrawerFragment(
     }
 
     private fun fillAuthUI(root: View) {
-
+        val res = root.resources
         root.ivUserAvatar.setImageDrawable(mUtils.getUserAvatar())
-        root.tvUserName.text = mPref.getString(mConfig.getSpNameUserName(), "Err")
-        root.tvUserMail.text = mPref.getString(mConfig.getSpNameUserMail(), "Err")
+        root.tvUserName.text = mPref.getString(
+            mConfig.getPrefUserName(),
+            res.getString(R.string.empty_user_name)
+        )
+        root.tvUserMail.text = mPref.getString(
+            mConfig.getPrefUserMail(),
+            res.getString(R.string.empty_user_email)
+        )
         root.ivLogOut.setOnClickListener { /*SIGN OUT*/
-            if (user != null) {
-                mGoogleAuth.gSignOut(user.id.toString())
-            }
+            if (user != null) mGoogleAuth.gSignOut(user.id.toString())
+
             dismiss()
 //            refreshCallback.refreshActivity()
 //            updatePagerOnLogOut()
@@ -119,25 +123,22 @@ class NavDrawerFragment(
     }
 
     private fun fillNotAuthUI(root: View) {
+        val res = root.resources
+        root.tvUserNameNA.text = mPref.getString(
+            mConfig.getPrefUserName(),
+            res.getString(R.string.empty_user_name)
+        )
+        root.tvUserMailNA.text = mPref.getString(
+            mConfig.getPrefUserMail(),
+            res.getString(R.string.empty_user_email)
+        )
         root.bSignIn.setOnClickListener {
             Log.d(TAG, "SIGN IN")
             mGoogleAuth.gSignIn(activity)
 //            refreshCallback.refreshActivity()
-
             dismiss()
         }
     }
-
-//    private fun updatePagerOnLogOut() {
-//        Log.d(ru.jrd_prime.trainingdiary.ui.TAG, "onResume: update on logout")
-//
-//
-//        val workoutPager = activity?.findViewById<ViewPager>(R.id.viewPagerMainDashboard)
-//        workoutPager?.adapter = activity?.supportFragmentManager?.let { WorkoutPageAdapter(it, null) }
-//        workoutPager?.setCurrentItem(START_PAGE, false)
-//        workoutPager?.addOnPageChangeListener(pageListener)
-//    }
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
