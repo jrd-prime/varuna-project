@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:showIn="@layout/activity_dashboard">
 
-        <include layout="@layout/stat_free_ui" />
+        <include layout="@layout/stat_premium_ui" />
         <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
         <!--            android:layout_width="match_parent"-->
         <!--            android:layout_height="match_parent"-->

@@ -14,25 +14,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.ads.AdLoader
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.a_root_header.*
 import kotlinx.android.synthetic.main.activity_dashboard.*
 import org.threeten.bp.LocalDateTime
 import ru.jrd_prime.trainingdiary.R
 import ru.jrd_prime.trainingdiary.TrainingDiaryApp
-import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.adapter.WorkoutPageAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.fb_core.models.User
 import ru.jrd_prime.trainingdiary.gauth.GAuth
-import ru.jrd_prime.trainingdiary.handlers.*
+import ru.jrd_prime.trainingdiary.handlers.RefreshCallback
+import ru.jrd_prime.trainingdiary.handlers.UserInfo
+import ru.jrd_prime.trainingdiary.handlers.UserPremium
+import ru.jrd_prime.trainingdiary.handlers.pageListener
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.utils.*
 import ru.jrd_prime.trainingdiary.utils.cfg.AppConfig
@@ -95,7 +94,7 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
 
         /* end VIEWS */
 
-        mStatViewModel = StatisticViewModel(this, mBinding)
+        mStatViewModel = StatisticViewModel(appCont, this, mBinding)
 
 
         /* START */
@@ -148,7 +147,6 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
             daysBack = 28
         )
 
-//        updateStat()
         fbc.listenNewData2(this)
 
 //        Log.d(TAG, "- - - - - - - - - -")
@@ -180,11 +178,11 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
 
         if (premium) {
             /* PREMIUM Статистика */
-            mStatViewModel.showAuthorizedStat( true, user)
+            mStatViewModel.showAuthorizedStat(true)
 
         } else {
             /* FREE Статистика */
-            mStatViewModel.showAuthorizedStat( false, user)
+            mStatViewModel.showAuthorizedStat(false)
         }
 
         mNavFragment = NavDrawerFragment(appCont, UI_WAY_USER, user)  /* Меню */
@@ -213,7 +211,6 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
     private fun showPager() {
         mPagerView.adapter?.notifyDataSetChanged()
     }
-
 
 
     override fun onStart() {
@@ -362,6 +359,15 @@ class DashboardActivity : AppCompatActivity(), RefreshCallback {
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         finish()
         startActivity(intent)
+    }
+
+    fun updateStat() {
+        val userID = mGoogleAuth?.getLastSignedInAccount()?.id.toString()
+        fbc.getUserPremium(object : UserPremium {
+            override fun onGetUserPremium(premiumStatus: Boolean) {
+                mStatViewModel.showAuthorizedStat(premiumStatus)
+            }
+        }, userID)
     }
 
 }

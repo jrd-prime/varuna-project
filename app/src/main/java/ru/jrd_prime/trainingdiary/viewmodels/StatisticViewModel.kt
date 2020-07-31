@@ -3,6 +3,7 @@ package ru.jrd_prime.trainingdiary.viewmodels
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -10,6 +11,12 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.getValue
 import kotlinx.android.synthetic.main.a_root_header.view.*
 import kotlinx.android.synthetic.main.stat_example_ui.view.*
+import kotlinx.android.synthetic.main.stat_example_ui.view.statExampleLayout
+import kotlinx.android.synthetic.main.stat_example_ui.view.statListView
+import kotlinx.android.synthetic.main.stat_example_ui.view.tvCalories_Stat
+import kotlinx.android.synthetic.main.stat_example_ui.view.tvDistance_Stat
+import kotlinx.android.synthetic.main.stat_example_ui.view.tvTime_Stat
+import kotlinx.android.synthetic.main.stat_premium_ui.view.*
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import ru.jrd_prime.trainingdiary.R
@@ -17,16 +24,22 @@ import ru.jrd_prime.trainingdiary.adapter.StatisticListAdapter
 import ru.jrd_prime.trainingdiary.databinding.ActivityDashboardBinding
 import ru.jrd_prime.trainingdiary.fb_core.FireBaseCore
 import ru.jrd_prime.trainingdiary.fb_core.config.DATE_FORMAT_STRING
-import ru.jrd_prime.trainingdiary.fb_core.models.User
 import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.handlers.GetWorkoutsCallback
+import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.model.PlaceStatisticModel
 
-class StatisticViewModel(private val ctx: Context, private val mBinding: ActivityDashboardBinding) :
+class StatisticViewModel(
+    private val appCont: AppContainer,
+    private val ctx: Context,
+    private val mBinding: ActivityDashboardBinding
+) :
     ViewModel() {
     var statTitle = "Statistics for the last month"
     val TAG = "dashVM"
+    val fbc = FireBaseCore(appCont)
     var place: PlaceStatisticModel? = null
+
     var workoutsSum = 0
     val statContainer = mBinding.frameHeader.layHeader
     val statView = statContainer.statListView
@@ -35,10 +48,7 @@ class StatisticViewModel(private val ctx: Context, private val mBinding: Activit
 
     //todo проверить статистику на переходе месяцв
     fun updateStat(
-        fbc: FireBaseCore,
-        statAdapter: StatisticListAdapter,
-        mainViewModel: DashboardViewModel,
-        binding: ActivityDashboardBinding
+        statAdapter: StatisticListAdapter
     ) {
         fbc.getData(object : GetWorkoutsCallback {
             override fun onWorkoutsCallBack(workouts: DataSnapshot) {
@@ -65,18 +75,58 @@ class StatisticViewModel(private val ctx: Context, private val mBinding: Activit
                     }
                 }
 
-                statAdapter.setNewData(mainViewModel.setNewStatistic(dataList))
-                setStats(dataList, binding)
+                statAdapter.setNewData(setNewStatistic(dataList))
+                setStats(dataList)
             }
         })
     }
 
+    fun setNewStatistic(list: List<Workout>): List<PlaceStatisticModel> {
+//        val data = list.filter { workoutModel -> !workoutModel.empty }
+        val data = list
+        val cardioSize = data.filter { workoutModel -> workoutModel.category == 1 }.size
+        val powerSize = data.filter { workoutModel -> workoutModel.category == 2 }.size
+        val stretchSize = data.filter { workoutModel -> workoutModel.category == 3 }.size
+        val restSize = data.filter { workoutModel -> workoutModel.category == 4 }.size
+
+        workoutsSum = cardioSize + powerSize + stretchSize + restSize
+
+
+        val onePercent: Float =
+            if (workoutsSum != 0) 100f / workoutsSum else 0f // no records - set def
+
+        val cardioPercent = onePercent * cardioSize
+        val powerPercent = onePercent * powerSize
+        val stretchPercent = onePercent * stretchSize
+        val restPercent = onePercent * restSize
+
+        val z = mutableListOf<PlaceStatisticModel>()
+        z.add(PlaceStatisticModel(1, cardioPercent))
+        z.add(PlaceStatisticModel(2, powerPercent))
+        z.add(PlaceStatisticModel(3, stretchPercent))
+        z.add(PlaceStatisticModel(4, restPercent))
+        var maxPercent = 0f
+        for (item in z) {
+            maxPercent = if (item.catPercent > maxPercent) item.catPercent else maxPercent
+        }
+        z.sortByDescending { it.catPercent }
+        val placed = listOf<PlaceStatisticModel>(z[0], z[1], z[2], z[3])
+        placed[0].catPlace = 1
+        placed[1].catPlace = 2
+        placed[2].catPlace = 3
+        placed[3].catPlace = 4
+
+        Log.d(
+            TAG,
+            "setNewStatistics\nCardio: $cardioSize \nPower: $powerSize \nStretch: $stretchSize \nRest: $restSize"
+        )
+        return placed
+    }
+
     fun setStats(
-        dataList: MutableList<Workout>,
-        binding: ActivityDashboardBinding
+        dataList: MutableList<Workout>
     ) {
-        val statRootView = binding.frameHeader
-        val res = binding.root.context.resources
+        val res = statContainer.context.resources
         var time = 0
         var cal = 0
         var dist = 0f
@@ -158,8 +208,7 @@ class StatisticViewModel(private val ctx: Context, private val mBinding: Activit
     }
 
     fun showAuthorizedStat(
-        premiumStatus: Boolean,
-        user: User
+        premiumStatus: Boolean
     ) {
         when (premiumStatus) {
             true -> showPremiumUI()
@@ -178,17 +227,23 @@ class StatisticViewModel(private val ctx: Context, private val mBinding: Activit
 
     private fun showPremiumUI() {
         val adapt = StatisticListAdapter()
+        val v = statContainer
 
-        statContainer.removeAllViews()
+        v.removeAllViews()
         val exampleView = li.inflate(R.layout.stat_premium_ui, null)
-        statContainer.addView(exampleView)
+
+
+        v.addView(exampleView)
+
+
         val statView = statContainer.findViewById<RecyclerView>(R.id.statListView)
         val res = statContainer.context.resources
 
         statView.adapter = adapt
-        statContainer.tvTime_Stat.text = Workout(time = 313).convertMinsToHM(res)
-        statContainer.tvCalories_Stat.text = res.getString(R.string.calories_val, 2020.toString())
-        statContainer.tvDistance_Stat.text = res.getString(R.string.distance_val, 38.5f.toString())
         statView.layoutManager = LinearLayoutManager(statContainer.context)
+
+
+        updateStat(adapt)
+
     }
 }

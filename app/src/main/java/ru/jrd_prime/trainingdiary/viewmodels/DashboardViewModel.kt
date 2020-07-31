@@ -19,45 +19,5 @@ class DashboardViewModel : ViewModel() {
         3 to "stretch",
         4 to "rest" */
 
-    fun setNewStatistic(list: List<Workout>): List<PlaceStatisticModel> {
-//        val data = list.filter { workoutModel -> !workoutModel.empty }
-        val data = list
-        val cardioSize = data.filter { workoutModel -> workoutModel.category == 1 }.size
-        val powerSize = data.filter { workoutModel -> workoutModel.category == 2 }.size
-        val stretchSize = data.filter { workoutModel -> workoutModel.category == 3 }.size
-        val restSize = data.filter { workoutModel -> workoutModel.category == 4 }.size
 
-        workoutsSum = cardioSize + powerSize + stretchSize + restSize
-
-
-        val onePercent: Float =
-            if (workoutsSum != 0) 100f / workoutsSum else 0f // no records - set def
-
-        val cardioPercent = onePercent * cardioSize
-        val powerPercent = onePercent * powerSize
-        val stretchPercent = onePercent * stretchSize
-        val restPercent = onePercent * restSize
-
-        val z = mutableListOf<PlaceStatisticModel>()
-        z.add(PlaceStatisticModel(1, cardioPercent))
-        z.add(PlaceStatisticModel(2, powerPercent))
-        z.add(PlaceStatisticModel(3, stretchPercent))
-        z.add(PlaceStatisticModel(4, restPercent))
-        var maxPercent = 0f
-        for (item in z) {
-            maxPercent = if (item.catPercent > maxPercent) item.catPercent else maxPercent
-        }
-        z.sortByDescending { it.catPercent }
-        val placed = listOf<PlaceStatisticModel>(z[0], z[1], z[2], z[3])
-        placed[0].catPlace = 1
-        placed[1].catPlace = 2
-        placed[2].catPlace = 3
-        placed[3].catPlace = 4
-
-        Log.d(
-            TAG,
-            "setNewStatistics\nCardio: $cardioSize \nPower: $powerSize \nStretch: $stretchSize \nRest: $restSize"
-        )
-        return placed
-    }
 }

@@ -10,3 +10,7 @@ interface UserInfo {
 interface RefreshCallback {
     fun refreshActivity()
 }
+
+interface UserPremium {
+    fun onGetUserPremium(premiumStatus: Boolean)
+}

@@ -14,6 +14,7 @@ import ru.jrd_prime.trainingdiary.fb_core.models.Workout
 import ru.jrd_prime.trainingdiary.handlers.GetWorkoutCallback
 import ru.jrd_prime.trainingdiary.handlers.GetWorkoutsCallback
 import ru.jrd_prime.trainingdiary.handlers.UserInfo
+import ru.jrd_prime.trainingdiary.handlers.UserPremium
 import ru.jrd_prime.trainingdiary.impl.AppContainer
 import ru.jrd_prime.trainingdiary.ui.DashboardActivity
 
@@ -26,6 +27,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
     private val userRef = db.getReference(_USERS)
     private val categoriesRef = db.getReference(_CATEGORIES)
     private val workoutsRef = db.getReference(_WORKOUTS)
+
     //todo delete uid from pref
     private val userId = appContainer.preferences.getString("jp_uid", "").toString()
     private val today = LocalDateTime.now()
@@ -163,7 +165,7 @@ class FireBaseCore(private val appContainer: AppContainer) {
         val listener = object : ChildEventListener {
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                 Log.d(TAG, "onChildChanged: chch")
-//                mainActivity.updateStat()
+                mainActivity.updateStat()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -335,5 +337,18 @@ class FireBaseCore(private val appContainer: AppContainer) {
     fun setPremium(to: Boolean) {
         userRef.child(appContainer.gAuth.getLastSignedInAccount()?.id.toString()).child("premium")
             .setValue(to)
+    }
+
+    fun getUserPremium(callback: UserPremium, id: String) {
+        userRef.child(id).child("premium")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {
+                }
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val premium = snapshot.getValue<Boolean>()
+                    callback.onGetUserPremium(premium ?: false)
+                }
+            })
     }
 }
