@@ -30,9 +30,12 @@ class FireBaseCore(private val appContainer: AppContainer) {
 
     //todo delete uid from pref
     private val userId = appContainer.preferences.getString("jp_uid", "").toString()
+    private val months =
+        listOf<String>("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
+
     private val today = LocalDateTime.now()
     private val year = today.year.toString()
-    private val month = today.monthValue.toString()
+    private val month = months[today.monthValue - 1]
     private val woRef = workoutsRef.child(userId)
     private val refUserWithID = userRef.child(userId)
 
@@ -88,7 +91,15 @@ class FireBaseCore(private val appContainer: AppContainer) {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var workout = snapshot.getValue<Workout>()
+
+
                     if (workout != null) {
+
+                        if (workout.category == 0) {
+                            setDefaultCategory(workout.id)
+                            workout.category = 4
+                        }
+
                         weekData.add(workout) // Если воркаут не пуст, то добавляем в даталист
                     } else {
                         val newWorkout = Workout(id = date)
@@ -106,9 +117,15 @@ class FireBaseCore(private val appContainer: AppContainer) {
         }
     }
 
+    private fun setDefaultCategory(woDate: String) {
+        val actualRef = workoutPathConstructor(woDate)
+        actualRef.child(woDate).child("category").setValue(4)
+    }
+
     fun getData(callback: GetWorkoutsCallback) {
         val weekData = mutableListOf<Workout>()
-        val dateData = woRef.child("2020").child("07")
+        val dateData = woRef.child(year).child(month)
+        Log.d(TAG, "getData: MONTH !!!!!!!!!!!!!!!!!!!!!!!!! $month")
         dateData.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
             }

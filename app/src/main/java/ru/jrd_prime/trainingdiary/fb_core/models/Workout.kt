@@ -7,7 +7,7 @@ import ru.jrd_prime.trainingdiary.R
 @IgnoreExtraProperties
 data class Workout(
     val id: String = "",
-    val category: Int = 4,
+    var category: Int = 4,
     var title: String = "",
     var description: String = "",
     var time: Int = 0,

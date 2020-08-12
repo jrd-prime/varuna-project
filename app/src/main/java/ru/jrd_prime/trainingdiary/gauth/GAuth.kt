@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -76,19 +77,19 @@ class GAuth(val appContext: TrainingDiaryApp) {
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount?>) {
         Log.d(TAG, "handleSignInResult: ")
-
         try {
             // Google Sign In was successful, authenticate with Firebase
             val account = completedTask.getResult(ApiException::class.java)!!
             utils.setConfigAfterSignIn(account)
             addUser(account)
-            fireBaseCore.setAuth(account.id!!,true)
+            fireBaseCore.setAuth(account.id!!, true)
             appContainer.preferences.edit().putString(USER_PREF_UID, account.id).apply()
             Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
             firebaseAuthWithGoogle(account.idToken!!)
         } catch (e: ApiException) {
             // Google Sign In failed, update UI appropriately
             Log.w(TAG, "Google sign in failed", e)
+            Toast.makeText(context, "Google sign in filed", Toast.LENGTH_SHORT).show()
 //            toasts.errorOnGoogleSignIn(e.statusCode)
             // ...
         }

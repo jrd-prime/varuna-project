@@ -106,6 +106,7 @@ class AppUtils(
 
     private fun setSettings(userAccount: GoogleSignInAccount?) {
         // Пишем данные пользователя в префы
+        Log.d(TAG, "setSettings:")
         pref.edit()
             .putString(config.getPrefUserName(), userAccount?.displayName)
             .putString(config.getSpNameUserID(), userAccount?.id)

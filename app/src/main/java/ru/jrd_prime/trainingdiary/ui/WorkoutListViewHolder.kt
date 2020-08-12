@@ -76,17 +76,12 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
 
         if (workout != null) {
 
+
             setImageFromConstants(workout.category, binding.ivCategory)
             var totalTime = 0
             var totalCalories = 0
             var totalDistance = 0f
-//            if (position == 1) {
-//                Log.d(TAG, "= = = = = = = = = = = = = = = = = = = ")
-//                Log.d(
-//                    TAG,
-//                    "before workout: time: $totalTime, cal: $totalCalories, dist: $totalDistance"
-//                )
-//            }
+
 
             val wo = workout
             val adds = workout.additional //todo if adds null - need write empty data to db
@@ -99,12 +94,6 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
                 totalCalories += wo.kcal
                 totalDistance += wo.distance
 
-//                if (position == 1) {
-//                    Log.d(
-//                        TAG,
-//                        "after workout: time: $totalTime, cal: $totalCalories, dist: $totalDistance"
-//                    )
-//                }
                 if (adds.isNullOrEmpty()) showAddsEmptyView(
                     0,
                     wo.id
@@ -119,13 +108,6 @@ class WorkoutListViewHolder(_binding: ANewCardViewBinding) :
                     }
                 }
 
-//                if (position == 1) {
-//                    Log.d(
-//                        TAG,
-//                        "after adds: time: $totalTime, cal: $totalCalories, dist: $totalDistance"
-//                    )
-//                    Log.d(TAG, "= = = = = = = = = = = = = = = = = = = ")
-//                }
                 binding.tvTotalMinutes.text =
                     String.format(res.getString(R.string.minutes_val), totalTime.toString())
 

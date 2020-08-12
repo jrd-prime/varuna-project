@@ -18,20 +18,26 @@
         android:paddingTop="0dp">
 
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="8dp">
 
-            <com.google.android.gms.ads.AdView
-                android:id="@+id/adView"
-                android:layout_marginTop="16dp"
-                android:layout_width="wrap_content"
+            <FrameLayout
+                android:id="@+id/ad_frame"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                ads:adSize="BANNER"
-                ads:adUnitId="@string/ad_banner_google_test_ad_id" />
+                android:layout_marginTop="16dp" />
+<!--            <com.google.android.gms.ads.AdView-->
+<!--                android:id="@+id/adView"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                ads:adSize="BANNER"-->
+<!--                ads:adUnitId="ca-app-pub-3940256099942544/2247696110" />-->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recView"

@@ -36,7 +36,7 @@ class StatisticViewModel(
 ) :
     ViewModel() {
     var statTitle = "Statistics for the last month"
-    val TAG = "dashVM"
+    val TAG = "statisticVM: drops:"
     val fbc = FireBaseCore(appCont)
     var place: PlaceStatisticModel? = null
 
@@ -47,17 +47,19 @@ class StatisticViewModel(
         statContainer.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     //todo проверить статистику на переходе месяцв
-    fun updateStat(
+    private fun updateStat(
         statAdapter: StatisticListAdapter
     ) {
         fbc.getData(object : GetWorkoutsCallback {
             override fun onWorkoutsCallBack(workouts: DataSnapshot) {
                 val workoutsList: Iterable<DataSnapshot> = workouts.children
                 val dataList = mutableListOf<Workout>()
+
                 val last =
                     DateTimeFormatter.ofPattern(DATE_FORMAT_STRING).format(LocalDateTime.now())
                 val cutter = DateTimeFormatter.ofPattern(DATE_FORMAT_STRING)
                     .format(LocalDateTime.now().plusDays(1))
+
                 for (d in workoutsList) {
                     val workout = d.getValue<Workout>()
                     if (workout != null) {
